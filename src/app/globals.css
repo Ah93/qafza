@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f2ff;
+  --foreground: #1b0f3d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-readex), system-ui, sans-serif;
+
+  /* Qafza brand, sampled from the PDF */
+  --color-violet: #7b26cc;
+  --color-magenta: #c8238a;
+  --color-plum: #b41f9d;
+  --color-orchid: #7e1eb3;
+  --color-indigo-deep: #251353;
+  --color-indigo-ink: #2e1662;
+  --color-lavender: #f6f2ff;
+  --color-blush: #fcecf6;
+  --color-sun: #fad66b;
+  --color-mint: #12b886;
+  --color-teal-card: #0f9f8f;
+  --color-pink-card: #e0307f;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* soft pink glow in the bottom corner, as on every page of the design */
+body::before {
+  content: "";
+  position: fixed;
+  inset: auto auto 0 0;
+  width: 55vw;
+  height: 45vh;
+  background: radial-gradient(circle at 0% 100%, #fbdcec 0%, transparent 65%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes wave {
+  from {
+    transform: scaleY(0.45);
+  }
+  to {
+    transform: scaleY(1.25);
+  }
+}
+
+@utility bg-brand {
+  background-image: linear-gradient(90deg, #7b26cc 0%, #c8238a 100%);
+}
+
+@utility bg-brand-text {
+  background-image: linear-gradient(90deg, #7b26cc 0%, #c8238a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* dot pattern as an overlay, so it never replaces the element's own gradient */
+@utility dots {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 14px 14px;
+    pointer-events: none;
+  }
+}
+
+/* phones: leave room for the fixed bottom navigation */
+@media (max-width: 767px) {
+  body:has([data-mobile-nav]) {
+    padding-bottom: calc(72px + env(safe-area-inset-bottom));
+  }
+}
