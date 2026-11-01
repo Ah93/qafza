@@ -8,8 +8,12 @@ export class MailError extends Error {}
 /** true once the Resend key and the verified sender are both set */
 export const mailConfigured = () => !!process.env.RESEND_API_KEY && !!process.env.MAIL_FROM;
 
-/** development only: sign-ups are confirmed without an email (SKIP_EMAIL_VERIFICATION=1); ignored in production */
-export const skipVerification = () => process.env.SKIP_EMAIL_VERIFICATION === "1" && process.env.NODE_ENV !== "production";
+/**
+ * Sign-ups are confirmed without an email when SKIP_EMAIL_VERIFICATION=1 (development only, ignored in production) or
+ * ALLOW_UNVERIFIED_SIGNUPS=1 (works anywhere, for demo deployments before a mail provider is connected).
+ * While either is on, nobody proves they own their email address: remove it before real users arrive.
+ */
+export const skipVerification = () => (process.env.SKIP_EMAIL_VERIFICATION === "1" && process.env.NODE_ENV !== "production") || process.env.ALLOW_UNVERIFIED_SIGNUPS === "1";
 
 /** outside production, with no provider configured, codes and links are handed back to the page so the flow can be tried */
 export const devHints = () => !mailConfigured() && process.env.NODE_ENV !== "production";
