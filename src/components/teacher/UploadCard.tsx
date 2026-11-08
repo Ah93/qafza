@@ -68,7 +68,7 @@ export function UploadCard() {
 
   return (
     <section className="rounded-[28px] border border-violet/10 bg-white p-6 shadow-xl shadow-violet/5 sm:p-8">
-      <p className="text-xs font-medium text-indigo-deep/55">أهلًا {user.name}</p>
+      <p className="text-xs font-medium text-indigo-deep/55">أهلاً {user.name}</p>
       <h1 className="mt-1 text-3xl font-bold leading-snug text-indigo-deep sm:text-[34px]">
         ما الدرس الذي تريد أن يلعبه طلابك؟
       </h1>

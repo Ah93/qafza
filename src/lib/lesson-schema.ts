@@ -68,6 +68,11 @@ function challenge(raw: unknown, i: number, allowed: Set<string>, lenient: boole
   return { kind: "match", prompt: str(c.prompt, `challenge ${i}.prompt`, 200), pairs };
 }
 
+/** one challenge of the given kind, checked as strictly as in a freshly built lesson */
+export function parseChallenge(raw: unknown, kind: Challenge["kind"]): Challenge {
+  return challenge(raw, 0, new Set([kind]), false);
+}
+
 /**
  * Normalise the "lead line, then ▪ head: body lines" content the player parses.
  * A station whose content does not suit its display mode (a timeline with two steps, a dialogue without speakers)

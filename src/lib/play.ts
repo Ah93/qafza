@@ -64,13 +64,19 @@ export const badgeOf = (id: BadgeId) => BADGES.find((b) => b.id === id)!;
 /* ---------- cards: one per station answered right first try, one rare for the boss ---------- */
 
 export const CARDS = [
-  { name: "كريّة حمراء", rare: false },
-  { name: "هويّة الخلية", rare: false },
-  { name: "رحلة الأكسجين", rare: false },
-  { name: "الشكل المقعّر", rare: false },
-  { name: "الهيموغلوبين", rare: false },
-  { name: "بطل الأكسجين", rare: true },
+  { name: "بطاقة المحطة 1", rare: false },
+  { name: "بطاقة المحطة 2", rare: false },
+  { name: "بطاقة المحطة 3", rare: false },
+  { name: "بطاقة المحطة 4", rare: false },
+  { name: "بطاقة المحطة 5", rare: false },
+  { name: "بطاقة الزعيم", rare: true },
 ] as const;
+
+/** a card is named after what it is for: the station it came from (the lesson's own title), or the boss */
+export const cardName = (i: number, stationTitles?: string[]) => (i < 5 ? (stationTitles?.[i] ?? CARDS[i].name) : "بطل الدرس");
+
+/** one sentence that says what cards are, shown wherever they are shown */
+export const CARDS_HELP = "تكسب بطاقة عن كل محطة تجيب عن تحدّيها صح من المحاولة الأولى، وبطاقة نادرة ★ حين تهزم الزعيم. تُحفظ في سجلّك.";
 
 /* ---------- fixtures: the other players in the lesson ---------- */
 

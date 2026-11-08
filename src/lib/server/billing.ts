@@ -15,6 +15,9 @@ const subs = () => fs().collection("subscriptions");
 const checkouts = () => fs().collection("checkouts");
 const users = () => fs().collection("users");
 
+/** Lessons are open to everyone until subscriptions launch; PAYWALL_ENABLED=1 brings the free-lesson limit back. */
+export const paywallOn = () => process.env.PAYWALL_ENABLED === "1";
+
 /** which payment provider is connected. Only "test" exists so far, and never in production. */
 export function provider(): "test" | null {
   return process.env.BILLING_PROVIDER === "test" && process.env.NODE_ENV !== "production" ? "test" : null;
@@ -44,7 +47,8 @@ export async function planStatus(uid: string): Promise<PlanStatus> {
     until: sub?.currentPeriodEnd ?? null,
     lessonsCreated: made,
     freeLimit: FREE_LESSONS,
-    canCreate: entitled || made < FREE_LESSONS,
+    canCreate: !paywallOn() || entitled || made < FREE_LESSONS,
+    open: !paywallOn(),
     payments: provider() ?? "off",
   };
 }
@@ -56,6 +60,7 @@ export const PAYWALL_MESSAGE = "استخدمت درسك المجاني. لدرس
  * Give it back with releaseLessonSlot when the lesson could not be created.
  */
 export async function reserveLessonSlot(uid: string): Promise<boolean> {
+  if (!paywallOn()) return true;
   if (await subscriptionOf(uid)) {
     await lessonsCreated(uid); // makes sure the counter exists before it is incremented
     await users().doc(uid).set({ lessonsCreated: increment(1) }, { merge: true });

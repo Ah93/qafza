@@ -48,6 +48,10 @@ type Flow = {
   setUserName: (name: string) => void;
   source: Source | null;
   setSource: (s: Source) => void;
+  /** the lesson on screen is the teacher's own (built, opened or restored), not the built-in sample */
+  hasDraft: boolean;
+  /** the saved draft has been looked for (until then `hasDraft` may still turn true) */
+  draftReady: boolean;
   custom: Customization;
   setCustom: (c: Customization) => void;
   lesson: Lesson;
@@ -59,6 +63,8 @@ type Flow = {
   setTitle: (title: string) => void;
   patchStation: (id: string, patch: Partial<Station>) => void;
   patchChallenge: (id: string, patch: Partial<Challenge>) => void;
+  /** swap a station's challenge for another one (a different kind) */
+  replaceChallenge: (id: string, challenge: Challenge) => void;
   setBoss: (boss: BossItem[]) => void;
   saved: Saved | null;
   save: (status?: "draft" | "published") => Promise<SaveOutcome>;
@@ -71,7 +77,10 @@ type Flow = {
   classes: ClassInfo[] | null;
   reloadClasses: () => Promise<void>;
   createClass: (c: NewClass) => Promise<{ ok: true; created: ClassInfo } | { ok: false; error: string }>;
-  patchClass: (id: string, patch: { requireLogin?: boolean; groups?: ClassInfo["groups"]; name?: string }) => Promise<boolean>;
+  patchClass: (id: string, patch: ClassPatch) => Promise<boolean>;
+  /** put a student in a group by hand (null: back to the automatic split); `reset` clears every manual placement */
+  moveStudent: (classId: string, studentId: string, group: number | null) => Promise<boolean>;
+  resetGroups: (classId: string) => Promise<boolean>;
   addClassStudents: (id: string, names: string[]) => Promise<boolean>;
   selectedClass: string;
   setSelectedClass: (id: string) => void;
@@ -86,10 +95,16 @@ export function useFlow() {
 }
 
 const SAMPLE = buildLesson(DEFAULT_CUSTOM);
+/** what the teacher can change about a class after creating it */
+export type ClassPatch = { requireLogin?: boolean; groups?: ClassInfo["groups"]; name?: string; kind?: ClassKind; stage?: string; subject?: string; struggleBelow?: number };
+
+const DRAFT_KEY = "qafza:draft";
 
 export function FlowProvider({ children }: { children: React.ReactNode }) {
   const [account, setAccount] = useState<AccountUser | null>(null);
-  const [source, setSource] = useState<Source | null>(null);
+  const [source, setSourceState] = useState<Source | null>(null);
+  const [hasDraft, setHasDraft] = useState(false);
+  const [draftReady, setDraftReady] = useState(false);
   const [custom, setCustom] = useState<Customization>(DEFAULT_CUSTOM);
   const [lesson, setLesson] = useState<Lesson>(SAMPLE);
   const [generatedFrom, setGeneratedFrom] = useState<Source | null>(null);
@@ -106,6 +121,40 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   const [classes, setClasses] = useState<ClassInfo[] | null>(null);
   const [selectedClass, setSelectedClass] = useState("");
   const inflight = useRef<Promise<GenerateOutcome> | null>(null);
+
+  // the lesson being edited survives a refresh or a trip back through the browser history (this tab only)
+  useEffect(() => {
+    const t = setTimeout(() => {
+      try {
+        const d = JSON.parse(sessionStorage.getItem(DRAFT_KEY) ?? "null") as { lesson?: Lesson; saved?: Saved | null } | null;
+        if (d?.lesson && Array.isArray(d.lesson.stations) && d.lesson.stations.length) {
+          setLesson(d.lesson);
+          setSaved(d.saved ?? null);
+          setHasDraft(true);
+        }
+      } catch {}
+      setDraftReady(true);
+    }, 0);
+    return () => clearTimeout(t);
+  }, []);
+  useEffect(() => {
+    if (!hasDraft) return;
+    try {
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ lesson, saved }));
+    } catch {}
+  }, [hasDraft, lesson, saved]);
+
+  /** a new source starts a new lesson: whatever was being edited is dropped */
+  const setSource = useCallback((s: Source) => {
+    setSourceState(s);
+    setHasDraft(false);
+    setLesson(SAMPLE);
+    setSaved(null);
+    setGeneratedFrom(null);
+    try {
+      sessionStorage.removeItem(DRAFT_KEY);
+    } catch {}
+  }, []);
 
   useEffect(() => {
     api<{ user: AccountUser | null }>("/api/auth/me").then((r) => r.ok && setAccount(r.data.user));
@@ -135,8 +184,26 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   );
 
   const patchClass = useCallback(
-    async (id: string, patch: { requireLogin?: boolean; groups?: ClassInfo["groups"]; name?: string }) => {
+    async (id: string, patch: ClassPatch) => {
       const r = await postJson(`/api/classes/${id}`, patch, "PATCH");
+      if (r.ok) await reloadClasses();
+      return r.ok;
+    },
+    [reloadClasses],
+  );
+
+  const moveStudent = useCallback(
+    async (classId: string, studentId: string, group: number | null) => {
+      const r = await postJson(`/api/classes/${classId}/students`, { student: studentId, group }, "PATCH");
+      if (r.ok) await reloadClasses();
+      return r.ok;
+    },
+    [reloadClasses],
+  );
+
+  const resetGroups = useCallback(
+    async (classId: string) => {
+      const r = await postJson(`/api/classes/${classId}/students`, { reset: true }, "PATCH");
       if (r.ok) await reloadClasses();
       return r.ok;
     },
@@ -168,6 +235,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       const r = await api<{ lesson: Lesson; truncated: boolean; pages: number }>("/api/generate", { method: "POST", body: form });
       if (!r.ok) return { ok: false, error: r.error };
       setLesson(r.data.lesson);
+      setHasDraft(true);
       setSaved(null); // a new lesson has not been saved yet
       setGeneratedFrom(source);
       return { ok: true, truncated: r.data.truncated, pages: r.data.pages };
@@ -189,6 +257,10 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       ...l,
       stations: l.stations.map((s) => (s.id === id ? { ...s, challenge: { ...s.challenge, ...patch } as Challenge } : s)),
     }));
+  }, []);
+
+  const replaceChallenge = useCallback((id: string, challenge: Challenge) => {
+    setLesson((l) => ({ ...l, stations: l.stations.map((s) => (s.id === id ? { ...s, challenge } : s)) }));
   }, []);
 
   const setBoss = useCallback((boss: BossItem[]) => setLesson((l) => ({ ...l, boss })), []);
@@ -214,6 +286,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
     const r = await api<{ lesson: Lesson; code: string }>(`/api/lessons/${id}`);
     if (!r.ok) return false;
     setLesson(r.data.lesson);
+    setHasDraft(true);
     setSaved({ id, code: r.data.code });
     setGeneratedFrom(null);
     return true;
@@ -235,6 +308,8 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       setUserName,
       source,
       setSource,
+      hasDraft,
+      draftReady,
       custom,
       setCustom,
       lesson,
@@ -244,6 +319,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       setTitle,
       patchStation,
       patchChallenge,
+      replaceChallenge,
       setBoss,
       saved,
       save,
@@ -255,11 +331,13 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       reloadClasses,
       createClass,
       patchClass,
+      moveStudent,
+      resetGroups,
       addClassStudents,
       selectedClass,
       setSelectedClass,
     }),
-    [account, setUserName, source, custom, lesson, generatedFrom, generate, setTitle, patchStation, patchChallenge, setBoss, saved, save, openSaved, publishShare, share, setShare, classes, reloadClasses, createClass, patchClass, addClassStudents, selectedClass],
+    [account, setUserName, hasDraft, draftReady, source, setSource, custom, lesson, generatedFrom, generate, setTitle, patchStation, patchChallenge, replaceChallenge, setBoss, saved, save, openSaved, publishShare, share, setShare, classes, reloadClasses, createClass, patchClass, addClassStudents, moveStudent, resetGroups, selectedClass],
   );
 
   return (

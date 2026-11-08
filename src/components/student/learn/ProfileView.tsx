@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Check, Flame as FlameIcon, Layers, Network, Zap, type LucideIcon } from "lucide-react";
 import { api } from "@/lib/client-api";
 import { ago } from "@/lib/ago";
-import { BADGES, CARDS, RANKS, nextRank, rankIndex, rankOf } from "@/lib/play";
+import { BADGES, CARDS, CARDS_HELP, RANKS, nextRank, rankIndex, rankOf } from "@/lib/play";
 import { useFlow } from "@/components/teacher/FlowProvider";
 import { Switch } from "@/components/teacher/ui";
 import { BadgeShape } from "../BadgeShape";
@@ -196,7 +196,7 @@ export function ProfileView() {
                 );
               })}
             </ul>
-            <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">كل بطاقة من محتوى درس لعبته، فتراجع وأنت تجمع.</p>
+            <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
           </section>
         </div>
 

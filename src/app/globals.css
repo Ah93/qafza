@@ -107,3 +107,30 @@ body::before {
     padding-bottom: calc(72px + env(safe-area-inset-bottom));
   }
 }
+
+/* The answer cards for a board-only class: printing the live screen prints ONLY these (see AnswerCards.tsx). */
+.print-sheet {
+  display: none;
+}
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+  body > *:not(.print-sheet) {
+    display: none !important;
+  }
+  .print-sheet {
+    display: block !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .print-sheet .sheet-page {
+    break-after: page;
+    page-break-after: always;
+  }
+  .print-sheet .sheet-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+}

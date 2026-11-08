@@ -352,7 +352,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
 
           {step === "class" && klass && (
             <div>
-              <h1 className="mt-5 text-[28px] font-bold leading-tight text-indigo-deep">أهلًا في «{klass.className}»</h1>
+              <h1 className="mt-5 text-[28px] font-bold leading-tight text-indigo-deep">أهلاً في «{klass.className}»</h1>
               <p className="mt-2 text-xs font-medium text-indigo-deep/60">أُضفت إلى الصف، وستظهر نتائجك عند معلّمك.</p>
               {klass.lessons.length ? (
                 <ul className="mt-5 space-y-2.5 text-start">

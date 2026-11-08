@@ -100,7 +100,13 @@ export function openSession(ownerId: string, code: string): Promise<Opened> {
 
 async function openFresh(ownerId: string, code: string): Promise<Opened> {
   const existing = getSession(code);
-  if (existing && existing.status === "running") return existing.ownerId === ownerId ? existing : { error: "هذه الحصة تخص معلّمًا آخر.", status: 403 };
+  if (existing && existing.status === "running") {
+    if (existing.ownerId !== ownerId) return { error: "هذه الحصة تخص معلّمًا آخر.", status: 403 };
+    // nobody has joined and nothing has started: this is only a lobby that was opened earlier. The teacher may have changed
+    // the sharing choices since (groups or individual, the class), so build it again from what is saved now.
+    if (existing.students.size === 0 && existing.maxAt === 0) sessions.delete(code);
+    else return existing;
+  }
 
   const found = await loadLesson("code", code, ownerId);
   if (!found) return { error: "لم نجد هذا الدرس.", status: 404 };
@@ -376,6 +382,12 @@ export function goto(s: Session, to: number) {
   notify(s);
 }
 
+/** the teacher has finished the explanation: the "repeat it" requests on screen are cleared */
+export function clearRepeats(s: Session) {
+  for (const st of s.students.values()) st.repeats.delete(s.at);
+  notify(s);
+}
+
 /** board-only: mark whether a group answered a challenge right */
 export function flag(s: Session, challenge: number, group: number, value: boolean) {
   if (!boardOnly(s) || group < 0 || group >= s.share.groupCount) return;
@@ -446,6 +458,10 @@ async function persist(s: Session) {
     return;
   }
 
+  // a challenge that nobody answered was not really asked (the teacher passed over it): it counts for no one, instead of as a miss for everyone
+  const asked = new Set<number>();
+  for (const st of s.students.values()) for (const ci of st.answers.keys()) asked.add(ci);
+
   const scores = currentGroupScores(s);
   const winner = scores.length ? scores.reduce((a, b) => (b.score > a.score ? b : a)).group : null;
   const byGroup = new Map<number, { id: string; points: number }>();
@@ -453,7 +469,7 @@ async function persist(s: Session) {
 
   for (const { st, points } of ranked(s)) {
     const shown = (ci: number) => s.visited.has(s.slides.findIndex((x) => x.kind === "challenge" && x.i === ci));
-    const results = Array.from({ length: total }, (_, ci) => (st.answers.has(ci) ? ((st.answers.get(ci)!.right ? 1 : 0) as 0 | 1) : shown(ci) ? 0 : null));
+    const results = Array.from({ length: total }, (_, ci) => (st.answers.has(ci) ? ((st.answers.get(ci)!.right ? 1 : 0) as 0 | 1) : asked.has(ci) && shown(ci) ? 0 : null));
     const boss = bossResults(s, st.answers.get(total));
     await insert(st.name, st.userId, st.ref, st.group, points, results, boss);
 

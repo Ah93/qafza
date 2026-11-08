@@ -47,6 +47,8 @@ export type PlanStatus = {
   freeLimit: number;
   /** may this account start another lesson right now? */
   canCreate: boolean;
+  /** lessons are open to everyone for now (no free-lesson limit); turned off with PAYWALL_ENABLED=1 */
+  open: boolean;
   /** is a payment provider connected? false means the pay button cannot work yet */
   payments: "live" | "test" | "off";
 };

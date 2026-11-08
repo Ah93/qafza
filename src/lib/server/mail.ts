@@ -83,14 +83,14 @@ ${cta ? `<tr><td style="padding:22px 0 6px"><a href="${esc(cta.url)}" style="dis
 export function verificationMail(to: string, firstName: string, code: string): Mail {
   const html = layout(
     "رمز تأكيد بريدك",
-    `أهلًا ${esc(firstName)}،<br>رمزك لتأكيد البريد:<div dir="ltr" style="font-size:34px;letter-spacing:8px;font-weight:bold;color:#6d28d9;margin:14px 0">${esc(code)}</div>صالح لمدة 15 دقيقة. لا تشاركه مع أحد.`,
+    `أهلاً ${esc(firstName)}،<br>رمزك لتأكيد البريد:<div dir="ltr" style="font-size:34px;letter-spacing:8px;font-weight:bold;color:#6d28d9;margin:14px 0">${esc(code)}</div>صالح لمدة 15 دقيقة. لا تشاركه مع أحد.`,
   );
-  return { to, subject: `رمز التأكيد ${code} — قفزة`, html, text: `أهلًا ${firstName}، رمز تأكيد بريدك في قفزة: ${code} (صالح 15 دقيقة).` };
+  return { to, subject: `رمز التأكيد ${code} — قفزة`, html, text: `أهلاً ${firstName}، رمز تأكيد بريدك في قفزة: ${code} (صالح 15 دقيقة).` };
 }
 
 export function resetMail(to: string, firstName: string, url: string): Mail {
-  const html = layout("إعادة تعيين كلمة المرور", `أهلًا ${esc(firstName)}،<br>طلبنا منك أحدٌ إعادة تعيين كلمة مرور حسابك. اضغط الزر لاختيار كلمة جديدة. الرابط صالح لمدة ساعة ويعمل مرة واحدة.`, { label: "اختر كلمة مرور جديدة", url });
-  return { to, subject: "إعادة تعيين كلمة المرور — قفزة", html, text: `أهلًا ${firstName}، لإعادة تعيين كلمة مرورك افتح الرابط (صالح ساعة، لمرة واحدة): ${url}` };
+  const html = layout("إعادة تعيين كلمة المرور", `أهلاً ${esc(firstName)}،<br>طلبنا منك أحدٌ إعادة تعيين كلمة مرور حسابك. اضغط الزر لاختيار كلمة جديدة. الرابط صالح لمدة ساعة ويعمل مرة واحدة.`, { label: "اختر كلمة مرور جديدة", url });
+  return { to, subject: "إعادة تعيين كلمة المرور — قفزة", html, text: `أهلاً ${firstName}، لإعادة تعيين كلمة مرورك افتح الرابط (صالح ساعة، لمرة واحدة): ${url}` };
 }
 
 export function consentMail(to: string, child: string, url: string): Mail {

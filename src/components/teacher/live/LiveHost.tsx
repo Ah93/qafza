@@ -6,6 +6,7 @@ import { api } from "@/lib/client-api";
 import { AR_LETTERS, CHALLENGE_LABELS, type Lesson } from "@/lib/lesson";
 import { ANSWER_CARDS, GROUP_POOL } from "@/lib/live";
 import { buildSlides, POINTS_RIGHT, type Slide, type TeacherSnap } from "@/lib/live-flow";
+import { PrintAnswerCards } from "./AnswerCards";
 import { TeacherHeader } from "../TeacherHeader";
 import { ArenaBoard, BoardOnlyArena, BossBoard, ChallengeBoard, ExplainBoard, FinishBoard, LeaderPill, ScorePills } from "./boards";
 
@@ -234,9 +235,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
                   </span>
                 ))}
               </div>
-              <button onClick={() => window.print()} className="mt-3 w-full rounded-xl border border-violet/10 bg-white py-2.5 text-xs font-bold text-violet transition hover:border-violet/30">
-                اطبع بطاقات الإجابة
-              </button>
+              <PrintAnswerCards groups={groups} />
               <p className="mt-2.5 text-[11px] font-medium leading-6 text-indigo-deep/60">لا طابعة؟ يكفي أن تكتب المجموعة الحرف على ورقة، أو أن ترفع أصابعها: 1 إلى 4.</p>
             </div>
           )}
@@ -244,9 +243,16 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
       )}
 
       {slide.kind === "explain" && !boardOnly && (
-        <p className={`mt-3 rounded-2xl px-4 py-3 text-xs font-bold leading-6 ${snap.repeats > 0 ? "bg-amber-50 text-amber-900" : "bg-violet/[0.06] text-indigo-deep/70"}`} aria-live="polite">
-          {snap.repeats > 0 ? `${snap.repeats} من الطلاب طلبوا إعادة الشرح.` : "لم يطلب أحد إعادة الشرح."}
-        </p>
+        <div className={`mt-3 rounded-2xl px-4 py-3 ${snap.repeats > 0 ? "bg-amber-50" : "bg-violet/[0.06]"}`} aria-live="polite">
+          <p className={`text-xs font-bold leading-6 ${snap.repeats > 0 ? "text-amber-900" : "text-indigo-deep/70"}`}>
+            {snap.repeats > 0 ? `${snap.repeats} من الطلاب طلبوا إعادة الشرح.` : "لم يطلب أحد إعادة الشرح."}
+          </p>
+          {snap.repeats > 0 && (
+            <button disabled={busy} onClick={() => act({ action: "clearRepeats" })} className="mt-2 rounded-full bg-white px-4 py-1.5 text-[11px] font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 disabled:opacity-60">
+              انتهى الشرح، أخفِ الطلبات
+            </button>
+          )}
+        </div>
       )}
 
       {slide.kind === "challenge" && (

@@ -5,7 +5,24 @@ import { usePathname } from "next/navigation";
 import { Heart, Presentation, Trophy, House } from "lucide-react";
 import { MobileNav } from "../MobileNav";
 import { Logo } from "../Logo";
+import { useSyncExternalStore } from "react";
+import { setSound, soundOn, subscribeSound } from "@/lib/sound";
 import { useStudent } from "./StudentProvider";
+
+/** the sound on/off switch (remembered on this device) */
+export function SoundToggle() {
+  const on = useSyncExternalStore(subscribeSound, soundOn, () => true);
+  return (
+    <button
+      onClick={() => setSound(!on)}
+      aria-pressed={on}
+      aria-label={on ? "أوقف الصوت" : "شغّل الصوت"}
+      className="grid size-9 place-items-center rounded-full border border-violet/10 bg-white text-base shadow-sm transition hover:border-violet/30"
+    >
+      <span aria-hidden>{on ? "🔊" : "🔇"}</span>
+    </button>
+  );
+}
 
 export function PlayerAvatar({ size = 32 }: { size?: number }) {
   return (
@@ -99,7 +116,10 @@ export function PlayHeader({ title, children }: { title?: string; children?: Rea
           <Logo href="/learn" />
         </div>
         <p className="hidden truncate text-sm font-bold text-indigo-deep sm:block">{title}</p>
-        <div className="flex items-center gap-2.5 justify-self-end">{children}</div>
+        <div className="flex items-center gap-2.5 justify-self-end">
+          {children}
+          <SoundToggle />
+        </div>
       </div>
     </header>
   );

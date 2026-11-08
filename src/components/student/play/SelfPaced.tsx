@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { Check, Gift, Layers, Network, Trophy, WifiOff } from "lucide-react";
 import { api, postJson } from "@/lib/client-api";
 import { CHALLENGE_LABELS, modeLabel } from "@/lib/lesson";
-import { CARDS, GROUP_BASE, PEERS, PLAYER, POINTS, nextRank, rankOf, RANKS } from "@/lib/play";
+import { CARDS, CARDS_HELP, cardName, GROUP_BASE, PEERS, PLAYER, POINTS, nextRank, rankOf, RANKS } from "@/lib/play";
 import { SAMPLE_CODE } from "../../useLessonByCode";
 import { useStudent } from "../StudentProvider";
 import { usePlayLesson, type PlayVariant } from "../usePlayLesson";
 import { Flame, Hearts, NamePill, PlayHeader } from "../StudentHeader";
 import { Overlay } from "../Overlay";
+import { sfx } from "@/lib/sound";
 import { SourceChip } from "@/components/teacher/review/parts";
 import { BossView, ChallengeView } from "./ChallengeView";
 import { StationView } from "./StationView";
@@ -51,6 +52,12 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   const queue = useRef<Promise<unknown>>(Promise.resolve());
   const pending = useRef(false);
   const latest = useRef({ run, at: 0, seconds: 0 });
+
+  // a new rank gets its fanfare
+  const rankUp = run.rankUp;
+  useEffect(() => {
+    if (rankUp !== null) sfx.rankUp();
+  }, [rankUp]);
 
   useEffect(() => {
     const t = setInterval(() => setSeconds((s) => s + 1), 1000);
@@ -323,6 +330,9 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                       challenge={station.challenge}
                       disabled={run.recovering || offline}
                       onAttempt={(attempt, correct) => {
+                        if (!correct) sfx.wrong();
+                        else if ((run.streak + 1) % 3 === 0) sfx.streak();
+                        else sfx.right();
                         dispatch({ type: "answer", challenge: phase.i, attempt, correct });
                         if (correct || attempt === 2) setResolved((r) => ({ ...r, [phase.i]: true }));
                       }}
@@ -342,6 +352,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                       <p className="mt-1 text-xs font-medium text-indigo-deep/60">أنهيت ثلاثة تحديات. خذ مكافأتك.</p>
                       <button
                         onClick={() => {
+                          sfx.streak();
                           dispatch({ type: "surprise" });
                           setOpened(true);
                         }}
@@ -356,7 +367,10 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                 </div>
               )}
 
-              {phase.kind === "boss" && <BossView items={lesson.boss} onWin={() => dispatch({ type: "boss" })} />}
+              {phase.kind === "boss" && <BossView items={lesson.boss} onWin={() => {
+                  sfx.boss();
+                  dispatch({ type: "boss" });
+                }} />}
             </section>
 
             {saveError && (
@@ -506,14 +520,15 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                   return (
                     <li
                       key={c.name}
-                      title={has ? c.name : "لم تُكتشف"}
+                      title={has ? cardName(i, lesson.stations.map((s) => s.title)) : "لم تُكتشف"}
                       className={`grid aspect-[4/3] place-items-center rounded-xl px-1 text-center text-[9px] font-bold leading-4 ${has ? (c.rare ? "bg-gradient-to-br from-amber-400 to-pink-500 text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/30"}`}
                     >
-                      {has ? c.name : "؟"}
+                      {has ? cardName(i, lesson.stations.map((s) => s.title)) : "؟"}
                     </li>
                   );
                 })}
               </ul>
+              <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
             </section>
           </aside>
         </div>
@@ -533,9 +548,9 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
       )}
 
       {welcome && (
-        <Overlay label="أهلًا بعودتك">
+        <Overlay label="أهلاً بعودتك">
           <span className="mx-auto grid size-16 place-items-center rounded-full bg-pink-50 text-3xl">👋</span>
-          <h2 className="mt-4 text-2xl font-bold text-indigo-deep">أهلًا بعودتك يا {real ? myName : PLAYER.name}!</h2>
+          <h2 className="mt-4 text-2xl font-bold text-indigo-deep">أهلاً بعودتك يا {real ? myName : PLAYER.name}!</h2>
           <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
             تقدّمك محفوظ. أنت عند {phase.kind === "station" ? `المحطة ${phase.i + 1}` : phase.kind === "challenge" ? `التحدي ${challengeNo + 1}` : "الجزء التالي"} من {total}، ومعك {run.points} نقطة.
           </p>

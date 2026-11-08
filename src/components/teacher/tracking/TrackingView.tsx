@@ -242,7 +242,7 @@ export function TrackingView() {
                     <li key={c.label}>
                       <div className="flex items-center justify-between text-[11px] font-bold text-indigo-deep">
                         <span>{c.label}</span>
-                        <span className={c.pct === null ? "text-slate-400" : good ? "text-emerald-600" : "text-amber-600"}>{c.pct === null ? "—" : `${c.pct}%`}</span>
+                        <span className={c.pct === null ? "text-slate-400" : good ? "text-emerald-600" : "text-amber-600"}>{c.pct === null ? "لم يُطرح" : `${c.pct}%`}</span>
                       </div>
                       <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
                         <div className={`h-full rounded-full ${good ? "bg-mint" : "bg-amber-500"}`} style={{ width: `${c.pct ?? 0}%` }} />

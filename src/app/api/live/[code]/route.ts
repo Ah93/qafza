@@ -1,6 +1,6 @@
 import { currentUser } from "@/lib/server/auth";
 import { clientIp, fail, limited, readJson, text, tooMany } from "@/lib/server/http";
-import { answer, askRepeat, award, end, engage, flag, getSession, goto, joinStudent, leave, notify, openSession, teacherSnap } from "@/lib/server/live";
+import { answer, askRepeat, award, clearRepeats, end, engage, flag, getSession, goto, joinStudent, leave, notify, openSession, teacherSnap } from "@/lib/server/live";
 import type { LiveAnswer } from "@/lib/live-flow";
 
 /** the answer a student sends, reduced to the plain shapes the judge understands */
@@ -29,12 +29,13 @@ export async function POST(req: Request, ctx: RouteContext<"/api/live/[code]">) 
     const s = await openSession(user.id, code);
     return "error" in s ? fail(s.error, s.status) : Response.json({ snap: teacherSnap(s) });
   }
-  if (["goto", "end", "flag", "award"].includes(action)) {
+  if (["goto", "end", "flag", "award", "clearRepeats"].includes(action)) {
     if (!user) return fail("سجّل الدخول أولًا.", 401);
     const s = getSession(code);
     if (!s || s.ownerId !== user.id) return fail("لا حصة مفتوحة بهذا الرمز.", 404);
     if (action === "goto") goto(s, Number(b.at));
     else if (action === "end") await end(s);
+    else if (action === "clearRepeats") clearRepeats(s);
     else if (action === "flag") flag(s, Number(b.challenge), Number(b.group), b.value === true);
     else award(s, { student: typeof b.student === "string" ? b.student : undefined, group: Number.isInteger(b.group) ? (b.group as number) : undefined }, Number(b.points));
     return Response.json({ snap: teacherSnap(s) });

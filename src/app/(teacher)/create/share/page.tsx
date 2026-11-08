@@ -204,12 +204,6 @@ export default function SharePage() {
                       ? "بلا صف: توزّع قفزة الطلاب على المجموعات بالتناوب عند دخولهم بالرمز."
                       : "المجموعات جاهزة من «صفوفي»، فلا تكتب شيئًا. كل طالب يجد مجموعته حين يدخل، والضيف الجديد يُضاف إلى الأقل عددًا."}
                   </p>
-                  <Link
-                    href="/join?code=7QK4"
-                    className="mt-2 inline-block text-[11px] font-bold text-violet underline underline-offset-4"
-                  >
-                    شاهد كيف يدخل الطالب ويجد مجموعته
-                  </Link>
                 </div>
               )}
 

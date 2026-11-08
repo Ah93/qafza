@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, Lock, X } from "lucide-react";
 import { AR_LETTERS, type BossItem, type Challenge } from "@/lib/lesson";
 import type { LiveAnswer } from "@/lib/live-flow";
+import { sfx } from "@/lib/sound";
 
 /** a deterministic rotation: server and client agree, and no item sits in its answer position */
 const rotate = <T,>(list: T[]): T[] => list.map((_, i) => list[(i + 1) % list.length]);
@@ -25,6 +26,10 @@ export function LiveChallenge({
   busy: boolean;
   onSubmit: (a: LiveAnswer) => void;
 }) {
+  const send = (a: LiveAnswer) => {
+    sfx.tap();
+    onSubmit(a);
+  };
   const [choice, setChoice] = useState<number | null>(null);
   const [value, setValue] = useState<boolean | null>(null);
   const [placed, setPlaced] = useState<Record<number, string>>({});
@@ -67,7 +72,7 @@ export function LiveChallenge({
             </li>
           ))}
         </ul>
-        <button disabled={!ready || busy} onClick={() => onSubmit({ kind: "boss", values: bossVals.map((v) => v === true) })} className={submitBtn}>
+        <button disabled={!ready || busy} onClick={() => send({ kind: "boss", values: bossVals.map((v) => v === true) })} className={submitBtn}>
           {busy ? "جارٍ الإرسال…" : "أرسل إجاباتي"}
         </button>
       </div>
@@ -94,7 +99,7 @@ export function LiveChallenge({
             </li>
           ))}
         </ul>
-        <button disabled={choice === null || busy} onClick={() => onSubmit({ kind: "mcq", choice: choice! })} className={submitBtn}>
+        <button disabled={choice === null || busy} onClick={() => send({ kind: "mcq", choice: choice! })} className={submitBtn}>
           {busy ? "جارٍ الإرسال…" : "أرسل إجابتي"}
         </button>
       </div>
@@ -117,7 +122,7 @@ export function LiveChallenge({
             </button>
           ))}
         </div>
-        <button disabled={value === null || busy} onClick={() => onSubmit({ kind: "tf", value: value! })} className={submitBtn}>
+        <button disabled={value === null || busy} onClick={() => send({ kind: "tf", value: value! })} className={submitBtn}>
           {busy ? "جارٍ الإرسال…" : "أرسل إجابتي"}
         </button>
       </div>
@@ -166,7 +171,7 @@ export function LiveChallenge({
             </button>
           ))}
         </div>
-        <button disabled={!done || busy} onClick={() => onSubmit({ kind: "dnd", placed: challenge.slots.map((_, i) => placed[i]) })} className={submitBtn}>
+        <button disabled={!done || busy} onClick={() => send({ kind: "dnd", placed: challenge.slots.map((_, i) => placed[i]) })} className={submitBtn}>
           {busy ? "جارٍ الإرسال…" : "أرسل إجابتي"}
         </button>
       </div>
@@ -216,7 +221,7 @@ export function LiveChallenge({
           ))}
         </div>
       </div>
-      <button disabled={!done || busy} onClick={() => onSubmit({ kind: "match", links: challenge.pairs.map((_, i) => links[i]) })} className={submitBtn}>
+      <button disabled={!done || busy} onClick={() => send({ kind: "match", links: challenge.pairs.map((_, i) => links[i]) })} className={submitBtn}>
         {busy ? "جارٍ الإرسال…" : "أرسل إجابتي"}
       </button>
     </div>

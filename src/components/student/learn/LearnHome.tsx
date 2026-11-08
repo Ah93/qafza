@@ -61,7 +61,7 @@ export function LearnHome() {
 
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-[11px] font-semibold text-indigo-deep/55">أهلًا{name ? `، ${name}` : ""}</p>
+            <p className="text-[11px] font-semibold text-indigo-deep/55">أهلاً{name ? `، ${name}` : ""}</p>
             <h1 className="mt-1 text-[34px] font-bold leading-tight text-indigo-deep">ماذا ستتعلّم اليوم؟</h1>
           </div>
           <div className="grid w-full grid-cols-3 gap-2 sm:w-auto sm:gap-2.5">

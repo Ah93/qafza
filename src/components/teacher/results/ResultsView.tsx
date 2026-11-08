@@ -184,7 +184,7 @@ export function ResultsView() {
                 <li key={g.label}>
                   <div className="flex items-center justify-between gap-2 text-xs font-bold text-indigo-deep">
                     <span className="truncate">{g.label}</span>
-                    <span style={{ color: g.pct === null ? "#94a3b8" : goalColor(g.pct) }}>{g.pct === null ? "—" : `${g.pct}%`}</span>
+                    <span style={{ color: g.pct === null ? "#94a3b8" : goalColor(g.pct) }}>{g.pct === null ? "لم يُطرح" : `${g.pct}%`}</span>
                   </div>
                   <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
                     <div className="h-full rounded-full" style={{ width: `${g.pct ?? 0}%`, background: goalColor(g.pct ?? 0) }} />

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useFlow } from "../FlowProvider";
+import { PrintAnswerCards } from "./AnswerCards";
 import { TeacherHeader } from "../TeacherHeader";
 import { CHALLENGE_LABELS, type Lesson } from "@/lib/lesson";
 import {
@@ -247,12 +248,7 @@ export function LiveSessionDemo({ lesson, code }: { lesson: Lesson; code: string
                   </span>
                 ))}
               </div>
-              <button
-                onClick={() => window.print()}
-                className="mt-3 w-full rounded-xl border border-violet/10 bg-white py-2.5 text-xs font-bold text-violet transition hover:border-violet/30"
-              >
-                اطبع بطاقات الإجابة
-              </button>
+              <PrintAnswerCards groups={groups} />
               <p className="mt-2.5 text-[11px] font-medium leading-6 text-indigo-deep/60">
                 لا طابعة؟ يكفي أن تكتب المجموعة الحرف على ورقة، أو أن ترفع أصابعها: 1 إلى 4.
               </p>

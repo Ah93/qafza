@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { QRCodeSVG } from "qrcode.react";
 import { TeacherHeader } from "../TeacherHeader";
 import { useFlow } from "../FlowProvider";
 import { Chip, Label, Switch, fieldCls } from "../ui";
 import { api } from "@/lib/client-api";
-import type { ClassKind } from "@/lib/classes";
+import { joinLink, type ClassKind } from "@/lib/classes";
+
+const noop = () => () => {};
 
 const KINDS: { label: string; kind: ClassKind }[] = [
   { label: "في مدرسة", kind: "school" },
@@ -51,7 +53,10 @@ export function NewClassView() {
     api<{ code: string }>("/api/codes").then((r) => r.ok && setCode(r.data.code));
   }, []);
 
-  const url = `qafza.ai/c/${code}`;
+  // the link opens the join page of THIS site with the class code filled in
+  const origin = useSyncExternalStore(noop, () => window.location.origin, () => "");
+  const link = origin && code ? joinLink(origin, code) : "";
+  const url = link.replace(/^https?:\/\//, "");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -200,7 +205,7 @@ export function NewClassView() {
             {code || "····"}
           </p>
           <div className="relative mx-auto mt-3 grid size-[136px] place-items-center rounded-2xl bg-white p-3">
-            {code ? <QRCodeSVG value={`https://${url}`} size={112} level="M" fgColor="#1b0f3d" title={`رمز QR للصف ${code}`} /> : null}
+            {code ? <QRCodeSVG value={link || code} size={112} level="M" fgColor="#1b0f3d" title={`رمز QR للصف ${code}`} /> : null}
           </div>
           <p dir="ltr" className="relative mt-3 text-[11px] font-bold text-white/90">
             {url}

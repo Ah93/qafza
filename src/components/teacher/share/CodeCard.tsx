@@ -1,17 +1,22 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { QRCodeSVG } from "qrcode.react";
 
+const noop = () => () => {};
+
 export function CodeCard({ code }: { code: string }) {
-  const URL_TEXT = `qafza.ai/${code}`;
+  // the link opens the join page of THIS site, with the code filled in
+  const origin = useSyncExternalStore(noop, () => window.location.origin, () => "");
+  const link = origin ? `${origin}/join?code=${code}` : "";
+  const URL_TEXT = link.replace(/^https?:\/\//, "");
   const qr = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState<"link" | "code" | null>(null);
 
   async function copy(what: "link" | "code") {
     try {
-      await navigator.clipboard.writeText(what === "link" ? `https://${URL_TEXT}` : code);
+      await navigator.clipboard.writeText(what === "link" ? link : code);
       setCopied(what);
       setTimeout(() => setCopied(null), 1600);
     } catch {
@@ -39,7 +44,7 @@ export function CodeCard({ code }: { code: string }) {
         </p>
 
         <div ref={qr} className="relative mx-auto mt-3 w-fit rounded-2xl bg-white p-3">
-          <QRCodeSVG value={`https://${URL_TEXT}`} size={132} level="M" fgColor="#1b0f3d" title={`رمز QR للدرس ${code}`} />
+          <QRCodeSVG value={link || code} size={132} level="M" fgColor="#1b0f3d" title={`رمز QR للدرس ${code}`} />
         </div>
 
         <div className="relative mt-3.5 flex items-center justify-between gap-2 rounded-2xl bg-white/10 py-2 pe-3 ps-2">

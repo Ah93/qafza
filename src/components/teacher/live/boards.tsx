@@ -2,7 +2,8 @@
 
 import { QRCodeSVG } from "qrcode.react";
 import { Check, Lock } from "lucide-react";
-import { AR_LETTERS, type Challenge, type Lesson, type Station } from "@/lib/lesson";
+import { AR_LETTERS, modeLabel, type Challenge, type Lesson, type Station } from "@/lib/lesson";
+import { StationView } from "@/components/student/play/StationView";
 import { ANSWER_CARDS, type Group } from "@/lib/live";
 
 /* ---------- shared frame ---------- */
@@ -169,32 +170,13 @@ export function ExplainBoard({
   total: number;
   right: React.ReactNode;
 }) {
-  const [lead, ...rest] = station.content.split("\n");
-  const bullets = rest.map((l) => l.replace(/^▪\s*/, ""));
   return (
-    <BoardFrame label={`الشرح · المحطة ${index + 1} من ${total}`} right={right}>
+    <BoardFrame label={`الشرح · المحطة ${index + 1} من ${total} · ${modeLabel(station.mode)}`} right={right}>
       <h2 className="text-[44px] font-bold leading-tight sm:text-5xl">{station.title}</h2>
-      <p className="mt-2 max-w-2xl text-base font-medium text-white/80">{lead}</p>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        {bullets.map((b, i) => {
-          const [head, ...tail] = b.split(/[:：]/);
-          return (
-            <div key={i} className="rounded-2xl bg-white/10 px-5 py-4">
-              {tail.length ? (
-                <>
-                  <p className="text-xs font-bold text-sun">{head}</p>
-                  <p className="mt-1 text-[15px] font-semibold leading-7">{tail.join(":").trim()}</p>
-                </>
-              ) : (
-                <p className="text-[15px] font-semibold leading-7">{b}</p>
-              )}
-            </div>
-          );
-        })}
+      {/* the station in the display mode the teacher chose (slides, timeline, dialogue, cards...), the same one students see */}
+      <div className="mt-5 rounded-3xl bg-white p-4 text-indigo-deep shadow-xl sm:p-5">
+        <StationView station={station} />
       </div>
-      <p className="mt-6 rounded-2xl bg-sun px-5 py-4 text-base font-bold text-indigo-deep">
-        الفكرة الأهم: {station.keyIdea}
-      </p>
     </BoardFrame>
   );
 }

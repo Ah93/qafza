@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FlowHeader } from "@/components/teacher/TeacherHeader";
@@ -12,7 +12,12 @@ import { Outline } from "@/components/teacher/review/Outline";
 
 export default function ReviewPage() {
   const router = useRouter();
-  const { lesson, save, setTitle } = useFlow();
+  const { lesson, save, setTitle, hasDraft, draftReady } = useFlow();
+
+  // no lesson of yours to review (a bare visit or a lost tab): do not show the built-in sample as if it were yours
+  useEffect(() => {
+    if (draftReady && !hasDraft) router.replace("/dashboard");
+  }, [draftReady, hasDraft, router]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,6 +31,7 @@ export default function ReviewPage() {
     }
     router.push("/create/share");
   }
+  if (!hasDraft) return null;
   const modes = new Set(lesson.stations.map((s) => s.mode)).size;
   const pending = lesson.stations.filter((s) => s.review).length;
 

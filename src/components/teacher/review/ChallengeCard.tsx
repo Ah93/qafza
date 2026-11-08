@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Layers } from "lucide-react";
-import { AR_LETTERS, CHALLENGE_LABELS, type Station } from "@/lib/lesson";
+import { postJson } from "@/lib/client-api";
+import { AR_LETTERS, CHALLENGE_LABELS, type Challenge, type Station } from "@/lib/lesson";
 import { useFlow } from "../FlowProvider";
 import { Arrow, CardHead, inputBase } from "./parts";
 
@@ -70,9 +72,22 @@ function ChoiceRow({
 const textInput = "w-full bg-transparent outline-none";
 
 export function ChallengeCard({ station, index }: { station: Station; index: number }) {
-  const { patchChallenge } = useFlow();
+  const { patchChallenge, replaceChallenge } = useFlow();
   const ch = station.challenge;
   const id = station.id;
+  const [switching, setSwitching] = useState<Challenge["kind"] | null>(null);
+  const [switchError, setSwitchError] = useState<string | null>(null);
+
+  /** another kind of challenge for this station, written from the station's own content */
+  async function switchTo(kind: Challenge["kind"]) {
+    if (kind === ch.kind || switching) return;
+    setSwitching(kind);
+    setSwitchError(null);
+    const r = await postJson<{ challenge: Challenge }>("/api/challenge", { kind, title: station.title, content: station.content, keyIdea: station.keyIdea });
+    setSwitching(null);
+    if (!r.ok) return setSwitchError(r.error);
+    replaceChallenge(id, r.data.challenge);
+  }
 
   return (
     <article
@@ -85,6 +100,31 @@ export function ChallengeCard({ station, index }: { station: Station; index: num
           {CHALLENGE_LABELS[ch.kind]}
         </span>
       </CardHead>
+
+      <div className="mt-3" role="group" aria-label="نوع التحدّي">
+        <p className="mb-1.5 text-[11px] font-bold text-indigo-deep/55">نوع التحدّي</p>
+        <div className="flex flex-wrap gap-1.5">
+          {(Object.keys(CHALLENGE_LABELS) as Challenge["kind"][]).map((k) => (
+            <button
+              key={k}
+              type="button"
+              onClick={() => switchTo(k)}
+              disabled={!!switching}
+              aria-pressed={ch.kind === k}
+              className={`rounded-full border px-3.5 py-1.5 text-[11px] font-bold transition disabled:opacity-60 ${ch.kind === k ? "border-violet bg-violet/10 text-violet" : "border-violet/15 bg-white text-indigo-deep/65 hover:border-violet/40"}`}
+            >
+              {switching === k ? "جارٍ الكتابة…" : CHALLENGE_LABELS[k]}
+            </button>
+          ))}
+        </div>
+        {switching ? (
+          <p role="status" className="mt-1.5 text-[11px] font-medium text-indigo-deep/55">نكتب تحدّيًا جديدًا من محتوى هذه المحطة…</p>
+        ) : switchError ? (
+          <p role="alert" className="mt-1.5 text-[11px] font-bold text-[#c0174f]">{switchError}</p>
+        ) : (
+          <p className="mt-1.5 text-[11px] font-medium text-indigo-deep/50">اختر نوعًا آخر فنكتب لك تحدّيًا جديدًا من محتوى المحطة، ويحلّ محلّ الحالي.</p>
+        )}
+      </div>
 
       {ch.kind === "mcq" && (
         <div className="mt-4">

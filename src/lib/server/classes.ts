@@ -7,8 +7,8 @@ import { lessonsOfClass } from "./lessons";
 const classes = () => fs().collection("classes");
 const roster = (classId: string) => classes().doc(classId).collection("students");
 
-type ClassDoc = { userId: string; name: string; kind: ClassKind; stage: string; subject: string; code: string; requireLogin: boolean; groups: number; createdAt: number };
-type StudentDoc = { name: string; userId: string | null; createdAt: number };
+type ClassDoc = { userId: string; name: string; kind: ClassKind; stage: string; subject: string; code: string; requireLogin: boolean; groups: number; struggleBelow?: number; createdAt: number };
+type StudentDoc = { name: string; userId: string | null; createdAt: number; group?: number | null };
 type AttemptDoc = { lessonId: string; studentName: string; studentUserId: string | null; startedAt: number; finishedAt: number | null; results: (0 | 1 | null)[] };
 
 const KINDS: ClassKind[] = ["school", "university", "training", "private"];
@@ -44,10 +44,10 @@ async function build(id: string, c: ClassDoc): Promise<ClassInfo> {
         if ((s.userId && a.studentUserId === s.userId) || a.studentName === s.name) first.set(a.lessonId, attemptMastery(a.results));
       }
       const scores = [...first.values()].filter((v): v is number => v !== null);
-      return { id: s.id, name: s.name, registered: !!s.userId, done: first.size, mastery: scores.length ? Math.round(scores.reduce((t, v) => t + v, 0) / scores.length) : null };
+      return { id: s.id, name: s.name, registered: !!s.userId, done: first.size, group: typeof s.group === "number" ? s.group : null, mastery: scores.length ? Math.round(scores.reduce((t, v) => t + v, 0) / scores.length) : null };
     });
 
-  return { id, name: c.name, kind: cleanKind(c.kind), stage: c.stage, subject: c.subject, code: c.code, requireLogin: !!c.requireLogin, groups: cleanGroups(c.groups), required: inClass.size, students: rows };
+  return { id, name: c.name, kind: cleanKind(c.kind), stage: c.stage, subject: c.subject, code: c.code, requireLogin: !!c.requireLogin, groups: cleanGroups(c.groups), struggleBelow: c.struggleBelow ?? 60, required: inClass.size, students: rows };
 }
 
 export async function listClasses(uid: string): Promise<ClassInfo[]> {
@@ -123,8 +123,28 @@ export async function classByCode(code: string): Promise<{ id: string; name: str
   return { id: c.id, name: data.name, requireLogin: !!data.requireLogin, userId: data.userId };
 }
 
-export async function updateClass(id: string, patch: { requireLogin?: boolean; groups?: ClassInfo["groups"]; name?: string }) {
+export type ClassPatch = { requireLogin?: boolean; groups?: ClassInfo["groups"]; name?: string; kind?: ClassKind; stage?: string; subject?: string; struggleBelow?: number };
+
+export async function updateClass(id: string, patch: ClassPatch) {
   await classes().doc(id).update(patch);
+}
+
+/** the teacher puts a student in a group by hand (0-based), or hands them back to the automatic split with null */
+export async function setStudentGroup(classId: string, studentId: string, group: number | null): Promise<boolean> {
+  const ref = roster(classId).doc(studentId);
+  if (!(await ref.get()).exists) return false;
+  await ref.update({ group });
+  return true;
+}
+
+/** every student goes back to the automatic split */
+export async function resetStudentGroups(classId: string): Promise<void> {
+  const snap = await roster(classId).get();
+  for (let i = 0; i < snap.docs.length; i += 400) {
+    const batch = fs().batch();
+    snap.docs.slice(i, i + 400).forEach((d) => batch.update(d.ref, { group: null }));
+    await batch.commit();
+  }
 }
 
 /** the class, its roster and its code; lessons assigned to it and past attempts stay, but no longer belong to a class */

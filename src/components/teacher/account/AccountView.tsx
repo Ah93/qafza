@@ -351,10 +351,12 @@ export function AccountView() {
             <Card title="الاشتراك">
               <div className="rounded-2xl bg-violet/[0.05] p-5">
                 <p className="text-[11px] font-bold text-violet">خطتك الحالية</p>
-                <p className="mt-1 text-xl font-bold text-indigo-deep">{plan?.entitled ? "قفزة الكاملة" : "التجربة المجانية"}</p>
+                <p className="mt-1 text-xl font-bold text-indigo-deep">{plan?.open ? "الدروس مفتوحة" : plan?.entitled ? "قفزة الكاملة" : "التجربة المجانية"}</p>
                 <p className="mt-1 text-xs font-medium text-indigo-deep/65">
                   {!plan
                     ? "جارٍ التحميل…"
+                    : plan.open
+                      ? "الدروس مفتوحة للجميع حاليًا بلا حد. سنعلن حين تُفتح الاشتراكات."
                     : plan.entitled
                       ? `اشتراكك (${plan.plan === "year" ? "العام الدراسي" : "شهري"}) ساري حتى ${dateAr(plan.until!)}.`
                       : plan.lessonsCreated >= plan.freeLimit

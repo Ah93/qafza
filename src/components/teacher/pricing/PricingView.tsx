@@ -57,6 +57,11 @@ export function PricingView() {
     <>
       <TeacherHeader />
       <main className="mx-auto w-full max-w-[860px] flex-1 px-5 py-8">
+        {status?.open && (
+          <p role="status" className="mb-4 rounded-2xl bg-mint/15 px-5 py-3 text-xs font-bold leading-6 text-emerald-900">
+            الدروس مفتوحة للجميع حاليًا: أنشئ دروسًا بلا حد. سنعلن هنا حين تُفتح الاشتراكات.
+          </p>
+        )}
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
             <Eyebrow>الاشتراك</Eyebrow>

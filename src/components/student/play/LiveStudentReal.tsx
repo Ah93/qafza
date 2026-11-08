@@ -2,13 +2,16 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/components/teacher/Toast";
 import { useLessonByCode } from "@/components/useLessonByCode";
 import { api } from "@/lib/client-api";
-import { CHALLENGE_LABELS } from "@/lib/lesson";
+import { CHALLENGE_LABELS, type Lesson } from "@/lib/lesson";
 import { GROUP_POOL } from "@/lib/live";
-import { buildSlides, ENGAGE_CAP_PER_STATION, POINTS_RIGHT, type LiveAnswer, type StudentSnap } from "@/lib/live-flow";
+import { buildSlides, ENGAGE_CAP_PER_STATION, POINTS_ENGAGE, POINTS_RIGHT, type LiveAnswer, type StudentSnap } from "@/lib/live-flow";
 import { rankOf } from "@/lib/play";
+import { sfx } from "@/lib/sound";
+import { Overlay } from "../Overlay";
 import { NamePill, PlayHeader } from "../StudentHeader";
 import type { LiveSeat } from "../StudentProvider";
 import { LiveChallenge, LiveReveal } from "./LiveChallenge";
@@ -23,9 +26,11 @@ type Conn = "connecting" | "live" | "lost" | "gone";
 export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
   const { lesson, missing } = useLessonByCode(seat.code);
   const toast = useToast();
+  const router = useRouter();
   const [snap, setSnap] = useState<StudentSnap | null>(null);
   const [link, setLink] = useState<Conn>("connecting");
   const [busy, setBusy] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const [tries, setTries] = useState(0);
   const lastKey = useRef("");
 
@@ -56,6 +61,20 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
       window.scrollTo({ top: 0 });
     }
   }, [key]);
+
+  // the teacher's reveal comes with a sound: bright for a right answer, soft for a wrong one
+  const reveal = snap ? slides[snap.at] : undefined;
+  const revealAt = reveal?.kind === "reveal" ? reveal.i : null;
+  const revealOutcome = snap && revealAt !== null ? snap.me.outcomes[revealAt] : undefined;
+  const played = useRef<number | null>(null);
+  useEffect(() => {
+    if (revealAt === null || played.current === revealAt) return;
+    played.current = revealAt;
+    if (!revealOutcome) sfx.reveal();
+    else if (revealOutcome.right === revealOutcome.of) sfx.right();
+    else if (revealOutcome.right > 0) sfx.reveal();
+    else sfx.wrong();
+  }, [revealAt, revealOutcome]);
 
   const send = useCallback(
     async (answer: LiveAnswer) => {
@@ -120,8 +139,9 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
           </button>
         </p>
       )}
-      <main className="mx-auto grid w-full max-w-[1000px] flex-1 items-start gap-4 px-5 py-5 lg:grid-cols-[1fr_245px]">
-        <div>
+      <main className="mx-auto grid w-full max-w-[1000px] flex-1 grid-cols-1 items-start gap-4 px-5 py-5 lg:grid-cols-[1fr_245px]">
+        <div className="min-w-0">
+          <Progress lesson={lesson} at={slide.kind === "arena" ? -1 : slide.kind === "finish" ? lesson.stations.length + 1 : slide.i} />
           <section className="dots relative overflow-hidden rounded-[28px] bg-gradient-to-b from-[#241356] to-[#4a1d96] p-6 text-white shadow-2xl shadow-indigo-deep/25" aria-live="polite">
             {slide.kind === "arena" && (
               <div className="relative py-6 text-center">
@@ -200,7 +220,9 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
               <h2 className="text-sm font-bold text-indigo-deep">نقاط المعرفة</h2>
               <span className="text-base font-bold text-violet">{me.points}</span>
             </div>
-            <p className="mt-1.5 text-[11px] font-medium text-indigo-deep/55">نقاط المتابعة في المحطات: حتى {ENGAGE_CAP_PER_STATION} لكل محطة</p>
+            <p className="mt-1.5 text-[11px] font-medium leading-5 text-indigo-deep/55">
+              اضغط «فهمت» أثناء الشرح لتكسب {POINTS_ENGAGE} نقطة، وحتى {ENGAGE_CAP_PER_STATION} نقاط في كل محطة. وكل إجابة صحيحة من أول مرة تكسبك {POINTS_RIGHT}.
+            </p>
             <span className="mt-3 inline-block rounded-full bg-sun px-3.5 py-1.5 text-[11px] font-bold text-indigo-deep">الرتبة: {rank.name}</span>
           </section>
 
@@ -241,11 +263,27 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
             )}
           </section>
 
-          <Link href="/learn" className="block rounded-2xl border border-violet/10 bg-white py-3 text-center text-[11px] font-bold text-violet transition hover:border-violet/40">
+          <Outline lesson={lesson} at={slide.kind === "arena" ? -1 : slide.kind === "finish" ? lesson.stations.length + 1 : slide.i} />
+
+          <button onClick={() => (snap.status === "ended" ? router.push("/learn") : setLeaving(true))} className="block w-full rounded-2xl border border-violet/10 bg-white py-3 text-center text-[11px] font-bold text-violet transition hover:border-violet/40">
             غادر الحصة
-          </Link>
+          </button>
         </aside>
       </main>
+      {leaving && (
+        <Overlay label="مغادرة الحصة">
+          <h2 className="text-xl font-bold text-indigo-deep">تغادر الحصة؟</h2>
+          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">تنقطع عن شاشة المعلّم، وتبقى نقاطك محفوظة. تستطيع العودة بالرمز نفسه ما دامت الحصة مفتوحة.</p>
+          <div className="mt-5 flex gap-2.5">
+            <button autoFocus onClick={() => setLeaving(false)} className="flex-1 rounded-full bg-brand py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
+              ابقَ في الحصة
+            </button>
+            <Link href="/learn" className="rounded-full border border-violet/15 px-6 py-3 text-xs font-bold leading-[1.6] text-violet">
+              غادر
+            </Link>
+          </div>
+        </Overlay>
+      )}
       {toast.node}
     </Shell>
   );
@@ -260,5 +298,56 @@ function Shell({ children, group, status }: { children: React.ReactNode; group?:
       </PlayHeader>
       {children}
     </>
+  );
+}
+
+/** where the class is, at a glance: the stations done, the one on screen, the ones still to come, and the boss round */
+function Progress({ lesson, at }: { lesson: Lesson; at: number }) {
+  const total = lesson.stations.length;
+  const left = Math.max(0, total - Math.max(0, at) - (at >= 0 && at < total ? 1 : 0));
+  return (
+    <div className="mb-3 rounded-2xl border border-violet/10 bg-white px-4 py-3 shadow-sm" aria-label="تقدّم الحصة">
+      <ol className="flex items-center gap-1.5">
+        {lesson.stations.map((s, i) => (
+          <li key={s.id} title={s.title} aria-current={i === at ? "step" : undefined} className="flex-1">
+            <span className={`block h-1.5 rounded-full ${i < at ? "bg-mint" : i === at ? "bg-violet" : "bg-violet/15"}`} />
+          </li>
+        ))}
+        <li aria-current={at === total ? "step" : undefined} className="flex-1" title="تحدّي الزعيم">
+          <span className={`block h-1.5 rounded-full ${at > total ? "bg-mint" : at === total ? "bg-pink-card" : "bg-violet/15"}`} />
+        </li>
+      </ol>
+      <p className="mt-2 text-[11px] font-bold text-indigo-deep/70">
+        {at < 0
+          ? `ستبدأ الحصة قريبًا: ${total} محطات ثم تحدّي الزعيم.`
+          : at > total
+            ? "انتهت المحطات وتحدّي الزعيم."
+            : at === total
+              ? "تحدّي الزعيم: آخر ما في الحصة."
+              : left > 0
+                ? `المحطة ${at + 1} من ${total} · تبقّى ${left === 1 ? "محطة واحدة" : `${left} محطات`} ثم تحدّي الزعيم.`
+                : `المحطة ${at + 1} من ${total}، وهي الأخيرة · ثم تحدّي الزعيم.`}
+      </p>
+    </div>
+  );
+}
+
+/** the whole plan of the lesson, so the student always knows what is still ahead */
+function Outline({ lesson, at }: { lesson: Lesson; at: number }) {
+  const total = lesson.stations.length;
+  const row = (key: string, n: string, title: string, state: "done" | "now" | "next") => (
+    <li key={key} aria-current={state === "now" ? "step" : undefined} className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-[11px] font-bold ${state === "now" ? "bg-violet/10 text-violet" : state === "done" ? "text-indigo-deep/45" : "text-indigo-deep/75"}`}>
+      <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[10px] ${state === "done" ? "bg-mint text-white" : state === "now" ? "bg-violet text-white" : "bg-violet/10 text-indigo-deep/55"}`}>{state === "done" ? "✓" : n}</span>
+      <span className="min-w-0 flex-1 truncate">{title}</span>
+    </li>
+  );
+  return (
+    <section className="rounded-3xl border border-violet/10 bg-white p-3.5 shadow-sm" aria-label="خطة الحصة">
+      <h2 className="px-1 pb-1.5 text-xs font-bold text-indigo-deep">خطة الحصة</h2>
+      <ol className="space-y-0.5">
+        {lesson.stations.map((s, i) => row(s.id, String(i + 1), s.title, i < at ? "done" : i === at ? "now" : "next"))}
+        {row("boss", "★", "تحدّي الزعيم", at > total ? "done" : at === total ? "now" : "next")}
+      </ol>
+    </section>
   );
 }

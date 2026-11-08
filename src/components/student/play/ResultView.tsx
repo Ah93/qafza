@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Check, Clock, Layers, Trophy, Zap } from "lucide-react";
-import { CARDS, GROUP_BASE, PEERS, PLAYER, badgeOf, rankOf, type BadgeId } from "@/lib/play";
+import { CARDS, CARDS_HELP, cardName, GROUP_BASE, PEERS, PLAYER, badgeOf, rankOf, type BadgeId } from "@/lib/play";
 import { useFlow } from "@/components/teacher/FlowProvider";
 import { useToast } from "@/components/teacher/Toast";
 import { BadgeShape } from "../BadgeShape";
@@ -200,7 +200,7 @@ export function ResultView() {
                     {has ? (
                       <span>
                         {c.rare ? "★" : <Check className="mx-auto size-4" strokeWidth={3} />}
-                        <span className="mt-1 block">{c.name}</span>
+                        <span className="mt-1 block">{cardName(i, r.lesson.stations.map((s) => s.title))}</span>
                         {c.rare && <span className="block text-[8px] opacity-90">نادرة</span>}
                       </span>
                     ) : (
@@ -212,6 +212,7 @@ export function ResultView() {
                 );
               })}
             </ul>
+            <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
           </section>
 
           <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
