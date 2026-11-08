@@ -95,7 +95,8 @@ function content(raw: unknown, i: number, wanted: ModeId, lenient: boolean, forc
   const speakers = items.every((l) => /^▪ [طم]\s*[:：]/.test(l));
   const fits: Record<ModeId, boolean> = {
     timeline: items.length >= 3 && labelled,
-    dialogue: items.length >= 2 && speakers,
+    // a dialogue line longer than 25 words stops being a conversation: such a station is shown as slides instead
+    dialogue: items.length >= 2 && speakers && items.every((l) => l.split(/\s+/).length <= 27),
     slides: labelled,
     infographic: labelled,
     cards: labelled,

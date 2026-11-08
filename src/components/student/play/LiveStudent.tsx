@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { PlayHeader } from "../StudentHeader";
 import { useStudent, type LiveSeat } from "../StudentProvider";
-import { LiveStudentDemo } from "./LiveStudentDemo";
 import { LiveStudentReal } from "./LiveStudentReal";
 
 export const seatKey = "qafza:seat";
@@ -19,9 +18,9 @@ function readSeat(): LiveSeat | null {
   }
 }
 
-/** a real seat joins the teacher's live session; with none, the sample lesson plays as a demo */
+/** a seat joins the teacher's live session; with none, the student is told to enter a code */
 export function LiveStudent() {
-  const { seat, joined } = useStudent();
+  const { seat } = useStudent();
   const [stored, setStored] = useState<LiveSeat | null | undefined>(undefined);
 
   useEffect(() => {
@@ -32,7 +31,6 @@ export function LiveStudent() {
 
   const mine = seat ?? stored ?? null;
   if (mine) return <LiveStudentReal seat={mine} />;
-  if (joined) return <LiveStudentDemo />;
   if (stored === undefined) return null;
 
   return (

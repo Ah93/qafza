@@ -14,7 +14,7 @@ const TABS = [
 
 export function GalleryHeader() {
   const path = usePathname();
-  const { user } = useFlow();
+  const { account, user } = useFlow();
   return (
     <header className="sticky top-0 z-30 border-b border-violet/5 bg-white/85 backdrop-blur">
       <div className="mx-auto grid h-16 max-w-[1000px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-5">
@@ -33,10 +33,16 @@ export function GalleryHeader() {
             </Link>
           ))}
         </nav>
-        <Link href="/dashboard" aria-label="لوحة المعلّم" className="flex items-center gap-2.5 justify-self-end rounded-full transition hover:opacity-80">
-          <span className="text-xs font-bold text-indigo-deep">{user.name}</span>
-          <span className="grid size-9 place-items-center rounded-full bg-sun text-sm font-bold text-indigo-deep">{user.initial}</span>
-        </Link>
+        {account ? (
+          <Link href="/dashboard" className="flex items-center gap-2.5 justify-self-end rounded-full transition hover:opacity-80">
+            <span className="text-xs font-bold text-indigo-deep">لوحتي</span>
+            <span aria-hidden className="grid size-9 place-items-center rounded-full bg-sun text-sm font-bold text-indigo-deep">{user.initial}</span>
+          </Link>
+        ) : (
+          <Link href="/login" className="justify-self-end rounded-full border border-violet/10 bg-white px-4 py-1.5 text-xs font-bold text-indigo-deep shadow-sm transition hover:border-violet/30">
+            الدخول
+          </Link>
+        )}
       </div>
     </header>
   );

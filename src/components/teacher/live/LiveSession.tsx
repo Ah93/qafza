@@ -2,17 +2,16 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { SAMPLE_CODE, useLessonByCode } from "@/components/useLessonByCode";
+import { useLessonByCode } from "@/components/useLessonByCode";
 import { TeacherHeader } from "../TeacherHeader";
 import { LiveHost } from "./LiveHost";
-import { LiveSessionDemo } from "./LiveSessionDemo";
 
-/** loads the lesson behind the code in the address, then runs the session: the sample code is a rehearsal, any other is a real class */
+/** loads the lesson behind the code in the address, then runs the live session */
 export function LiveGate() {
   const code = String(useParams<{ code: string }>().code ?? "").toUpperCase();
   const { lesson, loading, missing } = useLessonByCode(code);
 
-  if (lesson) return code === SAMPLE_CODE ? <LiveSessionDemo key={code} lesson={lesson} code={code} /> : <LiveHost key={code} lesson={lesson} code={code} />;
+  if (lesson) return <LiveHost key={code} lesson={lesson} code={code} />;
   return (
     <>
       <TeacherHeader />

@@ -7,7 +7,6 @@ import { Check, Gift, Layers, Network, Trophy, WifiOff } from "lucide-react";
 import { api, postJson } from "@/lib/client-api";
 import { CHALLENGE_LABELS, modeLabel } from "@/lib/lesson";
 import { CARDS, CARDS_HELP, cardName, GROUP_BASE, PEERS, PLAYER, POINTS, nextRank, rankOf, RANKS } from "@/lib/play";
-import { SAMPLE_CODE } from "../../useLessonByCode";
 import { useStudent } from "../StudentProvider";
 import { usePlayLesson, type PlayVariant } from "../usePlayLesson";
 import { Flame, Hearts, NamePill, PlayHeader } from "../StudentHeader";
@@ -18,7 +17,6 @@ import { BossView, ChallengeView } from "./ChallengeView";
 import { StationView } from "./StationView";
 import { accuracy, buildSequence, finalBadges, initialRun, reducer, type Run } from "./run";
 
-const MAP_LABELS = ["التعريف", "البطاقة", "الرحلة", "الشكل", "المفاهيم"];
 const weekday = new Intl.DateTimeFormat("ar", { weekday: "long" });
 
 type Board = { top: { name: string; points: number }[]; scores: number[] };
@@ -32,7 +30,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   const seq = useMemo(() => buildSequence(total), [total]);
 
   // only a lesson entered with a real code is saved; the demo and the teacher's preview are not
-  const real = variant === "joined" && !!joined && joined.code !== SAMPLE_CODE;
+  const real = variant === "joined" && !!joined;
   const needsJoin = variant === "joined" && !joined;
 
   // the first station is already on screen, so its display mode counts
@@ -41,6 +39,8 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   const [opened, setOpened] = useState(false);
   const [maxAt, setMaxAt] = useState(0);
   const [offline, setOffline] = useState(false);
+  /** what the student picked on the first try of each challenge, kept so the teacher can see which wrong answer tempted the class */
+  const choices = useRef<Record<number, number>>({});
   const [welcome, setWelcome] = useState(false);
   const [board, setBoard] = useState<"people" | "groups">("people");
   const [seconds, setSeconds] = useState(0);
@@ -89,6 +89,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
           ref: deviceRef,
           mode: "self",
           results: lesson.stations.map((_, i) => (r.firstTry[i] === true ? 1 : r.firstTry[i] === false ? 0 : null)),
+          choices: lesson.stations.map((_, i) => choices.current[i] ?? null),
           boss: finished ? lesson.boss.map(() => (r.bossBeaten ? 1 : 0)) : [],
           points: r.points,
           reached: stationReached(at),
@@ -221,17 +222,20 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   const segments = seq.map((p, idx) => ({ p, idx })).filter(({ p }) => p.kind !== "surprise" && p.kind !== "done");
 
   /* ---------- leaderboards ---------- */
-  const myName = name || PLAYER.name;
+  // the made-up classmates (سارة، عمر…) belong to the built-in sample lesson only. A teacher previewing their own lesson
+  // sees an empty board that says so, and a real lesson shows the real players.
+  const sampleOnly = variant === "demo";
+  const myName = name || (sampleOnly ? PLAYER.name : "أنت");
   const people = real
     ? [...(live?.top.map((t) => ({ name: t.name, initial: t.name[0], color: "#7c3aed", score: t.points, me: false })) ?? []), { name: `${myName} (أنت)`, initial: myName[0], color: PLAYER.color, score: run.points, me: true }]
         .sort((a, b) => b.score - a.score)
         .slice(0, 6)
     : [
-        ...PEERS.map((p) => ({ name: p.name, initial: p.initial, color: p.color, score: p.base, me: false })),
-        { name: `${PLAYER.name} (أنت)`, initial: PLAYER.initial, color: PLAYER.color, score: run.points, me: true },
+        ...(sampleOnly ? PEERS.map((p) => ({ name: p.name, initial: p.initial, color: p.color, score: p.base, me: false })) : []),
+        { name: `${sampleOnly ? PLAYER.name : myName} (أنت)`, initial: sampleOnly ? PLAYER.initial : myName[0], color: PLAYER.color, score: run.points, me: true },
       ].sort((a, b) => b.score - a.score);
   const myRank = real ? 1 + (live?.scores.filter((s) => s > run.points).length ?? 0) : null;
-  const groups = GROUP_BASE.map((g) => ({ ...g, score: g.base + (g.mine ? run.points : 0) })).sort((a, b) => b.score - a.score);
+  const groups = (sampleOnly ? GROUP_BASE : []).map((g) => ({ ...g, score: g.base + (g.mine ? run.points : 0) })).sort((a, b) => b.score - a.score);
 
   const challengeNo = phase.kind === "challenge" ? phase.i : phase.kind === "station" ? phase.i : 0;
   const station = phase.kind === "station" || phase.kind === "challenge" ? lesson.stations[phase.i] : null;
@@ -329,7 +333,8 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                       key={phase.i}
                       challenge={station.challenge}
                       disabled={run.recovering || offline}
-                      onAttempt={(attempt, correct) => {
+                      onAttempt={(attempt, correct, choice) => {
+                        if (attempt === 1 && choice !== undefined) choices.current[phase.i] = choice;
                         if (!correct) sfx.wrong();
                         else if ((run.streak + 1) % 3 === 0) sfx.streak();
                         else sfx.right();
@@ -410,19 +415,6 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
               </button>
             </div>
 
-            {!real && (
-              <div className="mt-4 flex flex-wrap justify-center gap-x-5 gap-y-1 text-[11px] font-bold text-violet">
-                <button className="underline underline-offset-4" onClick={() => setOffline(true)}>
-                  محاكاة: انقطع الاتصال
-                </button>
-                <button className="underline underline-offset-4" onClick={() => dispatch({ type: "simulateRankUp" })}>
-                  محاكاة: ترقية الرتبة
-                </button>
-                <button className="underline underline-offset-4" onClick={() => setWelcome(true)}>
-                  محاكاة: عاد الطالب بعد يوم
-                </button>
-              </div>
-            )}
           </div>
 
           <aside className="space-y-3">
@@ -446,7 +438,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                         <span className={`grid size-6 shrink-0 place-items-center rounded-full text-[10px] ${here ? "bg-violet text-white" : done ? "bg-mint text-white" : "bg-violet/10"}`}>
                           {done ? <Check className="size-3" strokeWidth={3.5} /> : i + 1}
                         </span>
-                        <span className="truncate">{real ? s.title : (MAP_LABELS[i] ?? s.title)}</span>
+                        <span className="truncate">{s.title}</span>
                       </button>
                     </li>
                   );
@@ -466,7 +458,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                   لوحة الصدارة
                   <Trophy className="size-3.5 text-sun" />
                 </h2>
-                {!real && (
+                {sampleOnly && (
                   <div className="flex rounded-full bg-white/10 p-0.5 text-[9px] font-bold">
                     {([
                       ["people", "الأفراد"],
@@ -480,7 +472,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                 )}
               </div>
               <ol className="relative mt-3 space-y-1.5">
-                {board === "people" || real
+                {board === "people" || !sampleOnly
                   ? people.map((p, i) => (
                       <li key={`${p.name}-${i}`} className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-bold ${p.me ? "bg-white/20 ring-1 ring-white/40" : "bg-white/10"}`}>
                         <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
@@ -503,6 +495,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                       </li>
                     ))}
               </ol>
+              {!real && !sampleOnly && <p className="relative mt-2.5 text-[10px] font-medium leading-5 text-white/75">هنا تظهر أسماء طلابك حين يلعبون الدرس. هذه معاينة، فلا أحد غيرك فيها.</p>}
               {real && myRank !== null && live && <p className="relative mt-2.5 text-[10px] font-medium text-white/70">ترتيبك الآن: {myRank} من {live.scores.length + 1}</p>}
             </section>
 
@@ -550,7 +543,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
       {welcome && (
         <Overlay label="أهلاً بعودتك">
           <span className="mx-auto grid size-16 place-items-center rounded-full bg-pink-50 text-3xl">👋</span>
-          <h2 className="mt-4 text-2xl font-bold text-indigo-deep">أهلاً بعودتك يا {real ? myName : PLAYER.name}!</h2>
+          <h2 className="mt-4 text-2xl font-bold text-indigo-deep">أهلاً بعودتك يا {myName}!</h2>
           <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
             تقدّمك محفوظ. أنت عند {phase.kind === "station" ? `المحطة ${phase.i + 1}` : phase.kind === "challenge" ? `التحدي ${challengeNo + 1}` : "الجزء التالي"} من {total}، ومعك {run.points} نقطة.
           </p>

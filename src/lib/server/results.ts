@@ -32,6 +32,10 @@ export type LessonReport = {
   /** per challenge: share right on the first try among those who reached it */
   challenges: { label: string; pct: number | null; answered: number }[];
   weakest: { index: number; pct: number; question: string; hint: string } | null;
+  /** how many students have played (their first attempt is what counts): under 5 is a small sample */
+  players: number;
+  /** every station below 60%, or whose wrong answer tempted a quarter of the class, worst first */
+  gaps: { index: number; title: string; pct: number; reasons: ("low" | "distractor")[]; distractor?: { text: string; pct: number } }[];
   students: ReportStudent[];
 };
 
@@ -119,6 +123,35 @@ export async function lessonReport(uid: string, lessonId: string): Promise<Lesso
   const ch = worstC ? lesson.stations[worstC.i].challenge : null;
   const weakest = worstC && ch && worstC.pct < 70 ? { index: worstC.i, pct: worstC.pct, question: questionOf(ch), hint: KIND_LABEL[ch.kind] } : null;
 
+  const gaps: LessonReport["gaps"] = [];
+  lesson.stations.forEach((st, i) => {
+    const seen = firsts.filter((a) => a.results[i] === 0 || a.results[i] === 1);
+    if (!seen.length) return;
+    const pct = Math.round((seen.filter((a) => a.results[i] === 1).length / seen.length) * 100);
+    const reasons: ("low" | "distractor")[] = [];
+    if (pct < 60) reasons.push("low");
+    let distractor: { text: string; pct: number } | undefined;
+    const c = st.challenge;
+    if (c.kind === "mcq") {
+      const counts = [0, 0, 0, 0];
+      let total = 0;
+      for (const a of firsts) {
+        const k = a.choices?.[i];
+        if (typeof k === "number" && k >= 0 && k < 4) {
+          counts[k]++;
+          total++;
+        }
+      }
+      const wrong = counts.map((n, k) => ({ k, n })).filter((x) => x.k !== c.correct).sort((a, b) => b.n - a.n)[0];
+      if (total && wrong && (wrong.n / total) * 100 >= 25) {
+        distractor = { text: c.options[wrong.k].text, pct: Math.round((wrong.n / total) * 100) };
+        reasons.push("distractor");
+      }
+    }
+    if (reasons.length) gaps.push({ index: i, title: st.title, pct, reasons, distractor });
+  });
+  gaps.sort((a, b) => a.pct - b.pct);
+
   const masteries = students.map((s) => s.mastery).filter((m): m is number => m !== null);
   const mins = attempts.filter((a) => a.finishedAt && a.minutes > 0).map((a) => a.minutes);
   const className = klass?.exists ? (klass.data() as { name: string }).name : null;
@@ -131,6 +164,8 @@ export async function lessonReport(uid: string, lessonId: string): Promise<Lesso
     minutes: mins.length ? Math.round(mins.reduce((t, v) => t + v, 0) / mins.length) : null,
     challenges,
     weakest,
+    players: firsts.length,
+    gaps,
     students,
   };
 }

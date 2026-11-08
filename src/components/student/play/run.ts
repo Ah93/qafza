@@ -67,7 +67,6 @@ export type Action =
   | { type: "engage" }
   | { type: "recover" }
   | { type: "rankSeen" }
-  | { type: "simulateRankUp" }
   | { type: "restore"; at: number; points: number; results: (0 | 1 | null)[] }
   | { type: "reset"; startPoints?: number };
 
@@ -136,9 +135,6 @@ export function reducer(run: Run, a: Action): Run {
 
     case "rankSeen":
       return { ...run, rankUp: null };
-
-    case "simulateRankUp":
-      return { ...run, rankUp: Math.min(3, rankIndex(run.startPoints + run.points) + 1) };
 
     case "restore": {
       // a student who left comes back: what the server saved is put back, the rest starts fresh

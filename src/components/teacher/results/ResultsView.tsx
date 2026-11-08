@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
-import { PAYWALL_EVENT, postJson } from "@/lib/client-api";
+import { postJson } from "@/lib/client-api";
 import { usePlan } from "../usePlan";
 import { TeacherHeader } from "../TeacherHeader";
 import { LessonPicker, ReportGate, useReport, type LessonReport } from "../report";
@@ -72,19 +72,6 @@ export function ResultsView() {
   const [className, setClassName] = useState("");
   const [busy, setBusy] = useState(false);
   const { plan } = usePlan();
-  const finished = state.phase === "ready" ? (state.report?.counts.done ?? 0) : 0;
-  const lessonId = state.phase === "ready" ? state.id : "";
-
-  // the free lesson has been played: say so once per lesson and visit (the design's "your free lesson is complete" moment)
-  useEffect(() => {
-    if (!plan || plan.entitled || plan.canCreate || !finished || !lessonId) return;
-    try {
-      if (sessionStorage.getItem(`qafza:paywall:${lessonId}`)) return;
-      sessionStorage.setItem(`qafza:paywall:${lessonId}`, "1");
-    } catch {}
-    window.dispatchEvent(new Event(PAYWALL_EVENT));
-  }, [plan, finished, lessonId]);
-
   if (state.phase !== "ready" || !state.report) {
     return (
       <>
@@ -135,6 +122,14 @@ export function ResultsView() {
           </div>
         </div>
 
+        {plan && !plan.open && !plan.entitled && !plan.canCreate && (
+          <p role="status" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet/10 bg-white px-5 py-3 text-xs font-semibold text-indigo-deep/80 shadow-sm">
+            <span>استخدمت درسك المجاني. اشترك لتبني درسك الثاني. وطلابك يلعبون مجانًا دائمًا.</span>
+            <Link href="/pricing" className="rounded-full bg-brand px-5 py-2 text-[11px] font-bold text-white shadow-md shadow-violet/25">
+              اشترك
+            </Link>
+          </p>
+        )}
         <div className="grid grid-cols-1 items-stretch gap-4 lg:grid-cols-[300px_1fr]">
           <section className="dots relative flex items-center justify-between gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-deep to-[#4a1d96] p-6 text-white shadow-xl shadow-indigo-deep/25">
             <div className="relative">
@@ -150,13 +145,21 @@ export function ResultsView() {
           </section>
 
           <section className="rounded-3xl border border-pink-card/15 bg-gradient-to-l from-pink-card/[0.08] to-amber-50 p-6">
-            {r.weakest ? (
+            {r.gaps.length > 0 ? (
               <>
-                <p className="text-[11px] font-bold text-[#a3124a]">افعل الآن · فجوة فهم</p>
-                <h2 className="mt-2 text-2xl font-bold leading-snug text-[#a3124a]">
-                  {100 - r.weakest.pct}% من الطلاب أخطأوا في التحدي {r.weakest.index + 1} من المحاولة الأولى
-                </h2>
-                <p className="mt-2 text-xs font-semibold leading-6 text-[#a3124a]/80">«{r.weakest.question}»</p>
+                <p className="text-[11px] font-bold text-[#a3124a]">افعل الآن · {r.gaps.length === 1 ? "فجوة فهم" : `${r.gaps.length} فجوات فهم`}</p>
+                <ul className="mt-2 space-y-2">
+                  {r.gaps.map((g) => (
+                    <li key={g.index} className="text-[15px] font-bold leading-7 text-[#a3124a]">
+                      المحطة {g.index + 1} «{g.title}»:{" "}
+                      {g.reasons.includes("low") && <>أصاب {g.pct}% فقط من المحاولة الأولى. </>}
+                      {g.distractor && <span className="font-semibold">اختار {g.distractor.pct}% من الصف «{g.distractor.text}»، وهو خيار خاطئ.</span>}
+                    </li>
+                  ))}
+                </ul>
+                {r.players < 5 && (
+                  <p className="mt-2 text-[11px] font-semibold text-[#a3124a]/80">العيّنة صغيرة: {r.players} {r.players === 1 ? "طالب" : "طلاب"} فقط، فاعتبرها إشارة لا حكمًا.</p>
+                )}
                 <div className="mt-4 flex flex-wrap items-center gap-2.5">
                   <Link href={`/live/${r.lesson.code}`} className="rounded-full bg-[#a3124a] px-6 py-2.5 text-xs font-bold text-white shadow-md shadow-[#a3124a]/25 transition hover:brightness-110">
                     أعدها في حصة مباشرة
@@ -168,9 +171,12 @@ export function ResultsView() {
               <>
                 <p className="text-[11px] font-bold text-emerald-700">{r.counts.done ? "لا فجوة واضحة" : "بانتظار الطلاب"}</p>
                 <h2 className="mt-2 text-2xl font-bold leading-snug text-indigo-deep">
-                  {r.counts.done ? "لم يتعثّر الصف في تحدٍّ بعينه. أحسنت." : "لم يُنهِ أحد الدرس بعد، فلا فجوات لنعرضها."}
+                  {r.counts.done ? "لم يتعثّر الصف في محطة بعينها. أحسنت." : "لم يُنهِ أحد الدرس بعد، فلا فجوات لنعرضها."}
                 </h2>
-                <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">حين يلعب طلابك، تظهر هنا التحديات التي أخطأ فيها أكثرهم من المحاولة الأولى.</p>
+                <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+                  {r.counts.done && r.players < 5 ? `العيّنة صغيرة: ${r.players} ${r.players === 1 ? "طالب" : "طلاب"} فقط. ` : ""}
+                  حين يلعب طلابك، تظهر هنا كل محطة أصاب فيها أقل من 60%، وكل خيار خاطئ اختاره ربع الصف أو أكثر.
+                </p>
               </>
             )}
           </section>

@@ -4,11 +4,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Logo } from "../Logo";
-import { useFlow } from "../teacher/FlowProvider";
 import { api, postJson } from "@/lib/client-api";
 import { DEFAULT_SHARE, type Lesson, type ShareConfig } from "@/lib/lesson";
-import { SAMPLE_CODE } from "../useLessonByCode";
-import { GROUP_POOL, ROSTER } from "@/lib/live";
+import { GROUP_POOL } from "@/lib/live";
 import { useStudent } from "./StudentProvider";
 
 type Step = "code" | "name" | "wait" | "group" | "board" | "class";
@@ -32,7 +30,6 @@ function Stripe({ n }: { n: number }) {
 
 export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
   const router = useRouter();
-  const { share: flowShare, sample } = useFlow();
   const { name, setName, deviceRef, joined, setJoined, seat, setSeat } = useStudent();
 
   const [step, setStep] = useState<Step>("code");
@@ -49,7 +46,6 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
 
   const first = typed ?? name;
   const code = chars.join("");
-  const isDemo = joined?.code === SAMPLE_CODE;
   const share = joined?.share ?? DEFAULT_SHARE;
   const selfPaced = share.how === "self";
   const boardOnly = share.devices === "board";
@@ -75,14 +71,6 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
       setNeedsLogin(false);
       setError(null);
 
-      if (c === SAMPLE_CODE) {
-        // the built-in demo lesson: it follows the choices made in this browser
-        const cfg = { ...DEFAULT_SHARE, how: flowShare.how, devices: flowShare.devices, grouping: flowShare.grouping, groupCount: flowShare.groupCount };
-        setJoined({ code: c, lesson: sample, share: cfg, teacher: "", className: null });
-        setBusy(false);
-        return setStep(cfg.devices === "board" && cfg.how === "live" ? "board" : "name");
-      }
-
       const r = await api<LessonReply | ClassReply>(`/api/join/${c}`);
       setBusy(false);
       if (!r.ok) {
@@ -98,7 +86,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
       setJoined({ code: c, lesson: d.lesson, share: d.share, teacher: d.teacher, className: d.className });
       setStep(d.share.devices === "board" && d.share.how === "live" ? "board" : "name");
     },
-    [flowShare, sample, setJoined],
+    [setJoined],
   );
 
   // a link or QR code carries the code: go straight to the next step
@@ -174,11 +162,6 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
       setBusy(false);
       return router.push("/play/joined");
     }
-    if (isDemo) {
-      setBusy(false);
-      setSeat(null);
-      return groups ? setStep("group") : router.push("/play/live");
-    }
     await sit(false);
     setBusy(false);
   }
@@ -186,8 +169,8 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
   const progress = step === "name" || step === "wait" ? 2 : step === "group" ? 3 : step === "class" ? 3 : 1;
   const seatGroup = seat?.group ?? 0;
   const group = GROUP_POOL[seatGroup % GROUP_POOL.length];
-  const mates = isDemo ? ROSTER.filter((n) => n !== "يوسف").slice(0, 5) : (seat?.mates ?? []);
-  const groupCount = isDemo ? share.groupCount : (seat?.groupCount ?? share.groupCount);
+  const mates = seat?.mates ?? [];
+  const groupCount = seat?.groupCount ?? share.groupCount;
 
   return (
     <>

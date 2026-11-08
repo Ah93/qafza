@@ -2,9 +2,9 @@ import Link from "next/link";
 import { Logo } from "../Logo";
 
 const STATS = [
-  { n: "30+", label: "طريقة عرض" },
-  { n: "100+", label: "عنصر لعب" },
-  { n: "15+", label: "شكل أسئلة" },
+  { n: "6", label: "أنماط عرض" },
+  { n: "5", label: "عوالم لعب" },
+  { n: "4", label: "أنماط تقييم" },
 ];
 
 function ShowcasePanel() {

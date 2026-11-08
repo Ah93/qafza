@@ -4,14 +4,14 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { HeroDemo } from "@/components/landing/HeroDemo";
 
 const STEPS = [
-  { n: "١", title: "ارفع", body: "ملف أو رابط أو فيديو أو نص", bg: "from-indigo-ink to-indigo-deep" },
+  { n: "١", title: "ارفع", body: "ملف PDF أو Word، أو رابط صفحة، أو نص", bg: "from-indigo-ink to-indigo-deep" },
   { n: "٢", title: "لعّب", body: "يُبنى أمامك في أقل من دقيقة", bg: "from-orchid to-violet" },
   { n: "٣", title: "شارك", body: "حصة مباشرة، أو تعلّم ذاتي", bg: "from-plum to-pink-card" },
 ];
 
 const FEATURES = [
   {
-    count: "10",
+    count: "6 متاحة الآن، و4 قادمة",
     title: "أنماط العرض",
     body: "كل فكرة تُعرض بالشكل الأنسب لها: رسم، أو خط زمني، أو بطاقات، أو حوار.",
     tone: "text-violet",
@@ -19,15 +19,15 @@ const FEATURES = [
     href: "/gallery",
   },
   {
-    count: "+100",
-    title: "أطر التلعيب",
+    count: "5 عوالم لعب، والمزيد قادم",
+    title: "عوالم اللعب",
     body: "نقاط ورتب ومجموعات وتحدٍّ أخير، تُبقي الطالب متحمّسًا حتى النهاية.",
     tone: "text-pink-card",
     chip: "bg-pink-card",
     href: "/rules",
   },
   {
-    count: "9",
+    count: "4 متاحة الآن، و5 قادمة",
     title: "أنماط التقييم",
     body: "تحدٍّ بعد كل محطة، وكل خطأ يُشرح فورًا.",
     tone: "text-teal-card",
@@ -52,7 +52,7 @@ export default function Home() {
               <span className="bg-brand-text">طلابك.</span>
             </h1>
             <p className="mt-5 max-w-md text-[15px] leading-8 text-indigo-deep/70">
-              ارفع ملفك، وتحوّله قفزة في لحظات إلى درس تفاعلي ملعوب. أي مادة، وبأي لغة.
+              ارفع ملفك، وتحوّله قفزة في أقل من دقيقة إلى درس تفاعلي ملعوب. أي مادة، وبأي لغة.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <Link
@@ -96,7 +96,8 @@ export default function Home() {
                   <span className="size-3.5 rounded-sm bg-white/90" />
                 </span>
                 <h3 className="text-lg font-bold text-indigo-deep">
-                  {f.title} <span className={`text-xs ${f.tone}`}>{f.count}</span>
+                  {f.title}
+                  <span className={`mt-1 block text-xs font-semibold ${f.tone}`}>{f.count}</span>
                 </h3>
                 <p className="mt-2 text-xs leading-6 text-indigo-deep/60">{f.body}</p>
                 <Link href={f.href} className={`mt-4 inline-block text-xs font-semibold ${f.tone}`}>

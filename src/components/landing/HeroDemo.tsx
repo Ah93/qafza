@@ -1,6 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { rankOf } from "@/lib/play";
+
+/** the example player bar: the rank always comes from the real rank table, never typed by hand */
+const EXAMPLE_POINTS = 340;
 
 const MODES = ["إنفوجرافيك", "شرائح", "خط زمني", "بطاقات"] as const;
 type Mode = (typeof MODES)[number];
@@ -118,10 +122,10 @@ export function HeroDemo() {
 
         <div className="mt-3 flex items-center justify-between rounded-2xl bg-white px-3 py-2.5">
           <span className="rounded-full bg-sun px-2.5 py-1 text-[10px] font-bold text-indigo-deep">
-            باحث
+            {rankOf(EXAMPLE_POINTS).name}
           </span>
           <span className="rounded-full bg-mint px-2.5 py-1 text-[10px] font-bold text-white">
-            340 نقطة معرفة
+            {EXAMPLE_POINTS} نقطة معرفة
           </span>
           <span className="flex items-center gap-1 text-[11px] text-rose-500">
             <span className="text-orange-500">🔥 3</span>

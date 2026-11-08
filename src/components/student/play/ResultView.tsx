@@ -66,17 +66,23 @@ export function ResultView() {
 
   const points = r.startPoints + r.points;
   const rank = rankOf(points);
-  const people = [
-    ...PEERS.map((p) => ({ name: p.name, initial: p.initial, color: p.color, score: p.base, me: false })),
-    { name: `${PLAYER.name} (أنت)`, initial: PLAYER.initial, color: PLAYER.color, score: r.points, me: true },
-  ].sort((a, b) => b.score - a.score);
-  const first = people[0].me;
-  const groups = GROUP_BASE.map((g) => ({ ...g, score: g.base + (g.mine ? r.points : 0) })).sort((a, b) => b.score - a.score);
-  const maxGroup = Math.max(...groups.map((g) => g.score));
-  const myGroupFirst = groups[0].mine;
+  // the made-up classmates exist only in the built-in sample result; a real result never shows people who did not play
+  const demo = !result;
+  const people = demo
+    ? [
+        ...PEERS.map((p) => ({ name: p.name, initial: p.initial, color: p.color, score: p.base, me: false })),
+        { name: `${PLAYER.name} (أنت)`, initial: PLAYER.initial, color: PLAYER.color, score: r.points, me: true },
+      ].sort((a, b) => b.score - a.score)
+    : [];
+  const first = demo && people[0].me;
+  const groups = demo ? GROUP_BASE.map((g) => ({ ...g, score: g.base + (g.mine ? r.points : 0) })).sort((a, b) => b.score - a.score) : [];
+  const maxGroup = Math.max(1, ...groups.map((g) => g.score));
+  const myGroupFirst = demo && groups[0].mine;
 
   const shown: BadgeId[] = [...new Set<BadgeId>([...r.badges, "flawless"])].slice(0, 4);
-  const sub = `${first ? "الأول بين اللاعبين" : `رتبتك ${people.findIndex((p) => p.me) + 1} بين اللاعبين`}، ${myGroupFirst ? "ومجموعتك الصقور في الصدارة" : "ومجموعتك الصقور تلاحق الصدارة"}.`;
+  const sub = demo
+    ? `${first ? "الأول بين اللاعبين" : `رتبتك ${people.findIndex((p) => p.me) + 1} بين اللاعبين`}، ${myGroupFirst ? "ومجموعتك الصقور في الصدارة" : "ومجموعتك الصقور تلاحق الصدارة"}.`
+    : `جمعت ${r.points} نقطة معرفة بدقّة ${r.accuracy}%.`;
 
   async function share() {
     const text = `أنهيت درس «${lesson.title}» في قفزة بدقّة ${r.accuracy}%، وجمعت ${r.points} نقطة معرفة!`;
@@ -239,38 +245,45 @@ export function ResultView() {
             )}
           </section>
 
+          {demo ? (
           <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
-            <h2 className="text-xl font-bold text-indigo-deep">لوحة الصدارة النهائية</h2>
-            <ol className="mt-3 space-y-2">
-              {people.map((p, i) => (
-                <li key={p.name} className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-bold ${p.me ? "border-2 border-violet bg-violet/[0.06]" : "bg-violet/[0.03]"}`}>
-                  <span className="w-3 text-[10px] text-indigo-deep/50">{i + 1}</span>
-                  <span className="grid size-6 place-items-center rounded-full text-[10px] text-white" style={{ background: p.color }}>
-                    {p.initial}
-                  </span>
-                  <span className="flex-1 truncate text-indigo-deep">{p.name}</span>
-                  <span className="text-indigo-deep">{p.score}</span>
-                </li>
-              ))}
-            </ol>
-            <h2 className="mt-5 text-lg font-bold text-indigo-deep">المجموعات</h2>
-            <ul className="mt-3 space-y-3">
-              {groups.map((g) => (
-                <li key={g.name}>
-                  <div className="flex items-center justify-between text-xs font-bold text-indigo-deep">
-                    <span className="flex items-center gap-2">
-                      <span className="size-2.5 rounded-[3px]" style={{ background: g.color }} />
-                      {g.name}{g.mine ? "، مجموعتك" : ""}
+              <h2 className="text-xl font-bold text-indigo-deep">لوحة الصدارة النهائية</h2>
+              <ol className="mt-3 space-y-2">
+                {people.map((p, i) => (
+                  <li key={p.name} className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-bold ${p.me ? "border-2 border-violet bg-violet/[0.06]" : "bg-violet/[0.03]"}`}>
+                    <span className="w-3 text-[10px] text-indigo-deep/50">{i + 1}</span>
+                    <span className="grid size-6 place-items-center rounded-full text-[10px] text-white" style={{ background: p.color }}>
+                      {p.initial}
                     </span>
-                    <span>{g.score}</span>
-                  </div>
-                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
-                    <div className="h-full rounded-full" style={{ width: `${(g.score / maxGroup) * 100}%`, background: g.color }} />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </section>
+                    <span className="flex-1 truncate text-indigo-deep">{p.name}</span>
+                    <span className="text-indigo-deep">{p.score}</span>
+                  </li>
+                ))}
+              </ol>
+              <h2 className="mt-5 text-lg font-bold text-indigo-deep">المجموعات</h2>
+              <ul className="mt-3 space-y-3">
+                {groups.map((g) => (
+                  <li key={g.name}>
+                    <div className="flex items-center justify-between text-xs font-bold text-indigo-deep">
+                      <span className="flex items-center gap-2">
+                        <span className="size-2.5 rounded-[3px]" style={{ background: g.color }} />
+                        {g.name}{g.mine ? "، مجموعتك" : ""}
+                      </span>
+                      <span>{g.score}</span>
+                    </div>
+                    <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
+                      <div className="h-full rounded-full" style={{ width: `${(g.score / maxGroup) * 100}%`, background: g.color }} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : (
+            <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
+              <h2 className="text-xl font-bold text-indigo-deep">ترتيب الصف</h2>
+              <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">ترتيبك بين زملائك ظهر لك في لوحة الصدارة وأنت تلعب، ويرى معلّمك نتائج الصف كلها في صفحته.</p>
+            </section>
+          )}
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-end gap-3">

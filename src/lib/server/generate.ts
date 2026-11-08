@@ -3,6 +3,7 @@ import type { Challenge, Customization, Lesson, ModeId } from "../lesson";
 import { LessonShapeError, STATION_COUNT, parseLesson, type Constraints } from "../lesson-schema";
 import { AiError, chatJson } from "./deepseek";
 import { fit, type Extracted } from "./extract";
+import { spreadAnswers } from "./shuffle";
 
 const KINDS: Record<string, Challenge["kind"][]> = {
   "اختيار من متعدد، صح أو خطأ، سحب وإفلات، مطابقة": ["mcq", "tf", "dnd", "match"],
@@ -53,6 +54,12 @@ const SYSTEM = `أنت مصمّم تعليمي خبير. تحوّل نصًّا �
 - timeline: 4 إلى 5 نقاط مرتبة بالتسلسل.
 - dialogue: 4 نقاط بالضبط، كل نقطة تبدأ بـ "▪ ط:" (طالب يسأل) أو "▪ م:" (مرشد يجيب) بالتناوب بدءًا بـ ط.
 - slides و infographic و cards و diagram: نقاط بصيغة "عنوان: شرح".
+قواعد الصياغة والمراجعة (إلزامية):
+- خاطب الطالب بكلمة «الدرس». لا تكتب «النص» ولا «الملف» ولا «المصدر» في أي عنوان أو سؤال أو شرح أو خيار موجَّه للطالب، إلا إن كان «النص» موضوع الدرس نفسه (كدرس عن النص الأدبي).
+- في نمط dialogue: لا يزيد سطر الحوار الواحد على 25 كلمة.
+- كل اسم علم أو مصطلح منقول من لغة أخرى بحروف عربية (كاسم شخص أو مكان أو مصطلح علمي أجنبي) ضعه في الحقل "review" بجملة تبدأ بـ«يحتاج مراجعة:» وتذكر الاسم وتطلب من المعلّم التأكد من كتابته الصحيحة.
+- نمط timeline لا يُستخدم إلا لما له ترتيب زمني أو مراحل متتابعة فعلًا. وما سواه فاختر له نمطًا آخر.
+
 اختر النمط الأنسب لمحتوى كل محطة (تسلسل → timeline، مصطلحات → cards، أجزاء → diagram، مقارنات → infographic، فكرة صعبة → dialogue، الباقي → slides).`;
 
 function userPrompt(pages: { n: number; text: string }[], c: Customization, forced: ModeId | null, kinds: string[], truncated: boolean) {
@@ -92,7 +99,7 @@ export async function generateLesson(ex: Extracted, custom: Customization): Prom
       : base;
     const raw = await chatJson(messages, { timeoutMs: 50_000 });
     try {
-      return { lesson: parseLesson(raw, cons), truncated, pages: pages.length };
+      return { lesson: spreadAnswers(parseLesson(raw, cons)), truncated, pages: pages.length };
     } catch (e) {
       if (!(e instanceof LessonShapeError)) throw e;
       problem = e.message;

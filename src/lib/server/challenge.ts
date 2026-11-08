@@ -2,6 +2,7 @@ import "server-only";
 import type { Challenge } from "../lesson";
 import { LessonShapeError, parseChallenge } from "../lesson-schema";
 import { AiError, chatJson } from "./deepseek";
+import { placeCorrect } from "./shuffle";
 
 const SHAPES: Record<Challenge["kind"], string> = {
   mcq: `{"kind":"mcq","question":"...","options":[{"text":"...","explanation":"لماذا هو خاطئ"},{...},{...},{...}],"correct":0}
@@ -28,7 +29,8 @@ ${SHAPES[kind]}`;
     ];
     const raw = await chatJson(messages, { maxTokens: 1500, timeoutMs: 40_000 });
     try {
-      return parseChallenge(raw, kind);
+      const c = parseChallenge(raw, kind);
+      return c.kind === "mcq" ? placeCorrect(c, Math.floor(Math.random() * 4)) : c;
     } catch (e) {
       if (!(e instanceof LessonShapeError)) throw e;
       problem = e.message;

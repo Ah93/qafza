@@ -211,7 +211,6 @@ export function buildLesson(c: Customization): Lesson {
   return { title: "خلايا الدم الحمراء", stations, boss: structuredClone(BOSS) };
 }
 
-export const LESSON_CODE = "7QK4";
 
 /** a saved lesson as the lists show it (the lesson body is fetched separately) */
 export type LessonSummary = {

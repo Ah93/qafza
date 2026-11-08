@@ -134,3 +134,23 @@ body::before {
     page-break-after: auto;
   }
 }
+
+/*
+ * Student screens on a phone (/join, /play, /learn): every control is at least 44px, and no text is below 12px.
+ * data-student is set by StudentProvider from the address, so teacher screens keep their denser layout.
+ */
+@media (max-width: 640px) {
+  html[data-student="1"] button,
+  html[data-student="1"] [role="tab"],
+  html[data-student="1"] [role="radio"],
+  html[data-student="1"] select,
+  html[data-student="1"] a[href] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  html[data-student="1"] .text-\[9px\],
+  html[data-student="1"] .text-\[10px\],
+  html[data-student="1"] .text-\[11px\] {
+    font-size: 12px;
+  }
+}

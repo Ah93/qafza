@@ -428,7 +428,7 @@ async function persist(s: Session) {
   const total = s.lesson.stations.length;
   const now = Date.now();
 
-  const insert = async (name: string, userId: string | null, ref: string, group: number | null, points: number, results: (0 | 1 | null)[], boss: (0 | 1)[]) => {
+  const insert = async (name: string, userId: string | null, ref: string, group: number | null, points: number, results: (0 | 1 | null)[], boss: (0 | 1)[], choices: (number | null)[] = []) => {
     if (s.classId) await enrol(s.classId, name, userId);
     await recordAttempt({
       lessonId: s.lessonId,
@@ -442,6 +442,7 @@ async function persist(s: Session) {
       finishedAt: now,
       points,
       results,
+      choices,
       boss,
       reached: s.maxAt,
       minutes: Math.max(0, (now - s.openedAt) / 60000),
@@ -471,7 +472,11 @@ async function persist(s: Session) {
     const shown = (ci: number) => s.visited.has(s.slides.findIndex((x) => x.kind === "challenge" && x.i === ci));
     const results = Array.from({ length: total }, (_, ci) => (st.answers.has(ci) ? ((st.answers.get(ci)!.right ? 1 : 0) as 0 | 1) : asked.has(ci) && shown(ci) ? 0 : null));
     const boss = bossResults(s, st.answers.get(total));
-    await insert(st.name, st.userId, st.ref, st.group, points, results, boss);
+    const choices = Array.from({ length: total }, (_, ci) => {
+      const a = st.answers.get(ci)?.answer;
+      return a?.kind === "mcq" ? a.choice : a?.kind === "tf" ? (a.value ? 0 : 1) : null;
+    });
+    await insert(st.name, st.userId, st.ref, st.group, points, results, boss, choices);
 
     if (!st.userId) continue;
     const right = results.map((r) => r === 1);

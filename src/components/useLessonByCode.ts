@@ -5,19 +5,17 @@ import { api } from "@/lib/client-api";
 import type { Lesson } from "@/lib/lesson";
 import { useFlow } from "./teacher/FlowProvider";
 
-export const SAMPLE_CODE = "7QK4";
-
 type State = { code: string; lesson: Lesson | null; missing: boolean };
 
 /**
- * The lesson behind a game code. The sample code and the code of the lesson being edited resolve in memory;
+ * The lesson behind a game code. The code of the lesson being edited resolves in memory;
  * any other code is looked up through the public join endpoint (so it also works on another device).
  */
 export function useLessonByCode(code: string): { lesson: Lesson | null; loading: boolean; missing: boolean } {
-  const { saved, lesson: current, sample } = useFlow();
+  const { saved, lesson: current } = useFlow();
   const [fetched, setFetched] = useState<State | null>(null);
 
-  const local = code === SAMPLE_CODE ? sample : saved?.code === code ? current : null;
+  const local = saved?.code === code ? current : null;
 
   useEffect(() => {
     if (local) return;

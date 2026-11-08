@@ -173,7 +173,7 @@ export function PricingView() {
           )}
           {status?.payments === "off" && (
             <p role="status" className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-[11px] font-semibold leading-6 text-amber-900">
-              الدفع الإلكتروني لم يُفعَّل بعد. <a href="#contact" className="font-bold text-violet underline underline-offset-4">تواصل معنا</a> لتفعيل اشتراكك.
+              الدفع الإلكتروني قريبًا. <a href="#contact" className="font-bold text-violet underline underline-offset-4">تواصل معنا لتفعيل اشتراكك</a>.
             </p>
           )}
           {justPaid && status?.entitled && (
@@ -189,10 +189,10 @@ export function PricingView() {
             </div>
             <button
               onClick={pay}
-              disabled={busy || status?.payments === "off"}
+              disabled={busy || !status || status.payments === "off"}
               className="rounded-full bg-brand px-8 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30 transition hover:brightness-110 disabled:opacity-60"
             >
-              {busy ? "جارٍ التحويل…" : status?.entitled ? `جدّد ${sym(amount)}` : `ادفع ${sym(amount)}`}
+              {busy ? "جارٍ التحويل…" : status?.payments === "off" ? "قريبًا" : status?.entitled ? `جدّد ${sym(amount)}` : `ادفع ${sym(amount)}`}
             </button>
           </div>
         </section>

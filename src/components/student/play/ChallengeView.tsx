@@ -9,8 +9,8 @@ type Status = "idle" | "wrong" | "right" | "failed";
 
 type Props = {
   challenge: Challenge;
-  /** called after every try; `attempt` is 1 or 2 */
-  onAttempt: (attempt: 1 | 2, correct: boolean) => void;
+  /** called after every try; `attempt` is 1 or 2. `choice` is the option picked (multiple choice: its index; true/false: 0 for true, 1 for false) */
+  onAttempt: (attempt: 1 | 2, correct: boolean, choice?: number) => void;
   disabled?: boolean;
 };
 
@@ -38,8 +38,8 @@ function Banner({ status, attempt, extra }: { status: Status; attempt: 1 | 2; ex
 function useAttempts(onAttempt: Props["onAttempt"]) {
   const [attempt, setAttempt] = useState<1 | 2>(1);
   const [status, setStatus] = useState<Status>("idle");
-  const resolve = (correct: boolean) => {
-    onAttempt(attempt, correct);
+  const resolve = (correct: boolean, choice?: number) => {
+    onAttempt(attempt, correct, choice);
     if (correct) setStatus("right");
     else if (attempt === 1) {
       setStatus("wrong");
@@ -60,7 +60,7 @@ function Mcq({ challenge, onAttempt, disabled }: Props & { challenge: Extract<Ch
     if (done || disabled || tried.includes(i)) return;
     setPicked(i);
     setTried((t) => [...t, i]);
-    resolve(i === challenge.correct);
+    resolve(i === challenge.correct, i);
   }
 
   const wrongExplanation = picked !== null && picked !== challenge.correct ? challenge.options[picked].explanation : undefined;
@@ -113,7 +113,7 @@ function TrueFalse({ challenge, onAttempt, disabled }: Props & { challenge: Extr
   function pick(v: boolean) {
     if (done || disabled || tried.includes(v)) return;
     setTried((t) => [...t, v]);
-    resolve(v === challenge.answer);
+    resolve(v === challenge.answer, v ? 0 : 1);
   }
 
   const opts: { v: boolean; label: string; letter: string; color: string }[] = [

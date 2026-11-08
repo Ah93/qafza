@@ -77,24 +77,30 @@ export function UploadCard() {
         {TABS.map((t) => {
           const on = tab === t.id;
           const Icon = t.icon;
+          // video is not supported yet: it stays visible, marked "soon", and cannot be chosen
+          const soon = t.id === "video";
           return (
             <button
               key={t.id}
               role="tab"
               aria-selected={on}
+              disabled={soon}
+              title={soon ? "قريبًا: الصق نص الفيديو المفرّغ في تبويب «نص» الآن" : undefined}
               onClick={() => {
                 setTab(t.id);
                 setValue("");
                 setError(null);
               }}
               className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs font-bold transition ${
-                on
-                  ? "border-violet bg-violet/10 text-violet"
-                  : "border-violet/10 bg-white text-indigo-deep hover:border-violet/30"
+                soon
+                  ? "cursor-not-allowed border-dashed border-violet/20 bg-white/60 text-indigo-deep/45"
+                  : on
+                    ? "border-violet bg-violet/10 text-violet"
+                    : "border-violet/10 bg-white text-indigo-deep hover:border-violet/30"
               }`}
             >
               {t.label}
-              <Icon className="size-3.5 text-violet" />
+              {soon ? <span className="rounded-full bg-violet/10 px-2 py-0.5 text-[10px] font-bold text-violet">قريبًا</span> : <Icon className="size-3.5 text-violet" />}
             </button>
           );
         })}

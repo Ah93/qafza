@@ -1,5 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { api } from "@/lib/client-api";
 import type { Lesson, ShareConfig } from "@/lib/lesson";
@@ -134,5 +136,21 @@ export function StudentProvider({ children }: { children: React.ReactNode }) {
     () => ({ deviceRef, name, setName, joined, setJoined, seat, setSeat, result, setResult, progress, refreshProgress }),
     [deviceRef, name, setName, joined, seat, result, setResult, progress, refreshProgress],
   );
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <Ctx.Provider value={value}>
+      {children}
+      <Suspense fallback={null}>
+        <StudentFlag />
+      </Suspense>
+    </Ctx.Provider>
+  );
+}
+
+/** marks the page as a student screen (/join, /play, /learn) so the phone rules in globals.css apply to it */
+function StudentFlag() {
+  const path = usePathname();
+  useEffect(() => {
+    document.documentElement.dataset.student = /^\/(join|play|learn)(\/|$)/.test(path) ? "1" : "0";
+  }, [path]);
+  return null;
 }
