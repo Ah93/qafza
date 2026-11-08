@@ -9,6 +9,7 @@ import { useFlow } from "../teacher/FlowProvider";
 const TABS = [
   { href: "/gallery", label: "أنماط العرض" },
   { href: "/gallery/assessment", label: "أنماط التقييم" },
+  { href: "/gallery/frameworks", label: "عوالم اللعب" },
   { href: "/rules", label: "قواعد اللعب" },
 ];
 

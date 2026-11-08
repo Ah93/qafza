@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useState } from "react";
 import Link from "next/link";
 import { Check, Minus, X } from "lucide-react";
@@ -8,6 +9,7 @@ import { ago } from "@/lib/ago";
 import { TeacherHeader } from "../TeacherHeader";
 import { LessonPicker, ReportGate, useReport, type LessonReport } from "../report";
 import { useToast } from "../Toast";
+import { fmtDate, fmtTime } from "@/lib/format";
 
 type Status = "done" | "going" | "none";
 
@@ -56,12 +58,12 @@ const extendedDue = (dueAt: number | null, days: number) => Math.max(Date.now(),
 
 function dueLabel(dueAt: number | null): { text: string; late: boolean } {
   if (!dueAt) return { text: "بلا موعد محدد", late: false };
-  const day = new Date(dueAt).toLocaleDateString("ar", { weekday: "long" });
-  const time = new Date(dueAt).toLocaleTimeString("ar", { hour: "numeric", minute: "2-digit" });
+  const day = fmtDate(dueAt, { weekday: "long" });
+  const time = fmtTime(dueAt);
   const left = Math.ceil((dueAt - Date.now()) / 86_400_000);
   if (left < 0) return { text: `انتهى الموعد ${day}`, late: true };
   if (left === 0) return { text: `ينتهي اليوم ${time}`, late: false };
-  return { text: `حتى ${day} ${time} · باقي ${left === 1 ? "يوم" : left === 2 ? "يومان" : `${left} أيام`}`, late: false };
+  return { text: `حتى ${day} ${time} · باقي ${plural.days(left)}`, late: false };
 }
 
 export function TrackingView() {
@@ -226,7 +228,7 @@ export function TrackingView() {
 
             {r.students.length > SHOWN && (
               <button onClick={() => setAll((a) => !a)} className="mt-4 text-[11px] font-bold text-violet underline underline-offset-4">
-                {all ? "اعرض أقل" : `و${r.students.length - SHOWN} طالبًا آخرين · اعرض الكل`}
+                {all ? "اعرض أقل" : `و${plural.students(r.students.length - SHOWN)} آخرين · اعرض الكل`}
               </button>
             )}
             {r.students.length > 0 && <p className="mt-3 text-[11px] font-medium text-indigo-deep/55">اضغط أي طالب لترى محاولاته</p>}

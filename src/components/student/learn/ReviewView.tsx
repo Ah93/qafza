@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Check, X } from "lucide-react";
@@ -152,9 +153,9 @@ export function ReviewView() {
               </span>
               <h1 className="mt-4 text-[28px] font-bold text-indigo-deep">أنهيت تثبيت اليوم</h1>
               <p className="mt-2 text-sm font-semibold text-indigo-deep/70">
-                تذكّرت {right} من {count}، وربحت {right * POINTS.review} نقطة.
+                تذكّرت {right} من {count}، وربحت {plural.points(right * POINTS.review)}.
               </p>
-              <p className="mt-1 text-xs font-medium text-indigo-deep/60">شعلتك اليومية الآن {streak} أيام.</p>
+              <p className="mt-1 text-xs font-medium text-indigo-deep/60">شعلتك اليومية الآن {plural.days(streak)}.</p>
               <Link href="/learn" className="mt-5 inline-block rounded-full bg-brand px-10 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
                 عُد إلى مساحتي
               </Link>

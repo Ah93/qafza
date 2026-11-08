@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
@@ -135,7 +136,7 @@ export function ResultsView() {
             <div className="relative">
               <h2 className="text-xl font-bold">مستوى الإتقان</h2>
               <p className="mt-1.5 text-[11px] font-medium leading-5 text-white/70">
-                {r.counts.done} من {r.counts.total} أكملوا{r.minutes ? ` · ${r.minutes} دقيقة` : ""}
+                {r.counts.done} من {r.counts.total} أكملوا{r.minutes ? ` · ${plural.minutes(r.minutes)}` : ""}
               </p>
             </div>
             <div className="relative grid place-items-center">
@@ -258,7 +259,7 @@ export function ResultsView() {
       {saving && (
         <Modal onClose={() => setSaving(false)} labelledBy="save-class">
           <h2 id="save-class" className="text-2xl font-bold text-indigo-deep">احفظ الحاضرين صفًّا</h2>
-          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">يصير الـ{finishedNames.length} طالبًا صفًّا جديدًا في «صفوفي»، فتوزّعهم على مجموعات متكافئة وتتابع إتقانهم في دروسك القادمة.</p>
+          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">يصير {plural.students(finishedNames.length)} صفًّا جديدًا في «صفوفي»، فتوزّعهم على مجموعات متكافئة وتتابع إتقانهم في دروسك القادمة.</p>
           <input
             data-autofocus
             value={className}

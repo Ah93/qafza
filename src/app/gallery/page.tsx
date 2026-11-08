@@ -14,7 +14,7 @@ import {
   VideoDemo,
 } from "@/components/gallery/DisplayDemos";
 
-export const metadata: Metadata = { title: "معرض أنماط العرض — قفزة" };
+export const metadata: Metadata = { title: "معرض أنماط العرض — قفزة", description: "الفكرة نفسها بعشرة أشكال: ستة متاحة الآن وأربعة قادمة. جرّب كل مثال بنفسك." };
 
 export default function DisplayGalleryPage() {
   return (

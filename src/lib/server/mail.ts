@@ -93,6 +93,19 @@ export function resetMail(to: string, firstName: string, url: string): Mail {
   return { to, subject: "إعادة تعيين كلمة المرور — قفزة", html, text: `أهلاً ${firstName}، لإعادة تعيين كلمة مرورك افتح الرابط (صالح ساعة، لمرة واحدة): ${url}` };
 }
 
+export function invoiceMail(to: string, firstName: string, inv: { id: string; number: string; total: number; vat: number; vatRate: number; currency: string; plan: string; kind: string }, origin?: string): Mail {
+  const cur = inv.currency === "usd" ? "$" : inv.currency === "sar" ? "ر.س" : "ر.ق";
+  const lines = [`الخطة: قفزة الكاملة (${inv.plan === "year" ? "العام الدراسي" : "شهري"})`, `الإجمالي: ${inv.total} ${cur}`, ...(inv.vatRate > 0 ? [`منها ضريبة القيمة المضافة (${inv.vatRate}%): ${inv.vat} ${cur}`] : [])];
+  const url = origin ? `${origin}/account/invoices/${inv.id}` : undefined;
+  const html = layout(`${inv.kind === "tax" ? "فاتورتك" : "إيصال دفعتك"} ${inv.number}`, `أهلًا ${esc(firstName)}،<br>شكرًا لاشتراكك في قفزة.<br><br>${lines.map(esc).join("<br>")}`, url ? { label: "افتح الفاتورة", url } : undefined);
+  return { to, subject: `${inv.kind === "tax" ? "فاتورة" : "إيصال"} ${inv.number} — قفزة`, html, text: `${lines.join("\n")}${url ? `\nالفاتورة: ${url}` : ""}` };
+}
+
+export function waitlistMail(to: string, firstName: string): Mail {
+  const html = layout("سجّلت في قائمة المعلّمين المئة", `أهلًا ${esc(firstName)}،<br>وصلنا تسجيلك، وشكرًا لاهتمامك بقفزة. نبحث عن 100 معلّم لاختبار المنصة معنا، من الابتدائي إلى الجامعة، وسنتواصل معك على هذا البريد حين يحين دورك.`);
+  return { to, subject: "وصلنا تسجيلك — قفزة", html, text: `أهلًا ${firstName}، وصلنا تسجيلك في قائمة المعلّمين المئة في قفزة. سنتواصل معك على هذا البريد حين يحين دورك.` };
+}
+
 export function consentMail(to: string, child: string, url: string): Mail {
   const html = layout(
     `${child} يريد إنشاء حساب في قفزة`,

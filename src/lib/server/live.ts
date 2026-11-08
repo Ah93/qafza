@@ -1,4 +1,5 @@
 import "server-only";
+import { track } from "./events";
 import { randomBytes } from "node:crypto";
 import { balanceGroups, type ClassStudent } from "../classes";
 import type { Lesson, ShareConfig } from "../lesson";
@@ -147,6 +148,7 @@ async function openFresh(ownerId: string, code: string): Promise<Opened> {
     pending: null,
   };
   sessions.set(code, s);
+  track("session_started", { userId: ownerId }, { mode: mode(s) });
   return s;
 }
 
@@ -323,6 +325,7 @@ export function joinStudent(s: Session, input: { name: string; ref: string; user
   }
   const st: LStudent = { id: randomBytes(12).toString("hex"), name, ref: input.ref, userId: input.userId, group, answers: new Map(), engaged: new Map(), repeats: new Set(), bonus: 0, conns: 0 };
   s.students.set(st.id, st);
+  track("student_joined", undefined, { mode: mode(s) });
   notify(s);
   return { ok: true, sid: st.id, group, mates: mates(s, st) };
 }
@@ -430,6 +433,7 @@ async function persist(s: Session) {
 
   const insert = async (name: string, userId: string | null, ref: string, group: number | null, points: number, results: (0 | 1 | null)[], boss: (0 | 1)[], choices: (number | null)[] = []) => {
     if (s.classId) await enrol(s.classId, name, userId);
+    track("lesson_completed", undefined, { mode: "live" });
     await recordAttempt({
       lessonId: s.lessonId,
       classId: s.classId,

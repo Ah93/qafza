@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useEffect, useState } from "react";
 import { Check, Flame as FlameIcon, Layers, Network, Zap, type LucideIcon } from "lucide-react";
 import { api } from "@/lib/client-api";
@@ -10,6 +11,7 @@ import { Switch } from "@/components/teacher/ui";
 import { BadgeShape } from "../BadgeShape";
 import { LearnHeader, PlayerAvatar } from "../StudentHeader";
 import { useStudent } from "../StudentProvider";
+import { fmtDate } from "@/lib/format";
 
 /** the two switches live on this device: they change what this browser shows and sends */
 function useDeviceFlag(key: string, fallback: boolean): [boolean, (v: boolean) => void] {
@@ -80,7 +82,7 @@ export function ProfileView() {
   const toNext = next ? Math.min(100, Math.round(((points - rank.from) / (next.from - rank.from)) * 100)) : 100;
   const cards = new Set<number>(Object.values(progress?.cards ?? {}).flat());
   const lessonsDone = progress?.lessonsDone ?? 0;
-  const since = progress ? new Date(progress.since).toLocaleDateString("ar", { month: "long", year: "numeric" }) : "";
+  const since = progress ? fmtDate(progress.since, { month: "long", year: "numeric" }) : "";
 
   return (
     <>
@@ -135,7 +137,7 @@ export function ProfileView() {
 
         <div className="mt-3 grid gap-3 sm:grid-cols-4">
           <Stat icon={Zap} tone="bg-mint/15 text-emerald-600" value={String(points)} label="نقطة معرفة" />
-          <Stat icon={FlameIcon} tone="bg-orange-100 text-orange-500" value={`${streak} أيام`} label="الشعلة" />
+          <Stat icon={FlameIcon} tone="bg-orange-100 text-orange-500" value={plural.days(streak)} label="الشعلة" />
           <Stat icon={Network} tone="bg-violet/10 text-violet" value={String(lessonsDone)} label="دروس مكتملة" />
           <Stat icon={Layers} tone="bg-teal-100 text-teal-600" value={progress?.accuracy == null ? "—" : `${progress.accuracy}%`} label="متوسط الدقّة" />
         </div>

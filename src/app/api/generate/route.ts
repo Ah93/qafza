@@ -1,4 +1,5 @@
 import { isResponse, requireUser } from "@/lib/server/auth";
+import { track } from "@/lib/server/events";
 import { PAYWALL_MESSAGE, planStatus } from "@/lib/server/billing";
 import { AiError } from "@/lib/server/deepseek";
 import { fs, increment } from "@/lib/server/firestore";
@@ -70,13 +71,17 @@ export async function POST(req: Request) {
 
     // the AI allowance: only requests that reached the model count
     if (limited(`gen:${user.id}`, 4, 60_000)) return tooMany();
+    track("lesson_build_started", { userId: user.id });
+    const t0 = Date.now();
     const out = await generateLesson(ex, customization(form.get("custom")));
+    track("lesson_build_succeeded", { userId: user.id }, { ms: Date.now() - t0, pages: out.pages });
 
     // counted only when a lesson was really produced
     await usage.set({ userId: user.id, day, generations: increment(1) }, { merge: true });
     return Response.json({ lesson: out.lesson, sourceName, pages: out.pages, truncated: out.truncated });
   } catch (e) {
     if (e instanceof SourceError) return fail(e.message, 422);
+    track("lesson_build_failed", { userId: user.id }, { reason: e instanceof AiError ? "ai" : "unexpected" });
     if (e instanceof AiError) {
       console.error("[qafza] generation failed:", e.message);
       return fail(e.userMessage, e.status);

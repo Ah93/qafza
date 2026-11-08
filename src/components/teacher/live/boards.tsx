@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { QRCodeSVG } from "qrcode.react";
 import { Check, Lock } from "lucide-react";
 import { AR_LETTERS, modeLabel, type Challenge, type Lesson, type Station } from "@/lib/lesson";
@@ -92,7 +93,7 @@ export function ArenaBoard({
           <p dir="ltr" className="my-2 text-end text-[88px] font-bold leading-none tracking-wide sm:text-[104px]">
             {code}
           </p>
-          <p className="text-sm font-bold">{count} طالبًا في الساحة</p>
+          <p className="text-sm font-bold">{plural.students(count)} في الساحة</p>
 
           {mode === "groups" ? (
             <div className={`mt-4 grid gap-3 ${groups.length === 4 ? "sm:grid-cols-4" : groups.length === 2 ? "sm:grid-cols-2" : "sm:grid-cols-3"}`}>
@@ -103,7 +104,7 @@ export function ArenaBoard({
                     <p className="flex-1 text-sm font-bold leading-6">مجموعة {g.name}</p>
                   </div>
                   <p className="mt-1 text-[10px] font-medium text-white/65">
-                    {sizes[i]} طلاب · إتقان {g.mastery}%
+                    {plural.students(sizes[i])} · إتقان {g.mastery}%
                   </p>
                 </div>
               ))}
@@ -148,7 +149,7 @@ export function BoardOnlyArena({ lesson, groups, sizes }: { lesson: Lesson; grou
             <div key={g.id} className="relative rounded-2xl border-2 bg-white/[0.07] px-5 py-5" style={{ borderColor: g.color }}>
               <span className="absolute end-4 top-4 size-3 rounded-[3px]" style={{ background: g.color }} />
               <p className="whitespace-nowrap text-[22px] font-bold">مجموعة {g.name}</p>
-              <p className="mt-1 text-sm font-semibold text-white/70">{sizes[i]} طلاب</p>
+              <p className="mt-1 text-sm font-semibold text-white/70">{plural.students(sizes[i])}</p>
             </div>
           ))}
         </div>

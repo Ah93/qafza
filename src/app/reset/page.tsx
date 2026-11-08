@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { ResetForm } from "@/components/auth/ResetForm";
 
-export const metadata: Metadata = { title: "كلمة مرور جديدة — قفزة" };
+export const metadata: Metadata = { title: "كلمة مرور جديدة — قفزة", description: "اختر كلمة مرور جديدة لحسابك في قفزة." };
 
 export default function ResetPage() {
   return (

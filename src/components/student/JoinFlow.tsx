@@ -267,7 +267,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
                   setTyped(e.target.value);
                   setError(null);
                 }}
-                placeholder="يوسف"
+                placeholder="مثال: ريان"
                 aria-label="اسمك الأول"
                 maxLength={20}
                 className="mt-5 w-full rounded-2xl border-2 border-violet/25 bg-white px-5 py-4 text-center text-xl font-bold text-indigo-deep outline-none transition placeholder:text-indigo-deep/30 focus:border-violet focus:ring-4 focus:ring-violet/10"

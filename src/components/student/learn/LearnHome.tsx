@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -55,7 +56,7 @@ export function LearnHome() {
       <main className="mx-auto w-full max-w-[860px] flex-1 px-5 py-6">
         {account?.role === "teach" && (
           <p role="status" className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-5 py-3 text-xs font-bold text-amber-900">
-            أنت معلّم ضغطت «أتعلّم». هكذا يرى الطالب مساحته، وحسابك واحد تعلّم به وتتعلّم.
+            هذه مساحتك كمتعلّم: الدروس التي تلعبها، وتثبيتك اليومي. أما دروسك التي تعلّمها فتجدها في «أعلّم».
           </p>
         )}
 
@@ -65,7 +66,7 @@ export function LearnHome() {
             <h1 className="mt-1 text-[34px] font-bold leading-tight text-indigo-deep">ماذا ستتعلّم اليوم؟</h1>
           </div>
           <div className="grid w-full grid-cols-3 gap-2 sm:w-auto sm:gap-2.5">
-            <Stat icon={FlameIcon} tone="bg-orange-100 text-orange-500" value={`${streak} أيام`} label="الشعلة" />
+            <Stat icon={FlameIcon} tone="bg-orange-100 text-orange-500" value={plural.days(streak)} label="الشعلة" />
             <Stat icon={Zap} tone="bg-mint/15 text-emerald-600" value={String(points)} label="نقطة معرفة" />
             <Stat icon={Trophy} tone="bg-amber-100 text-amber-600" value={progress?.rank ?? "مبتدئ"} label="الرتبة" />
           </div>
@@ -82,7 +83,7 @@ export function LearnHome() {
             <section className="dots relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-600 to-teal-500 p-6 text-white shadow-xl shadow-emerald-700/20">
               <span className="relative inline-block rounded-full bg-white/20 px-4 py-1.5 text-[11px] font-bold">تثبيت اليوم · أُنجز ✓</span>
               <h2 className="relative mt-4 text-[26px] font-bold leading-snug">أحسنت! ثبّتّ ما نسيته اليوم.</h2>
-              <p className="relative mt-1 text-xs font-medium text-white/85">شعلتك الآن {streak} أيام. نراك غدًا.</p>
+              <p className="relative mt-1 text-xs font-medium text-white/85">شعلتك الآن {plural.days(streak)}. نراك غدًا.</p>
             </section>
           ) : due > 0 ? (
             <section className="dots relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#b3195f] to-[#ec5d9f] p-6 text-white shadow-xl shadow-pink-700/20">
@@ -119,9 +120,9 @@ export function LearnHome() {
               value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase().slice(0, 4))}
               dir="ltr"
-              placeholder="7QK4"
+              placeholder="مثال: AB12"
               aria-label="رمز اللعبة"
-              className="mt-3 w-full rounded-2xl border-2 border-violet/25 bg-white py-3 text-center text-lg font-bold tracking-widest text-indigo-deep outline-none transition placeholder:text-indigo-deep/30 focus:border-violet"
+              className="mt-3 w-full rounded-2xl border-2 border-violet/25 bg-white py-3 text-center text-lg font-bold tracking-widest text-indigo-deep outline-none transition placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-indigo-deep/35 focus:border-violet"
             />
             <button className="mt-2.5 w-full rounded-2xl bg-indigo-deep py-3 text-xs font-bold text-white transition hover:bg-indigo-ink">ادخل</button>
           </form>

@@ -4,7 +4,7 @@ import { GalleryHeader, PageTitle } from "@/components/gallery/GalleryShell";
 import { BadgeShape } from "@/components/student/BadgeShape";
 import { BADGES, RANKS } from "@/lib/play";
 
-export const metadata: Metadata = { title: "قواعد اللعب — قفزة" };
+export const metadata: Metadata = { title: "كيف تحفّز قفزة طلابك — قفزة", description: "النقاط للحماس، والإتقان للتعلّم، ولا يختلطان: جدول النقاط والرتب والشارات وبقية عناصر اللعب." };
 
 const POINTS: { label: string; value: string; tone: string }[] = [
   { label: "إجابة صحيحة من المحاولة الأولى", value: "+10", tone: "text-emerald-600" },
@@ -64,8 +64,8 @@ export default function RulesPage() {
       <main className="mx-auto w-full max-w-[1000px] flex-1 px-5 py-8">
         <PageTitle
           eyebrow="نظام اللعب"
-          title="قواعد اللعب في قفزة"
-          intro="مرجع واحد للنقاط والرتب والشارات وبقية عناصر اللعب. كل الشاشات تتبع هذه القواعد، وأرقامها هي المعتمدة."
+          title="كيف تحفّز قفزة طلابك"
+          intro="النقاط للحماس، والإتقان للتعلّم، ولا يختلطان."
         />
 
         <div className="mt-6 grid items-start gap-4 lg:grid-cols-[1.12fr_1fr]">

@@ -6,7 +6,7 @@ import { QRCodeSVG } from "qrcode.react";
 
 const noop = () => () => {};
 
-export function CodeCard({ code }: { code: string }) {
+export function CodeCard({ code, preview = true }: { code: string; preview?: boolean }) {
   // the link opens the join page of THIS site, with the code filled in
   const origin = useSyncExternalStore(noop, () => window.location.origin, () => "");
   const link = origin ? `${origin}/join?code=${code}` : "";
@@ -75,12 +75,14 @@ export function CodeCard({ code }: { code: string }) {
         </div>
       </div>
 
-      <Link
-        href="/play/preview"
-        className="block rounded-full border border-violet/10 bg-white py-3 text-center text-xs font-bold text-violet shadow-sm transition hover:border-violet/30"
-      >
-        جرّبه كطالب قبل النشر
-      </Link>
+      {preview && (
+        <Link
+          href="/play/preview"
+          className="block rounded-full border border-violet/10 bg-white py-3 text-center text-xs font-bold text-violet shadow-sm transition hover:border-violet/30"
+        >
+          جرّبه كطالب قبل النشر
+        </Link>
+      )}
     </aside>
   );
 }

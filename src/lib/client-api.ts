@@ -36,5 +36,11 @@ export async function api<T = Record<string, unknown>>(path: string, init: Reque
   }
 }
 
+/** tell the team a page was seen or a button pressed (no personal data; failures are silent) */
+export function trackEvent(name: "upgrade_viewed" | "upgrade_clicked") {
+  if (typeof window === "undefined") return;
+  void fetch("/api/events", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name }) }).catch(() => {});
+}
+
 export const postJson = <T = Record<string, unknown>>(path: string, body: unknown, method = "POST") =>
   api<T>(path, { method, headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });

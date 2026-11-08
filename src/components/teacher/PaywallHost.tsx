@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { PAYWALL_EVENT } from "@/lib/client-api";
+import { PAYWALL_EVENT, trackEvent } from "@/lib/client-api";
 import { PRICES, money } from "@/lib/pricing";
 
 /** The "free lesson used" dialog. Mounted once; any 402 from the API opens it (see client-api.ts). */
@@ -11,7 +11,10 @@ export function PaywallHost() {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const on = () => setOpen(true);
+    const on = () => {
+      setOpen(true);
+      trackEvent("upgrade_viewed");
+    };
     window.addEventListener(PAYWALL_EVENT, on);
     return () => window.removeEventListener(PAYWALL_EVENT, on);
   }, []);
@@ -35,7 +38,7 @@ export function PaywallHost() {
           <span className="text-xs font-semibold text-indigo-deep/55">شهريًا · أو وفّر بخطة العام الدراسي</span>
         </p>
         <div className="mt-5 flex items-center gap-3">
-          <Link href="/pricing" data-autofocus onClick={() => setOpen(false)} className="flex-1 rounded-full bg-brand py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-violet/30 transition hover:brightness-110">
+          <Link href="/pricing" data-autofocus onClick={() => { trackEvent("upgrade_clicked"); setOpen(false); }} className="flex-1 rounded-full bg-brand py-3.5 text-center text-sm font-bold text-white shadow-lg shadow-violet/30 transition hover:brightness-110">
             اشترك الآن
           </Link>
           <button onClick={() => setOpen(false)} className="rounded-full border border-violet/15 bg-white px-6 py-3.5 text-xs font-bold text-violet">

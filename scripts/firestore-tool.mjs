@@ -11,7 +11,7 @@ const env = Object.fromEntries(
 );
 const db = getFirestore(initializeApp({ credential: cert({ projectId: env.FIREBASE_PROJECT_ID, clientEmail: env.FIREBASE_CLIENT_EMAIL, privateKey: env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n") }) }));
 
-const COLLECTIONS = ["users", "emails", "verifications", "lessons", "codes", "classes", "attempts", "progress", "mistakes", "usage", "tokens", "consents", "subscriptions", "_healthcheck"];
+const COLLECTIONS = ["users", "emails", "verifications", "lessons", "codes", "classes", "attempts", "progress", "mistakes", "usage", "tokens", "consents", "waitlist", "events", "invoices", "counters", "subscriptions", "_healthcheck"];
 const cmd = process.argv[2];
 
 async function deleteBy(collection, field, value) {
@@ -49,6 +49,8 @@ if (cmd === "count") {
     await deleteBy("mistakes", "userId", uid);
     await deleteBy("tokens", "userId", uid);
     await deleteBy("usage", "userId", uid);
+    await deleteBy("events", "userId", uid);
+    await deleteBy("invoices", "userId", uid);
     await db.collection("progress").doc(uid).delete();
     await db.collection("verifications").doc(uid).delete();
     await db.collection("subscriptions").doc(uid).delete();
@@ -67,6 +69,9 @@ if (cmd === "count") {
     c++;
   }
   if (c) console.log(`removed ${c} pending consent request(s)`);
+  // beta waitlist entries made by tests
+  const wl = await db.collection("waitlist").select("email").get();
+  for (const d of wl.docs) if (String(d.data().email).endsWith("@example.com")) await d.ref.delete();
   await db.collection("_healthcheck").doc("ping").delete();
   console.log(`removed ${n} test account(s) and everything they owned`);
 } else console.log("usage: count | wipe-test");

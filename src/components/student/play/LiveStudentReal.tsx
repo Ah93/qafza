@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -33,6 +34,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
   const [leaving, setLeaving] = useState(false);
   const [tries, setTries] = useState(0);
   const lastKey = useRef("");
+  const queued = useRef<{ slide: number; answer: LiveAnswer } | null>(null);
 
   // one stream; the browser reconnects by itself, a 403/404 closes it for good
   useEffect(() => {
@@ -62,6 +64,15 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
     }
   }, [key]);
 
+  // an answer given while offline goes out as soon as the connection is back
+  useEffect(() => {
+    const q = queued.current;
+    if (link !== "live" || !q || !snap) return;
+    queued.current = null;
+    const ci = slides[q.slide] && "i" in slides[q.slide] ? (slides[q.slide] as { i: number }).i : -1;
+    if (snap.at === q.slide && !snap.me.answered.includes(ci)) void post(seat.code, { action: "answer", sid: seat.sid, slide: q.slide, answer: q.answer });
+  }, [link, snap, slides, seat]);
+
   // the teacher's reveal comes with a sound: bright for a right answer, soft for a wrong one
   const reveal = snap ? slides[snap.at] : undefined;
   const revealAt = reveal?.kind === "reveal" ? reveal.i : null;
@@ -82,7 +93,12 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
       setBusy(true);
       const r = await post(seat.code, { action: "answer", sid: seat.sid, slide: snap.at, answer });
       setBusy(false);
-      if (!r.ok) toast.show(r.error);
+      if (r.ok) return;
+      if (r.status === 0) {
+        // no connection: keep the answer on this device and send it the moment the stream is back, if the class is still on this slide
+        queued.current = { slide: snap.at, answer };
+        toast.show("انقطع الاتصال. سنرسل إجابتك حين يعود.");
+      } else toast.show(r.error);
     },
     [snap, seat, toast],
   );
@@ -147,7 +163,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
               <div className="relative py-6 text-center">
                 <p className="text-[11px] font-semibold text-white/75">الحصة على وشك أن تبدأ</p>
                 <h1 className="mt-2 text-[34px] font-bold leading-tight">{lesson.title}</h1>
-                <p className="mt-3 text-xs font-medium text-white/80">{snap.count} طلاب في الحصة. شاشتك تتبع المعلّم تلقائيًا.</p>
+                <p className="mt-3 text-xs font-medium text-white/80">{plural.students(snap.count)} في الحصة. شاشتك تتبع المعلّم تلقائيًا.</p>
               </div>
             )}
 
@@ -190,7 +206,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
                 <p className="text-[11px] font-semibold text-white/75">انتهت الحصة</p>
                 <h1 className="mt-2 text-[34px] font-bold">أحسنت يا {me.name}!</h1>
                 <p className="mt-3 text-sm font-semibold text-white/90">
-                  جمعت {me.points} نقطة · ترتيبك {me.rank} من {snap.count}
+                  جمعت {plural.points(me.points)} · ترتيبك {me.rank} من {snap.count}
                 </p>
               </div>
             )}
@@ -319,13 +335,13 @@ function Progress({ lesson, at }: { lesson: Lesson; at: number }) {
       </ol>
       <p className="mt-2 text-[11px] font-bold text-indigo-deep/70">
         {at < 0
-          ? `ستبدأ الحصة قريبًا: ${total} محطات ثم تحدّي الزعيم.`
+          ? `ستبدأ الحصة قريبًا: ${plural.stations(total)} ثم تحدّي الزعيم.`
           : at > total
             ? "انتهت المحطات وتحدّي الزعيم."
             : at === total
               ? "تحدّي الزعيم: آخر ما في الحصة."
               : left > 0
-                ? `المحطة ${at + 1} من ${total} · تبقّى ${left === 1 ? "محطة واحدة" : `${left} محطات`} ثم تحدّي الزعيم.`
+                ? `المحطة ${at + 1} من ${total} · تبقّى ${plural.stations(left)} ثم تحدّي الزعيم.`
                 : `المحطة ${at + 1} من ${total}، وهي الأخيرة · ثم تحدّي الزعيم.`}
       </p>
     </div>

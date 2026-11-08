@@ -93,9 +93,9 @@ export function LoginForm() {
           onChange={(e) => setCode(e.target.value.toUpperCase())}
           maxLength={4}
           dir="ltr"
-          placeholder="7QK4"
+          placeholder="الرمز"
           aria-label="رمز اللعبة"
-          className="w-24 rounded-xl border border-violet/10 bg-white py-2 text-center text-sm font-bold tracking-widest text-indigo-deep outline-none focus:border-violet"
+          className="w-24 rounded-xl border border-violet/10 bg-white py-2 text-center text-sm font-bold tracking-widest text-indigo-deep outline-none placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-indigo-deep/35 focus:border-violet"
         />
         <button className="rounded-xl bg-indigo-deep px-4 py-2 text-xs font-bold text-white">ادخل</button>
       </form>

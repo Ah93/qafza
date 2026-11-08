@@ -503,34 +503,6 @@ const QUICK = [
   { text: "تُصنع خلايا الدم الحمراء في القلب.", answer: false },
   { text: "الشكل المقعّر يزيد مساحة سطح الخلية.", answer: true },
 ];
-const SECONDS = 8;
-
-function Countdown({ onEnd, paused }: { onEnd: () => void; paused: boolean }) {
-  const [s, setS] = useState(SECONDS);
-  const end = useRef(onEnd);
-  useEffect(() => {
-    end.current = onEnd;
-  });
-  useEffect(() => {
-    if (paused) return;
-    const id = setInterval(() => {
-      setS((v) => {
-        if (v <= 1) {
-          clearInterval(id);
-          queueMicrotask(() => end.current());
-          return 0;
-        }
-        return v - 1;
-      });
-    }, 1000);
-    return () => clearInterval(id);
-  }, [paused]);
-  return (
-    <span className={`rounded-full px-3 py-1 text-[12px] font-bold ${s <= 3 ? "bg-rose-400 text-white" : "bg-sun text-indigo-deep"}`} aria-label={`باقي ${s} ثوانٍ`}>
-      0:0{s}
-    </span>
-  );
-}
 
 export function QuickDemo() {
   const [i, setI] = useState(0);
@@ -556,7 +528,7 @@ export function QuickDemo() {
   return (
     <div className="relative flex min-h-[300px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-[#5a0620] via-[#9b1342] to-[#d62a76] p-4 text-white">
       <div className="flex items-center justify-between gap-3">
-        {state === "play" ? <Countdown key={i} onEnd={() => { setWhy("انتهى الوقت."); setState("lost"); }} paused={false} /> : <span className="rounded-full bg-white/15 px-3 py-1 text-[12px] font-bold">0:00</span>}
+        <span className="rounded-full bg-white/15 px-3 py-1 text-[12px] font-bold">بلا مؤقّت</span>
         <p className="text-[11px] font-bold">
           العبارة {Math.min(i + 1, QUICK.length)} من {QUICK.length} · خطأ واحد ينهي الجولة
         </p>

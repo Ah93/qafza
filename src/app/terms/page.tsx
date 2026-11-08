@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoGrid, LegalShell } from "@/components/legal/LegalShell";
 
-export const metadata: Metadata = { title: "الشروط — قفزة" };
+export const metadata: Metadata = { title: "الشروط — قفزة", description: "شروط استخدام منصة قفزة للمعلّمين والطلاب." };
 
 export default function TermsPage() {
   return (

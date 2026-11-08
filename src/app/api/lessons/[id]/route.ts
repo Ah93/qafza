@@ -1,4 +1,5 @@
 import { isResponse, requireUser } from "@/lib/server/auth";
+import { track } from "@/lib/server/events";
 import { fail, readJson, text } from "@/lib/server/http";
 import { deleteLesson, loadLesson, ownsLesson, patchLesson, updateLessonData, updateShare } from "@/lib/server/lessons";
 import { LessonShapeError } from "@/lib/lesson-schema";
@@ -26,7 +27,11 @@ export async function PATCH(req: Request, ctx: RouteContext<"/api/lessons/[id]">
     throw e;
   }
 
-  if (b.share !== undefined) await updateShare(user.id, id, b.share);
+  if (b.share !== undefined) {
+    await updateShare(user.id, id, b.share);
+    const how = (b.share as { how?: unknown } | null)?.how;
+    track("lesson_shared", { userId: user.id }, { how: how === "self" ? "self" : "live" });
+  }
 
   const patch: Parameters<typeof patchLesson>[1] = {};
   if ("folder" in b) patch.folder = b.folder === null ? null : text(b.folder, 60) || null;

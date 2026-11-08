@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -12,12 +13,24 @@ import { Outline } from "@/components/teacher/review/Outline";
 
 export default function ReviewPage() {
   const router = useRouter();
-  const { lesson, save, setTitle, hasDraft, draftReady } = useFlow();
+  const { lesson, save, setTitle, hasDraft, draftReady, undo, canUndo, autosave } = useFlow();
 
   // no lesson of yours to review (a bare visit or a lost tab): do not show the built-in sample as if it were yours
   useEffect(() => {
     if (draftReady && !hasDraft) router.replace("/dashboard");
   }, [draftReady, hasDraft, router]);
+  // Ctrl/Cmd+Z steps back through the last edits. Inside a text box the browser's own undo (letter by letter) stays in charge.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey) || e.key.toLowerCase() !== "z" || e.shiftKey) return;
+      const el = document.activeElement;
+      if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement || (el as HTMLElement | null)?.isContentEditable) return;
+      e.preventDefault();
+      undo();
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [undo]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,7 +50,7 @@ export default function ReviewPage() {
 
   const MODE_WORDS = ["", "نمط عرض واحد", "نمطي عرض", "ثلاثة أنماط عرض", "أربعة أنماط عرض", "خمسة أنماط عرض", "ستة أنماط عرض"];
   const parts = [
-    `${lesson.stations.length} محطات ب${MODE_WORDS[modes]}`,
+    `${plural.stations(lesson.stations.length)} ب${MODE_WORDS[modes]}`,
     `${lesson.stations.length} تحديات`,
     "تحدّي الزعيم",
     pending === 0 ? "لا شيء يحتاج مراجعة" : pending === 1 ? "محطة واحدة تحتاج مراجعة" : `${pending} محطات تحتاج مراجعة`,
@@ -52,7 +65,18 @@ export default function ReviewPage() {
             <h1 className="text-2xl font-bold">راجع درسك وعدّله</h1>
             <p className="mt-1.5 text-xs font-medium text-white/80">{parts.join(" · ")}</p>
           </div>
-          <div className="relative flex items-center gap-2.5">
+          <div className="relative flex flex-wrap items-center gap-2.5">
+            <span role="status" aria-live="polite" className="text-[11px] font-bold text-white/80">
+              {autosave === "saving" ? "يحفظ…" : autosave === "saved" ? "حُفظ ✓" : autosave === "error" ? "تعذّر الحفظ التلقائي" : ""}
+            </span>
+            <button
+              onClick={undo}
+              disabled={!canUndo}
+              title="تراجع عن آخر تعديل (Ctrl+Z)"
+              className="rounded-full bg-white/15 px-5 py-2.5 text-xs font-bold text-white transition hover:bg-white/25 disabled:opacity-40"
+            >
+              تراجع
+            </button>
             <Link
               href="/play/preview"
               className="rounded-full bg-white/15 px-5 py-2.5 text-xs font-bold text-white transition hover:bg-white/25"
@@ -64,7 +88,7 @@ export default function ReviewPage() {
               disabled={busy}
               className="rounded-full bg-white px-6 py-2.5 text-xs font-bold text-indigo-deep shadow-md transition hover:bg-white/90 disabled:opacity-60"
             >
-              {busy ? "جارٍ الحفظ…" : "احفظ وشارك"}
+              {busy ? "جارٍ الحفظ…" : "شارك"}
             </button>
           </div>
         </section>

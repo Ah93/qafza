@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/client-api";
 import type { PlanStatus } from "@/lib/pricing";
+import { fmtDate } from "@/lib/format";
 
 /** the signed-in teacher's plan (null while loading) */
 export function usePlan() {
@@ -18,4 +19,4 @@ export function usePlan() {
   return { plan, reload };
 }
 
-export const dateAr = (ms: number) => new Date(ms).toLocaleDateString("ar", { day: "numeric", month: "long", year: "numeric" });
+export const dateAr = (ms: number) => fmtDate(ms, { day: "numeric", month: "long", year: "numeric" });

@@ -4,7 +4,7 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { AuthTabs, SocialButtons } from "@/components/auth/parts";
 import { LoginForm } from "@/components/auth/LoginForm";
 
-export const metadata: Metadata = { title: "تسجيل الدخول — قفزة" };
+export const metadata: Metadata = { title: "تسجيل الدخول — قفزة", description: "ادخل إلى حسابك في قفزة لتكمل دروسك وتتابع نتائج طلابك." };
 
 export default function LoginPage() {
   return (

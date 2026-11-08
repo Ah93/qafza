@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Check } from "lucide-react";
 import { TeacherHeader } from "../TeacherHeader";
 import { useFlow } from "../FlowProvider";
-import { postJson } from "@/lib/client-api";
+import { postJson, trackEvent } from "@/lib/client-api";
 import { CURRENCIES, METHODS, PRICES, methodsFor, money, type Currency, type PayMethod, type PlanId } from "@/lib/pricing";
 import { dateAr, usePlan } from "../usePlan";
 import { useToast } from "../Toast";
@@ -24,6 +24,7 @@ export function PricingView() {
   const { user } = useFlow();
   const { plan: status } = usePlan();
   const justPaid = useSearchParams().get("paid") === "1";
+  useEffect(() => trackEvent("upgrade_viewed"), []);
   const [busy, setBusy] = useState(false);
   const toast = useToast();
   const [currency, setCurrency] = useState<Currency>("usd");
@@ -43,6 +44,7 @@ export function PricingView() {
   const [payError, setPayError] = useState<string | null>(null);
 
   async function pay() {
+    trackEvent("upgrade_clicked");
     setBusy(true);
     setPayError(null);
     const r = await postJson<{ url: string }>("/api/billing/checkout", { plan, currency, method });
@@ -129,6 +131,7 @@ export function PricingView() {
             </p>
             <p className="relative mt-2 text-xs font-bold text-sun">
               {plan === "monthly" ? "ألغِ متى شئت" : `أي نحو ${sym(perMonth)} شهريًا`}
+              {currency === "sar" && <span className="mt-1 block text-[11px] font-semibold text-white/80">الأسعار بالريال شاملة ضريبة القيمة المضافة (15%). وتصلك فاتورة بعد كل دفعة.</span>}
             </p>
 
             <ul className="relative mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs font-semibold">

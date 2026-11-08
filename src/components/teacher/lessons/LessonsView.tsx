@@ -9,6 +9,7 @@ import { TeacherHeader } from "../TeacherHeader";
 import { useFlow } from "../FlowProvider";
 import { useToast } from "../Toast";
 import { fieldCls } from "../ui";
+import { dateFormat } from "@/lib/format";
 
 const ICONS: LucideIcon[] = [Orbit, Ellipsis, Copy, Waypoints, BookOpen];
 const iconFor = (id: string) => ICONS[[...id].reduce((t, c) => t + c.charCodeAt(0), 0) % ICONS.length];
@@ -23,7 +24,7 @@ const readFolders = () => {
   }
 };
 
-const date = new Intl.DateTimeFormat("ar", { day: "numeric", month: "long", numberingSystem: "latn" });
+const date = dateFormat({ day: "numeric", month: "long" });
 
 function Art({ icon: Icon }: { icon: LucideIcon }) {
   return (
@@ -85,7 +86,7 @@ function CardMenu({ lesson, folders, onAction }: { lesson: LessonSummary; folder
           {!moving ? (
             <>
               <button role="menuitem" className={item} onClick={() => run("open")}>
-                فتح وتعديل
+                تعديل الدرس
               </button>
               {!lesson.archived && (
                 <button role="menuitem" className={item} onClick={() => run("share")}>
@@ -292,7 +293,7 @@ export function LessonsView() {
                 {shown.map((l) => (
                   <li key={l.id} className="relative">
                     <article className="overflow-hidden rounded-3xl border border-violet/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet/10">
-                      <button onClick={() => open(l, "/create/review")} className="block w-full text-start" aria-label={`افتح ${l.title}`}>
+                      <button onClick={() => router.push(`/lessons/${l.id}`)} className="block w-full text-start" aria-label={`افتح صفحة ${l.title}`}>
                         <Art icon={iconFor(l.id)} />
                         <span className={`absolute end-3 top-3 rounded-full px-3 py-1 text-[10px] font-bold text-white ${l.archived ? "bg-slate-400" : l.status === "draft" ? "bg-slate-500" : "bg-mint"}`}>
                           {l.archived ? "مؤرشف" : l.status === "draft" ? "مسودة" : "منشور"}

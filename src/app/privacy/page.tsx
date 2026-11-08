@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { InfoGrid, LegalShell } from "@/components/legal/LegalShell";
 
-export const metadata: Metadata = { title: "الخصوصية — قفزة" };
+export const metadata: Metadata = { title: "الخصوصية — قفزة", description: "ما نحفظه عنك وما لا نجمعه أبدًا، وكيف تحذف حسابك وبياناتك." };
 
 export default function PrivacyPage() {
   return (

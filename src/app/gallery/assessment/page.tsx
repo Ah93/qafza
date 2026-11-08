@@ -13,7 +13,7 @@ import {
   TrueFalseDemo,
 } from "@/components/gallery/AssessmentDemos";
 
-export const metadata: Metadata = { title: "معرض أنماط التقييم — قفزة" };
+export const metadata: Metadata = { title: "معرض أنماط التقييم — قفزة", description: "اسأل بأكثر من طريقة: أربعة أنماط متاحة الآن وخمسة قادمة. أجب عن كل تحدٍّ وشاهد كيف يُشرح الخطأ." };
 
 export default function AssessmentGalleryPage() {
   return (
@@ -47,7 +47,7 @@ export default function AssessmentGalleryPage() {
       <ModeCard icon={<Users className="size-5" />} title="سيناريو" fits="التطبيق في مواقف حقيقية" launch={false} note="موقف من الحياة، والطالب يختار ما يفعل بحسب ما تعلّم.">
         <ScenarioDemo />
       </ModeCard>
-      <ModeCard icon={<Zap className="size-5" />} title="أسئلة سريعة" fits="المسابقات وتحدّي الزعيم" launch={false} note="سلسلة عبارات بمؤقّت قصير، وخطأ واحد ينهي الجولة.">
+      <ModeCard icon={<Zap className="size-5" />} title="أسئلة سريعة" fits="المسابقات وتحدّي الزعيم" launch={false} note="سلسلة عبارات، وخطأ واحد ينهي الجولة. بلا مؤقّت، فلا نعاقب على البطء.">
         <QuickDemo />
       </ModeCard>
     </GalleryShell>

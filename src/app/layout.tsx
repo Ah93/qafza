@@ -11,8 +11,8 @@ const readex = Readex_Pro({
 });
 
 export const metadata: Metadata = {
-  title: "قفزة — حوّل أي درس إلى تجربة يلعبها طلابك",
-  description: "ارفع ملفك، وتحوّله قفزة في أقل من دقيقة إلى درس تفاعلي ملعوب.",
+  title: "قفزة — من ملف عادي إلى درس لا يُقاوَم",
+  description: "ارفع درسك، وتبنيه قفزة في أقل من دقيقة درسًا تفاعليًا يلعبه طلابك. جرّبه مجانًا.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

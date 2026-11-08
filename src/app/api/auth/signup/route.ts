@@ -1,4 +1,5 @@
 import { deliverCode, hashPassword, issueVerificationCode, startSession } from "@/lib/server/auth";
+import { track } from "@/lib/server/events";
 import { skipVerification } from "@/lib/server/mail";
 import { updateUser } from "@/lib/server/users";
 import { createConsent } from "@/lib/server/consents";
@@ -41,6 +42,7 @@ export async function POST(req: Request) {
 
   const id = await createUser({ email, firstName: first, lastName: last, passwordHash: await hashPassword(password), role, country: text(b.country, 8) || null, birthYear });
   if (!id) return fail("هذا البريد مسجّل من قبل. جرّب تسجيل الدخول.", 409);
+  track("signup_completed", { userId: id });
 
   if (skipVerification()) {
     await updateUser(id, { verified: true });

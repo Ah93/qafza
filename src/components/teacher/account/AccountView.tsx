@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { X } from "lucide-react";
 import { TeacherHeader } from "../TeacherHeader";
 import { useFlow } from "../FlowProvider";
 import { api, postJson } from "@/lib/client-api";
 import { dateAr, usePlan } from "../usePlan";
+import { money } from "@/lib/pricing";
+import type { Invoice } from "@/lib/server/invoices";
 import { useToast } from "../Toast";
 import { Chip, Label, Switch, fieldCls } from "../ui";
 
@@ -67,6 +69,14 @@ function ToggleRow({
 
 export function AccountView() {
   const { plan } = usePlan();
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  useEffect(() => {
+    let live = true;
+    api<{ invoices: Invoice[] }>("/api/billing/invoices").then((r) => live && r.ok && setInvoices(r.data.invoices));
+    return () => {
+      live = false;
+    };
+  }, []);
   const { user, account, setUserName } = useFlow();
   const toast = useToast();
   const [section, setSection] = useState<SectionId>("profile");
@@ -370,6 +380,22 @@ export function AccountView() {
               >
                 {plan?.entitled ? "جدّد اشتراكك" : "اشترك في قفزة الكاملة"}
               </Link>
+              <h3 className="mt-6 text-sm font-bold text-indigo-deep">الفواتير</h3>
+              {invoices.length === 0 ? (
+                <p className="mt-2 text-xs font-medium text-indigo-deep/55">لا فواتير بعد. تصلك فاتورة بالبريد بعد كل دفعة، وتجدها هنا.</p>
+              ) : (
+                <ul className="mt-2 divide-y divide-violet/10 rounded-2xl border border-violet/10">
+                  {invoices.map((i) => (
+                    <li key={i.id} className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-xs font-bold text-indigo-deep">
+                      <span dir="ltr">{i.number}</span>
+                      <span>{money(i.currency, i.total)}</span>
+                      <Link href={`/account/invoices/${i.id}`} className="text-violet underline underline-offset-4">
+                        افتح الفاتورة
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </Card>
           )}
         </div>

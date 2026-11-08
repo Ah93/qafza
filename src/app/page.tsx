@@ -2,18 +2,19 @@ import Link from "next/link";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { HeroDemo } from "@/components/landing/HeroDemo";
+import { BetaBar } from "@/components/landing/BetaBar";
 
 const STEPS = [
-  { n: "١", title: "ارفع", body: "ملف PDF أو Word، أو رابط صفحة، أو نص", bg: "from-indigo-ink to-indigo-deep" },
-  { n: "٢", title: "لعّب", body: "يُبنى أمامك في أقل من دقيقة", bg: "from-orchid to-violet" },
-  { n: "٣", title: "شارك", body: "حصة مباشرة، أو تعلّم ذاتي", bg: "from-plum to-pink-card" },
+  { n: "1", title: "ارفع", body: "ملفك كما هو، دون أي تجهيز: PDF أو Word أو رابط أو نص", bg: "from-indigo-ink to-indigo-deep" },
+  { n: "2", title: "لعّب", body: "تبنيه قفزة: محطات وتحديات وزعيم في أقل من دقيقة، وأنت تراجع وتعتمد", bg: "from-orchid to-violet" },
+  { n: "3", title: "شارك", body: "على السبورة، أو برابط لكل طالب", bg: "from-plum to-pink-card" },
 ];
 
 const FEATURES = [
   {
     count: "6 متاحة الآن، و4 قادمة",
     title: "أنماط العرض",
-    body: "كل فكرة تُعرض بالشكل الأنسب لها: رسم، أو خط زمني، أو بطاقات، أو حوار.",
+    body: "لكل فكرة شكلها: تختار قفزة من 6 أنماط عرض ما يناسب كل فكرة، وتأتي 4 أخرى قريبًا.",
     tone: "text-violet",
     chip: "bg-violet",
     href: "/gallery",
@@ -21,15 +22,15 @@ const FEATURES = [
   {
     count: "5 عوالم لعب، والمزيد قادم",
     title: "عوالم اللعب",
-    body: "نقاط ورتب ومجموعات وتحدٍّ أخير، تُبقي الطالب متحمّسًا حتى النهاية.",
+    body: "نقاط ورتب ومجموعات تتنافس، وزعيم في الآخر. تُبقي الصف كله حاضرًا حتى النهاية.",
     tone: "text-pink-card",
     chip: "bg-pink-card",
-    href: "/rules",
+    href: "/gallery/frameworks",
   },
   {
     count: "4 متاحة الآن، و5 قادمة",
     title: "أنماط التقييم",
-    body: "تحدٍّ بعد كل محطة، وكل خطأ يُشرح فورًا.",
+    body: "كل خطأ فرصة فهم: تحدٍّ بعد كل محطة، وكل إجابة خاطئة تُشرح فورًا من درسك نفسه.",
     tone: "text-teal-card",
     chip: "bg-teal-card",
     href: "/gallery/assessment",
@@ -39,29 +40,35 @@ const FEATURES = [
 export default function Home() {
   return (
     <>
+      <BetaBar />
       <SiteHeader />
       <main className="mx-auto w-full max-w-[1080px] flex-1 px-5">
         {/* hero */}
         <section className="grid items-center gap-10 py-10 lg:grid-cols-2">
           <div>
             <h1 className="text-5xl font-bold leading-[1.25] text-indigo-deep lg:text-[56px]">
-              حوّل أي درس
+              من ملف عادي…
               <br />
-              <span className="bg-brand-text">إلى تجربة يلعبها</span>
+              <span className="bg-brand-text">إلى درس</span>
               <br />
-              <span className="bg-brand-text">طلابك.</span>
+              <span className="bg-brand-text">لا يُقاوَم.</span>
             </h1>
             <p className="mt-5 max-w-md text-[15px] leading-8 text-indigo-deep/70">
-              ارفع ملفك، وتحوّله قفزة في أقل من دقيقة إلى درس تفاعلي ملعوب. أي مادة، وبأي لغة.
+              ارفع درسك كما هو، وتبنيه قفزة في أقل من دقيقة: محطات تفاعلية، وتحدٍّ بعد كل فكرة، ومنافسة تُبقي الصف كله حاضرًا.
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-4">
               <Link
                 href="/signup"
                 className="rounded-full bg-brand px-8 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30"
               >
-                ابدأ بدرس مجاني
+                ابنِ درسك مجانًا
               </Link>
-              <span className="text-[11px] text-indigo-deep/50">جرّب: بدّل نمط العرض في المثال</span>
+              <Link href="/play/demo" className="rounded-full border border-violet/15 bg-white px-7 py-3 text-sm font-bold text-violet transition hover:border-violet/40">
+                جرّب درسًا جاهزًا
+              </Link>
+            </div>
+            <div className="mt-3">
+              <span className="text-[11px] text-indigo-deep/55">جرّب بنفسك: الدرس نفسه بأربعة أشكال.</span>
             </div>
           </div>
           <HeroDemo />
@@ -110,12 +117,12 @@ export default function Home() {
 
         {/* pricing */}
         <section className="mt-14">
-          <h2 className="mb-4 text-2xl font-bold text-indigo-deep">سعر واحد يفتح كل شيء</h2>
+          <h2 className="mb-4 text-2xl font-bold text-indigo-deep">ابدأ مجانًا، وادفع حين تقتنع.</h2>
           <div className="grid items-center gap-4 sm:grid-cols-3">
             <article className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
               <div className="text-sm font-semibold text-indigo-deep">التجربة المجانية</div>
               <div className="mt-1 text-3xl font-bold text-indigo-deep">مجانًا</div>
-              <p className="mt-2 text-xs text-indigo-deep/60">درس كامل بكل المزايا، مع حصته وتقريره.</p>
+              <p className="mt-2 text-xs text-indigo-deep/60">درسك الأول علينا: كاملًا بكل مزاياه، مع حصته وتقريره.</p>
               <Link
                 href="/signup"
                 className="mt-5 block rounded-full border border-violet/15 py-2.5 text-center text-xs font-bold text-violet"
@@ -144,7 +151,7 @@ export default function Home() {
             <article className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
               <div className="text-sm font-semibold text-indigo-deep">المؤسسات</div>
               <div className="mt-1 text-3xl font-bold text-indigo-deep">عرض خاص</div>
-              <p className="mt-2 text-xs text-indigo-deep/60">للمدارس والمعاهد والجامعات وأقسام التدريب.</p>
+              <p className="mt-2 text-xs text-indigo-deep/60">لمدرستك أو جامعتك: عرض يناسب حجمكم واحتياجكم.</p>
               <Link
                 href="/pricing#contact"
                 className="mt-5 block rounded-full border border-violet/15 py-2.5 text-center text-xs font-bold text-violet"
@@ -153,6 +160,14 @@ export default function Home() {
               </Link>
             </article>
           </div>
+        </section>
+
+        {/* closing */}
+        <section className="my-14 rounded-3xl bg-gradient-to-l from-indigo-deep to-[#4a1d96] px-6 py-8 text-center text-white shadow-xl shadow-indigo-deep/25">
+          <p className="mx-auto max-w-xl text-lg font-bold leading-9">حصتك القادمة يمكن أن تكون أكثر حصة ينتظرها طلابك هذا الأسبوع.</p>
+          <Link href="/signup" className="mt-5 inline-block rounded-full bg-white px-9 py-3 text-sm font-bold text-indigo-deep shadow-md transition hover:bg-white/90">
+            ابنِ درسك الآن
+          </Link>
         </section>
       </main>
       <SiteFooter />

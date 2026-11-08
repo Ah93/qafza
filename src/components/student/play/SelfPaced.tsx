@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -16,8 +17,9 @@ import { SourceChip } from "@/components/teacher/review/parts";
 import { BossView, ChallengeView } from "./ChallengeView";
 import { StationView } from "./StationView";
 import { accuracy, buildSequence, finalBadges, initialRun, reducer, type Run } from "./run";
+import { dateFormat } from "@/lib/format";
 
-const weekday = new Intl.DateTimeFormat("ar", { weekday: "long" });
+const weekday = dateFormat({ weekday: "long" });
 
 type Board = { top: { name: string; points: number }[]; scores: number[] };
 type OpenAttempt = { id: string; results: (0 | 1 | null)[]; points: number; reached: number; minutes: number };
@@ -39,6 +41,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   const [opened, setOpened] = useState(false);
   const [maxAt, setMaxAt] = useState(0);
   const [offline, setOffline] = useState(false);
+  const [sheet, setSheet] = useState(false);
   /** what the student picked on the first try of each challenge, kept so the teacher can see which wrong answer tempted the class */
   const choices = useRef<Record<number, number>>({});
   const [welcome, setWelcome] = useState(false);
@@ -172,6 +175,18 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   const points = run.startPoints + run.points;
   const rank = rankOf(points);
 
+  /** the student chose to begin again: a fresh attempt (the unfinished one is left behind and never counts) */
+  function startOver() {
+    choices.current = {};
+    attemptId.current = undefined;
+    dispatch({ type: "reset" });
+    setResolved({});
+    setMaxAt(0);
+    setSeconds(0);
+    setWelcome(false);
+    void save(initialRun(0), 0, false, 0);
+  }
+
   function goTo(at: number) {
     const target = seq[at];
     if (target?.kind === "station") dispatch({ type: "mode", mode: lesson.stations[target.i].mode });
@@ -245,6 +260,124 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
 
   if (needsJoin) return null;
 
+  /* the side column: the map of stations, then the leaderboard and the cards. On a phone the map is the strip at the top
+     and the other two open from the bottom button, so the station and the challenge get the whole width. */
+  const mapSection = (
+    <>
+            <section className="rounded-3xl border border-violet/10 bg-white p-4 shadow-sm">
+              <h2 className="flex items-center justify-between text-base font-bold text-indigo-deep">
+                خريطة المحطات
+                <Network className="size-3.5 text-violet" />
+              </h2>
+              <ol className="mt-2.5 space-y-1">
+                {lesson.stations.map((s, i) => {
+                  const here = (phase.kind === "station" || phase.kind === "challenge") && phase.i === i;
+                  const reached = seq.findIndex((x) => x.kind === "station" && x.i === i) <= maxAt;
+                  const done = seq.findIndex((x) => x.kind === "challenge" && x.i === i) < run.at;
+                  return (
+                    <li key={s.id}>
+                      <button
+                        disabled={!reached}
+                        onClick={() => goTo(seq.findIndex((x) => x.kind === "station" && x.i === i))}
+                        className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-start text-xs font-bold transition ${here ? "bg-violet/10 text-violet" : reached ? "text-indigo-deep hover:bg-violet/5" : "text-indigo-deep/35"}`}
+                      >
+                        <span className={`grid size-6 shrink-0 place-items-center rounded-full text-[10px] ${here ? "bg-violet text-white" : done ? "bg-mint text-white" : "bg-violet/10"}`}>
+                          {done ? <Check className="size-3" strokeWidth={3.5} /> : i + 1}
+                        </span>
+                        <span className="truncate">{s.title}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+                <li>
+                  <span className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-bold ${phase.kind === "boss" ? "bg-pink-card/10 text-pink-card" : "text-indigo-deep/35"}`}>
+                    <span className="grid size-6 place-items-center rounded-full bg-pink-card/10 text-[10px] text-pink-card">★</span>
+                    الزعيم
+                  </span>
+                </li>
+              </ol>
+            </section>
+
+    </>
+  );
+  const restSection = (
+    <>
+
+            <section className="dots relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#241356] to-[#4a1d96] p-4 text-white shadow-xl shadow-indigo-deep/25">
+              <div className="relative flex items-center justify-between">
+                <h2 className="flex items-center gap-1.5 whitespace-nowrap text-[15px] font-bold">
+                  لوحة الصدارة
+                  <Trophy className="size-3.5 text-sun" />
+                </h2>
+                {sampleOnly && (
+                  <div className="flex rounded-full bg-white/10 p-0.5 text-[9px] font-bold">
+                    {([
+                      ["people", "الأفراد"],
+                      ["groups", "المجموعات"],
+                    ] as const).map(([id, label]) => (
+                      <button key={id} onClick={() => setBoard(id)} aria-pressed={board === id} className={`rounded-full px-2 py-1 transition ${board === id ? "bg-white text-indigo-deep" : "text-white/70"}`}>
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <ol className="relative mt-3 space-y-1.5">
+                {board === "people" || !sampleOnly
+                  ? people.map((p, i) => (
+                      <li key={`${p.name}-${i}`} className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-bold ${p.me ? "bg-white/20 ring-1 ring-white/40" : "bg-white/10"}`}>
+                        <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
+                        <span className="grid size-5 place-items-center rounded-full text-[10px]" style={{ background: p.color }}>
+                          {p.initial}
+                        </span>
+                        <span className="flex-1 truncate">{p.name}</span>
+                        <span>{p.score}</span>
+                      </li>
+                    ))
+                  : groups.map((g, i) => (
+                      <li key={g.name} className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-bold ${g.mine ? "bg-white/20 ring-1 ring-white/40" : "bg-white/10"}`}>
+                        <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
+                        <span className="size-2.5 rounded-[3px]" style={{ background: g.color }} />
+                        <span className="flex-1">
+                          {g.name}
+                          {g.mine ? "، مجموعتك" : ""}
+                        </span>
+                        <span>{g.score}</span>
+                      </li>
+                    ))}
+              </ol>
+              {!real && !sampleOnly && <p className="relative mt-2.5 text-[10px] font-medium leading-5 text-white/75">هنا تظهر أسماء طلابك حين يلعبون الدرس. هذه معاينة، فلا أحد غيرك فيها.</p>}
+              {real && myRank !== null && live && <p className="relative mt-2.5 text-[10px] font-medium text-white/70">ترتيبك الآن: {myRank} من {live.scores.length + 1}</p>}
+            </section>
+
+            <section className="rounded-3xl border border-violet/10 bg-white p-4 shadow-sm">
+              <h2 className="flex items-center justify-between text-base font-bold text-indigo-deep">
+                بطاقاتك
+                <span className="flex items-center gap-1.5 text-[10px] font-semibold text-indigo-deep/50">
+                  {run.cards.length} من {CARDS.length}
+                  <Layers className="size-3.5 text-pink-card" />
+                </span>
+              </h2>
+              <ul className="mt-3 grid grid-cols-3 gap-2">
+                {CARDS.map((c, i) => {
+                  const has = run.cards.includes(i);
+                  return (
+                    <li
+                      key={c.name}
+                      title={has ? cardName(i, lesson.stations.map((s) => s.title)) : "لم تُكتشف"}
+                      className={`grid aspect-[4/3] place-items-center rounded-xl px-1 text-center text-[9px] font-bold leading-4 ${has ? (c.rare ? "bg-gradient-to-br from-amber-400 to-pink-500 text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/30"}`}
+                    >
+                      {has ? cardName(i, lesson.stations.map((s) => s.title)) : "؟"}
+                    </li>
+                  );
+                })}
+              </ul>
+              <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
+            </section>
+
+    </>
+  );
+
   return (
     <>
       <PlayHeader title={lesson.title}>
@@ -268,13 +401,13 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
         </div>
       )}
 
-      <main className="mx-auto w-full max-w-[1000px] flex-1 px-5 py-5">
+      <main className="mx-auto w-full max-w-[1000px] flex-1 px-5 py-5 max-md:pb-24">
         {/* stats */}
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-3xl border border-violet/10 bg-white px-5 py-3 shadow-sm">
           <Hearts n={run.hearts} />
           <Flame n={run.streak} />
           <span className="text-[11px] font-semibold text-indigo-deep/55">الشعلة</span>
-          <span className="rounded-full bg-mint px-3.5 py-1.5 text-[11px] font-bold text-white">{run.points} نقطة معرفة</span>
+          <span className="rounded-full bg-mint px-3.5 py-1.5 text-[11px] font-bold text-white">{plural.knowledgePoints(run.points)}</span>
           <span className="rounded-full bg-sun px-3.5 py-1.5 text-[11px] font-bold text-indigo-deep">الرتبة: {rank.name}</span>
         </div>
 
@@ -287,7 +420,32 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
           })}
         </div>
 
-        <div className="mt-4 grid items-start gap-4 lg:grid-cols-[1fr_230px]">
+        {/* phone: one dot per station (tap one you have reached to go back to it) */}
+        <ol className="mt-3 flex items-center justify-between gap-1.5 md:hidden" aria-label="المحطات">
+          {lesson.stations.map((st, i) => {
+            const here = (phase.kind === "station" || phase.kind === "challenge") && phase.i === i;
+            const reached = seq.findIndex((x) => x.kind === "station" && x.i === i) <= maxAt;
+            const done = seq.findIndex((x) => x.kind === "challenge" && x.i === i) < run.at;
+            return (
+              <li key={st.id} className="flex-1">
+                <button
+                  disabled={!reached}
+                  onClick={() => goTo(seq.findIndex((x) => x.kind === "station" && x.i === i))}
+                  aria-label={`المحطة ${i + 1}: ${st.title}${here ? " (الحالية)" : done ? " (أنهيتها)" : ""}`}
+                  aria-current={here ? "step" : undefined}
+                  className={`mx-auto grid size-11 place-items-center rounded-full text-sm font-bold transition ${here ? "bg-violet text-white ring-4 ring-violet/20" : done ? "bg-mint text-white" : reached ? "bg-violet/10 text-violet" : "bg-slate-100 text-slate-400"}`}
+                >
+                  {done ? <Check className="size-4" strokeWidth={3.5} /> : i + 1}
+                </button>
+              </li>
+            );
+          })}
+          <li className="flex-1">
+            <span aria-label="الزعيم" className={`mx-auto grid size-11 place-items-center rounded-full text-sm ${phase.kind === "boss" ? "bg-pink-card text-white ring-4 ring-pink-card/20" : "bg-pink-card/10 text-pink-card"}`}>★</span>
+          </li>
+        </ol>
+
+        <div className="mt-4 grid items-start gap-4 md:grid-cols-[1fr_230px]">
           <div className="min-w-0">
             <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm sm:p-6" aria-live="polite">
               {station && phase.kind === "station" && (
@@ -417,115 +575,34 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
 
           </div>
 
-          <aside className="space-y-3">
-            <section className="rounded-3xl border border-violet/10 bg-white p-4 shadow-sm">
-              <h2 className="flex items-center justify-between text-base font-bold text-indigo-deep">
-                خريطة المحطات
-                <Network className="size-3.5 text-violet" />
-              </h2>
-              <ol className="mt-2.5 space-y-1">
-                {lesson.stations.map((s, i) => {
-                  const here = (phase.kind === "station" || phase.kind === "challenge") && phase.i === i;
-                  const reached = seq.findIndex((x) => x.kind === "station" && x.i === i) <= maxAt;
-                  const done = seq.findIndex((x) => x.kind === "challenge" && x.i === i) < run.at;
-                  return (
-                    <li key={s.id}>
-                      <button
-                        disabled={!reached}
-                        onClick={() => goTo(seq.findIndex((x) => x.kind === "station" && x.i === i))}
-                        className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-start text-xs font-bold transition ${here ? "bg-violet/10 text-violet" : reached ? "text-indigo-deep hover:bg-violet/5" : "text-indigo-deep/35"}`}
-                      >
-                        <span className={`grid size-6 shrink-0 place-items-center rounded-full text-[10px] ${here ? "bg-violet text-white" : done ? "bg-mint text-white" : "bg-violet/10"}`}>
-                          {done ? <Check className="size-3" strokeWidth={3.5} /> : i + 1}
-                        </span>
-                        <span className="truncate">{s.title}</span>
-                      </button>
-                    </li>
-                  );
-                })}
-                <li>
-                  <span className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-bold ${phase.kind === "boss" ? "bg-pink-card/10 text-pink-card" : "text-indigo-deep/35"}`}>
-                    <span className="grid size-6 place-items-center rounded-full bg-pink-card/10 text-[10px] text-pink-card">★</span>
-                    الزعيم
-                  </span>
-                </li>
-              </ol>
-            </section>
-
-            <section className="dots relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#241356] to-[#4a1d96] p-4 text-white shadow-xl shadow-indigo-deep/25">
-              <div className="relative flex items-center justify-between">
-                <h2 className="flex items-center gap-1.5 whitespace-nowrap text-[15px] font-bold">
-                  لوحة الصدارة
-                  <Trophy className="size-3.5 text-sun" />
-                </h2>
-                {sampleOnly && (
-                  <div className="flex rounded-full bg-white/10 p-0.5 text-[9px] font-bold">
-                    {([
-                      ["people", "الأفراد"],
-                      ["groups", "المجموعات"],
-                    ] as const).map(([id, label]) => (
-                      <button key={id} onClick={() => setBoard(id)} aria-pressed={board === id} className={`rounded-full px-2 py-1 transition ${board === id ? "bg-white text-indigo-deep" : "text-white/70"}`}>
-                        {label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <ol className="relative mt-3 space-y-1.5">
-                {board === "people" || !sampleOnly
-                  ? people.map((p, i) => (
-                      <li key={`${p.name}-${i}`} className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-bold ${p.me ? "bg-white/20 ring-1 ring-white/40" : "bg-white/10"}`}>
-                        <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
-                        <span className="grid size-5 place-items-center rounded-full text-[10px]" style={{ background: p.color }}>
-                          {p.initial}
-                        </span>
-                        <span className="flex-1 truncate">{p.name}</span>
-                        <span>{p.score}</span>
-                      </li>
-                    ))
-                  : groups.map((g, i) => (
-                      <li key={g.name} className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-bold ${g.mine ? "bg-white/20 ring-1 ring-white/40" : "bg-white/10"}`}>
-                        <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
-                        <span className="size-2.5 rounded-[3px]" style={{ background: g.color }} />
-                        <span className="flex-1">
-                          {g.name}
-                          {g.mine ? "، مجموعتك" : ""}
-                        </span>
-                        <span>{g.score}</span>
-                      </li>
-                    ))}
-              </ol>
-              {!real && !sampleOnly && <p className="relative mt-2.5 text-[10px] font-medium leading-5 text-white/75">هنا تظهر أسماء طلابك حين يلعبون الدرس. هذه معاينة، فلا أحد غيرك فيها.</p>}
-              {real && myRank !== null && live && <p className="relative mt-2.5 text-[10px] font-medium text-white/70">ترتيبك الآن: {myRank} من {live.scores.length + 1}</p>}
-            </section>
-
-            <section className="rounded-3xl border border-violet/10 bg-white p-4 shadow-sm">
-              <h2 className="flex items-center justify-between text-base font-bold text-indigo-deep">
-                بطاقاتك
-                <span className="flex items-center gap-1.5 text-[10px] font-semibold text-indigo-deep/50">
-                  {run.cards.length} من {CARDS.length}
-                  <Layers className="size-3.5 text-pink-card" />
-                </span>
-              </h2>
-              <ul className="mt-3 grid grid-cols-3 gap-2">
-                {CARDS.map((c, i) => {
-                  const has = run.cards.includes(i);
-                  return (
-                    <li
-                      key={c.name}
-                      title={has ? cardName(i, lesson.stations.map((s) => s.title)) : "لم تُكتشف"}
-                      className={`grid aspect-[4/3] place-items-center rounded-xl px-1 text-center text-[9px] font-bold leading-4 ${has ? (c.rare ? "bg-gradient-to-br from-amber-400 to-pink-500 text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/30"}`}
-                    >
-                      {has ? cardName(i, lesson.stations.map((s) => s.title)) : "؟"}
-                    </li>
-                  );
-                })}
-              </ul>
-              <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
-            </section>
+          <aside className="hidden space-y-3 md:block">
+            {mapSection}
+            {restSection}
           </aside>
         </div>
       </main>
+
+      {/* phone: the leaderboard and the cards, pulled up from the bottom */}
+      <button
+        onClick={() => setSheet(true)}
+        className="fixed inset-x-5 bottom-5 z-30 rounded-full bg-indigo-deep py-3.5 text-sm font-bold text-white shadow-xl shadow-indigo-deep/30 md:hidden"
+      >
+        ترتيبي وبطاقاتي
+      </button>
+      {sheet && (
+        <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true" aria-label="ترتيبي وبطاقاتي">
+          <button aria-label="أغلق" className="absolute inset-0 bg-indigo-deep/50" onClick={() => setSheet(false)} />
+          <div className="absolute inset-x-0 bottom-0 max-h-[82vh] animate-[pop_.25s_ease-out] space-y-3 overflow-y-auto rounded-t-[28px] bg-lavender p-4 pb-6 shadow-2xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-indigo-deep">ترتيبي وبطاقاتي</h2>
+              <button onClick={() => setSheet(false)} className="rounded-full bg-white px-5 py-2 text-xs font-bold text-violet shadow-sm">
+                إغلاق
+              </button>
+            </div>
+            {restSection}
+          </div>
+        </div>
+      )}
 
       {run.rankUp !== null && (
         <Overlay label="ترقية الرتبة">
@@ -547,8 +624,11 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
           <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
             تقدّمك محفوظ. أنت عند {phase.kind === "station" ? `المحطة ${phase.i + 1}` : phase.kind === "challenge" ? `التحدي ${challengeNo + 1}` : "الجزء التالي"} من {total}، ومعك {run.points} نقطة.
           </p>
-          <button autoFocus onClick={() => setWelcome(false)} className="mt-5 rounded-full bg-brand px-9 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
-            تابع من حيث توقفت
+          <button autoFocus onClick={() => setWelcome(false)} className="mt-5 w-full rounded-full bg-brand px-9 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
+            {phase.kind === "station" ? `أكمل من المحطة ${phase.i + 1}` : phase.kind === "challenge" ? `أكمل من التحدي ${challengeNo + 1}` : "أكمل من حيث توقفت"}
+          </button>
+          <button onClick={startOver} className="mt-2.5 w-full rounded-full border border-violet/15 bg-white px-9 py-3 text-sm font-bold text-violet transition hover:border-violet/40">
+            ابدأ من جديد
           </button>
         </Overlay>
       )}

@@ -1,5 +1,6 @@
 "use client";
 
+import * as plural from "@/lib/plural";
 import Link from "next/link";
 import { Check, Clock, Layers, Trophy, Zap } from "lucide-react";
 import { CARDS, CARDS_HELP, cardName, GROUP_BASE, PEERS, PLAYER, badgeOf, rankOf, type BadgeId } from "@/lib/play";
@@ -59,7 +60,7 @@ function StatCard({ icon: Icon, tone, value, label }: { icon: typeof Zap; tone: 
 
 export function ResultView() {
   const { sample, account } = useFlow();
-  const { result } = useStudent();
+  const { result, joined } = useStudent();
   const toast = useToast();
   const r = result ?? { ...SAMPLE, lesson: sample };
   const lesson = r.lesson;
@@ -82,10 +83,10 @@ export function ResultView() {
   const shown: BadgeId[] = [...new Set<BadgeId>([...r.badges, "flawless"])].slice(0, 4);
   const sub = demo
     ? `${first ? "الأول بين اللاعبين" : `رتبتك ${people.findIndex((p) => p.me) + 1} بين اللاعبين`}، ${myGroupFirst ? "ومجموعتك الصقور في الصدارة" : "ومجموعتك الصقور تلاحق الصدارة"}.`
-    : `جمعت ${r.points} نقطة معرفة بدقّة ${r.accuracy}%.`;
+    : `جمعت ${plural.knowledgePoints(r.points)} بدقّة ${r.accuracy}%.`;
 
   async function share() {
-    const text = `أنهيت درس «${lesson.title}» في قفزة بدقّة ${r.accuracy}%، وجمعت ${r.points} نقطة معرفة!`;
+    const text = `أنهيت درس «${lesson.title}» في قفزة بدقّة ${r.accuracy}%، وجمعت ${plural.knowledgePoints(r.points)}!`;
     try {
       if (navigator.share) await navigator.share({ text });
       else {
@@ -135,7 +136,7 @@ export function ResultView() {
             <div>
               <h2 className="text-xl font-bold text-emerald-900">حُفظت إنجازاتك في حسابك</h2>
               <p className="mt-0.5 text-xs font-medium text-emerald-900/75">
-                {r.points} نقطة معرفة، و{r.badges.length} شارات، و{r.cards.length} بطاقات. تجدها في «سجلّي»، وما أخطأت فيه يعود إليك في التثبيت.
+                {plural.knowledgePoints(r.points)}، و{plural.badges(r.badges.length)}، و{plural.cards(r.cards.length)}. تجدها في «سجلّي»، وما أخطأت فيه يعود إليك في التثبيت.
               </p>
             </div>
           </section>
@@ -148,7 +149,7 @@ export function ResultView() {
               <div>
                 <h2 className="text-xl font-bold text-indigo-deep">احفظ إنجازاتك قبل أن تغادر</h2>
                 <p className="mt-0.5 text-xs font-medium text-indigo-deep/70">
-                  {r.points} نقطة معرفة، و{r.badges.length} شارات، و{r.cards.length} بطاقات، ورتبة {rank.name}. حساب مجاني في ثوانٍ.{" "}
+                  {plural.knowledgePoints(r.points)}، و{plural.badges(r.badges.length)}، و{plural.cards(r.cards.length)}، ورتبة {rank.name}. حساب مجاني في ثوانٍ.{" "}
                   <Link href="/parent-consent" className="font-bold text-violet underline underline-offset-2">
                     عمري أقل من 13
                   </Link>
@@ -290,7 +291,7 @@ export function ResultView() {
           <button onClick={share} className="rounded-full border border-violet/15 bg-white px-7 py-3.5 text-sm font-bold text-indigo-deep shadow-sm transition hover:border-violet/40">
             شارك إنجازك
           </button>
-          <Link href="/play/self" className="rounded-full bg-brand px-10 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet/30 transition hover:brightness-110">
+          <Link href={demo ? "/play/demo" : joined ? `/join?code=${joined.code}` : "/learn"} className="rounded-full bg-brand px-10 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet/30 transition hover:brightness-110">
             العب مرة أخرى
           </Link>
         </div>

@@ -1,4 +1,5 @@
 import "server-only";
+import { track } from "./events";
 import type { User } from "./auth";
 import { enrol } from "./classes";
 import { fs, newId } from "./firestore";
@@ -125,6 +126,7 @@ export async function saveAttempt(user: User | null, a: AttemptInput): Promise<S
   }
 
   const id = existing?.exists ? existing.id : a.id!;
+  if (a.finished) track("lesson_completed", undefined, { mode: "self" });
   if (a.finished && user) await applyAttempt(user.id, found.row.id, { points: a.points, results: a.results, badges: a.badges, cards: a.cards });
   return { ok: true, id, finished: a.finished };
 }

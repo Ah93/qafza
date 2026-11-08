@@ -1,6 +1,7 @@
 import "server-only";
 import { FREE_LESSONS, PLAN_DAYS, PRICES, type Currency, type PayMethod, type PlanId, type PlanStatus } from "../pricing";
 import { fs, increment, newId } from "./firestore";
+import { issueInvoice } from "./invoices";
 
 /**
  * Teachers get FREE_LESSONS lessons for free (counted for life, so deleting one does not buy another); after that
@@ -108,6 +109,7 @@ export async function activate(uid: string, plan: PlanId, currency: Currency, am
     const from = cur && cur.currentPeriodEnd > now ? cur.currentPeriodEnd : now;
     tx.set(ref_, { plan, currency, amount, status: "active", startedAt: cur && cur.currentPeriodEnd > now ? cur.startedAt : now, currentPeriodEnd: from + PLAN_DAYS[plan] * 86_400_000, provider: providerName, providerRef: ref, updatedAt: now } satisfies SubDoc);
   });
+  await issueInvoice(uid, { plan, currency, amount });
 }
 
 /** the test provider's "I paid" / "I cancelled" button. Each payment session can be used once. */

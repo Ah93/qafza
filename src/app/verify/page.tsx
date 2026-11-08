@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Logo } from "@/components/Logo";
 import { VerifyForm } from "@/components/auth/VerifyForm";
 
-export const metadata: Metadata = { title: "تأكيد البريد — قفزة" };
+export const metadata: Metadata = { title: "تأكيد البريد — قفزة", description: "اكتب الرمز المكوّن من 6 أرقام الذي وصلك لتأكيد بريدك." };
 
 export default function VerifyPage() {
   return (

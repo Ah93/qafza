@@ -66,6 +66,11 @@ type Flow = {
   /** swap a station's challenge for another one (a different kind) */
   replaceChallenge: (id: string, challenge: Challenge) => void;
   setBoss: (boss: BossItem[]) => void;
+  /** step back through the last 20 edits */
+  undo: () => void;
+  canUndo: boolean;
+  /** the draft is saved on its own two seconds after every edit */
+  autosave: "idle" | "saving" | "saved" | "error";
   saved: Saved | null;
   save: (status?: "draft" | "published") => Promise<SaveOutcome>;
   openSaved: (id: string) => Promise<boolean>;
@@ -108,7 +113,31 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   const [custom, setCustom] = useState<Customization>(DEFAULT_CUSTOM);
   const [lesson, setLesson] = useState<Lesson>(SAMPLE);
   const [generatedFrom, setGeneratedFrom] = useState<Source | null>(null);
-  const [saved, setSaved] = useState<Saved | null>(null);
+  const [saved, setSavedState] = useState<Saved | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const [autosave, setAutosave] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [undoCount, setUndoCount] = useState(0);
+  // refs hold the latest values for the save queue and the history, which must not read stale closures
+  const lessonRef = useRef<Lesson>(SAMPLE);
+  const savedRef = useRef<Saved | null>(null);
+  const sourceRef = useRef<Source | null>(null);
+  const history = useRef<Lesson[]>([]);
+  const lastPush = useRef(0);
+  const queue = useRef<Promise<unknown>>(Promise.resolve());
+
+  const setSaved = useCallback((v: Saved | null) => {
+    savedRef.current = v;
+    setSavedState(v);
+  }, []);
+  /** replace the whole lesson (built, opened, restored): there is nothing to step back to, and nothing unsaved */
+  const replaceLesson = useCallback((l: Lesson, unsaved: boolean) => {
+    lessonRef.current = l;
+    setLesson(l);
+    history.current = [];
+    setUndoCount(0);
+    setDirty(unsaved);
+    setAutosave("idle");
+  }, []);
   const [share, setShareState] = useState<ShareSettings>({
     how: "live",
     devices: "devices",
@@ -121,6 +150,9 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   const [classes, setClasses] = useState<ClassInfo[] | null>(null);
   const [selectedClass, setSelectedClass] = useState("");
   const inflight = useRef<Promise<GenerateOutcome> | null>(null);
+  useEffect(() => {
+    sourceRef.current = source;
+  }, [source]);
 
   // the lesson being edited survives a refresh or a trip back through the browser history (this tab only)
   useEffect(() => {
@@ -128,7 +160,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       try {
         const d = JSON.parse(sessionStorage.getItem(DRAFT_KEY) ?? "null") as { lesson?: Lesson; saved?: Saved | null } | null;
         if (d?.lesson && Array.isArray(d.lesson.stations) && d.lesson.stations.length) {
-          setLesson(d.lesson);
+          replaceLesson(d.lesson, false);
           setSaved(d.saved ?? null);
           setHasDraft(true);
         }
@@ -136,7 +168,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       setDraftReady(true);
     }, 0);
     return () => clearTimeout(t);
-  }, []);
+  }, [replaceLesson, setSaved]);
   useEffect(() => {
     if (!hasDraft) return;
     try {
@@ -148,13 +180,13 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   const setSource = useCallback((s: Source) => {
     setSourceState(s);
     setHasDraft(false);
-    setLesson(SAMPLE);
+    replaceLesson(SAMPLE, false);
     setSaved(null);
     setGeneratedFrom(null);
     try {
       sessionStorage.removeItem(DRAFT_KEY);
     } catch {}
-  }, []);
+  }, [replaceLesson, setSaved]);
 
   useEffect(() => {
     api<{ user: AccountUser | null }>("/api/auth/me").then((r) => r.ok && setAccount(r.data.user));
@@ -234,9 +266,9 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
 
       const r = await api<{ lesson: Lesson; truncated: boolean; pages: number }>("/api/generate", { method: "POST", body: form });
       if (!r.ok) return { ok: false, error: r.error };
-      setLesson(r.data.lesson);
+      replaceLesson(r.data.lesson, true); // unsaved: the autosave makes it a draft within seconds
       setHasDraft(true);
-      setSaved(null); // a new lesson has not been saved yet
+      setSaved(null);
       setGeneratedFrom(source);
       return { ok: true, truncated: r.data.truncated, pages: r.data.pages };
     })().finally(() => {
@@ -244,53 +276,101 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
     });
     inflight.current = run;
     return run;
-  }, [source, custom]);
+  }, [source, custom, replaceLesson, setSaved]);
 
-  const setTitle = useCallback((title: string) => setLesson((l) => ({ ...l, title })), []);
-
-  const patchStation = useCallback((id: string, patch: Partial<Station>) => {
-    setLesson((l) => ({ ...l, stations: l.stations.map((s) => (s.id === id ? { ...s, ...patch } : s)) }));
+  /** every change to the lesson goes through here: it is remembered for undo (typing is grouped) and marks the lesson unsaved */
+  const edit = useCallback((fn: (l: Lesson) => Lesson) => {
+    const before = lessonRef.current;
+    const after = fn(before);
+    if (after === before) return;
+    const now = Date.now();
+    if (now - lastPush.current > 800) {
+      history.current = [...history.current.slice(-19), before];
+      setUndoCount(history.current.length);
+    }
+    lastPush.current = now;
+    lessonRef.current = after;
+    setLesson(after);
+    setDirty(true);
   }, []);
 
-  const patchChallenge = useCallback((id: string, patch: Partial<Challenge>) => {
-    setLesson((l) => ({
-      ...l,
-      stations: l.stations.map((s) => (s.id === id ? { ...s, challenge: { ...s.challenge, ...patch } as Challenge } : s)),
-    }));
+  const undo = useCallback(() => {
+    const prev = history.current.pop();
+    if (!prev) return;
+    setUndoCount(history.current.length);
+    lastPush.current = 0;
+    lessonRef.current = prev;
+    setLesson(prev);
+    setDirty(true);
   }, []);
 
-  const replaceChallenge = useCallback((id: string, challenge: Challenge) => {
-    setLesson((l) => ({ ...l, stations: l.stations.map((s) => (s.id === id ? { ...s, challenge } : s)) }));
-  }, []);
+  const setTitle = useCallback((title: string) => edit((l) => ({ ...l, title })), [edit]);
 
-  const setBoss = useCallback((boss: BossItem[]) => setLesson((l) => ({ ...l, boss })), []);
+  const patchStation = useCallback(
+    (id: string, patch: Partial<Station>) => edit((l) => ({ ...l, stations: l.stations.map((x) => (x.id === id ? { ...x, ...patch } : x)) })),
+    [edit],
+  );
+
+  const patchChallenge = useCallback(
+    (id: string, patch: Partial<Challenge>) =>
+      edit((l) => ({ ...l, stations: l.stations.map((x) => (x.id === id ? { ...x, challenge: { ...x.challenge, ...patch } as Challenge } : x)) })),
+    [edit],
+  );
+
+  const replaceChallenge = useCallback(
+    (id: string, challenge: Challenge) => edit((l) => ({ ...l, stations: l.stations.map((x) => (x.id === id ? { ...x, challenge } : x)) })),
+    [edit],
+  );
+
+  const setBoss = useCallback((boss: BossItem[]) => edit((l) => ({ ...l, boss })), [edit]);
   const setShare = useCallback((patch: Partial<ShareSettings>) => setShareState((s) => ({ ...s, ...patch })), []);
 
   /** create the lesson on the server the first time, then update it on later saves */
-  const save = useCallback(
-    async (status: "draft" | "published" = "published"): Promise<SaveOutcome> => {
-      if (saved) {
-        const r = await postJson(`/api/lessons/${saved.id}`, { lesson, status }, "PATCH");
-        return r.ok ? { ok: true, saved } : { ok: false, error: r.error };
+  /** one save at a time (autosave and "share" never race and never create the lesson twice); `status` only when it must change */
+  const persist = useCallback((status?: "draft" | "published"): Promise<SaveOutcome> => {
+    const run = async (): Promise<SaveOutcome> => {
+      const l = lessonRef.current;
+      const s0 = savedRef.current;
+      if (s0) {
+        const r = await postJson(`/api/lessons/${s0.id}`, status ? { lesson: l, status } : { lesson: l }, "PATCH");
+        if (!r.ok) return { ok: false, error: r.error };
+        if (lessonRef.current === l) setDirty(false);
+        return { ok: true, saved: s0 };
       }
-      const r = await postJson<{ lesson: { id: string; code: string } }>("/api/lessons", { lesson, sourceName: source?.name ?? "", status });
+      const r = await postJson<{ lesson: { id: string; code: string } }>("/api/lessons", { lesson: l, sourceName: sourceRef.current?.name ?? "", status: status ?? "draft" });
       if (!r.ok) return { ok: false, error: r.error };
       const next = { id: r.data.lesson.id, code: r.data.lesson.code };
       setSaved(next);
+      if (lessonRef.current === l) setDirty(false);
       return { ok: true, saved: next };
-    },
-    [saved, lesson, source],
-  );
+    };
+    const job = queue.current.then(run);
+    queue.current = job.catch(() => undefined);
+    return job;
+  }, [setSaved]);
+
+  const save = useCallback((status: "draft" | "published" = "published") => persist(status), [persist]);
+
+  // the draft saves itself two seconds after the last edit
+  useEffect(() => {
+    if (!dirty || !hasDraft) return;
+    const t = setTimeout(async () => {
+      setAutosave("saving");
+      const r = await persist();
+      setAutosave(r.ok ? "saved" : "error");
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [dirty, lesson, hasDraft, persist]);
 
   const openSaved = useCallback(async (id: string) => {
     const r = await api<{ lesson: Lesson; code: string }>(`/api/lessons/${id}`);
     if (!r.ok) return false;
-    setLesson(r.data.lesson);
+    replaceLesson(r.data.lesson, false);
     setHasDraft(true);
     setSaved({ id, code: r.data.code });
     setGeneratedFrom(null);
     return true;
-  }, []);
+  }, [replaceLesson, setSaved]);
 
   const publishShare = useCallback(async () => {
     if (!saved) return { ok: false as const, error: "احفظ الدرس أولًا." };
@@ -320,6 +400,9 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       patchStation,
       patchChallenge,
       replaceChallenge,
+      undo,
+      canUndo: undoCount > 0,
+      autosave,
       setBoss,
       saved,
       save,
@@ -337,7 +420,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       selectedClass,
       setSelectedClass,
     }),
-    [account, setUserName, hasDraft, draftReady, source, setSource, custom, lesson, generatedFrom, generate, setTitle, patchStation, patchChallenge, replaceChallenge, setBoss, saved, save, openSaved, publishShare, share, setShare, classes, reloadClasses, createClass, patchClass, addClassStudents, moveStudent, resetGroups, selectedClass],
+    [account, setUserName, hasDraft, draftReady, source, setSource, custom, lesson, generatedFrom, generate, setTitle, patchStation, patchChallenge, replaceChallenge, undo, undoCount, autosave, setBoss, saved, save, openSaved, publishShare, share, setShare, classes, reloadClasses, createClass, patchClass, addClassStudents, moveStudent, resetGroups, selectedClass],
   );
 
   return (

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { LegalShell } from "@/components/legal/LegalShell";
 import { Faq } from "@/components/legal/Faq";
 
-export const metadata: Metadata = { title: "المساعدة — قفزة" };
+export const metadata: Metadata = { title: "المساعدة — قفزة", description: "إجابات عن أسئلة المعلّمين والطلاب الأكثر شيوعًا في قفزة." };
 
 const ITEMS = [
   {

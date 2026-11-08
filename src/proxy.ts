@@ -29,6 +29,7 @@ export const config = {
     "/pricing/:path*",
     "/live/:path*",
     "/learn/:path*",
+    "/admin/:path*",
     "/verify",
   ],
 };

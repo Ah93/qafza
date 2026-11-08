@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { BookOpen, Check, Zap } from "lucide-react";
 import { FlowHeader } from "@/components/teacher/TeacherHeader";
 import { useFlow } from "@/components/teacher/FlowProvider";
+import { fmtNumber } from "@/lib/format";
 import {
   ASSESSMENT_OPTIONS,
   AUDIENCES,
@@ -128,7 +129,7 @@ export default function CustomizePage() {
     source.type === "file"
       ? `ملف · ${source.sizeKb! >= 1024 ? (source.sizeKb! / 1024).toFixed(1) + " م.ب" : source.sizeKb + " ك.ب"}`
       : source.type === "text"
-        ? `نص · ${source.text!.length.toLocaleString("ar-EG")} حرفًا`
+        ? `نص · ${fmtNumber(source.text!.length)} حرفًا`
         : source.type === "video"
           ? "رابط فيديو"
           : "رابط صفحة";
