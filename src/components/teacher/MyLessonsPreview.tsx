@@ -53,11 +53,11 @@ export function MyLessonsPreview() {
               <BookOpen className="size-5" />
             </Art>
             <div className="p-4">
-              <span className={`rounded-full px-2.5 py-1 text-[10px] font-bold ${l.status === "draft" ? "bg-slate-100 text-slate-600" : "bg-mint/15 text-emerald-700"}`}>
+              <span className={`rounded-full px-2.5 py-1 text-xs font-bold ${l.status === "draft" ? "bg-slate-100 text-slate-600" : "bg-mint/15 text-emerald-700"}`}>
                 {l.status === "draft" ? "مسودة" : "منشور"}
               </span>
               <h3 className="mt-2 line-clamp-2 text-base font-bold text-indigo-deep">{l.title}</h3>
-              <p className="mt-1 text-[11px] text-indigo-deep/55">
+              <p className="mt-1 text-xs text-indigo-deep/70">
                 الرمز <span dir="ltr">{l.code}</span> · 5 محطات · 5 تحديات
               </p>
             </div>
@@ -68,7 +68,7 @@ export function MyLessonsPreview() {
           <div className="grid min-h-[190px] place-items-center rounded-3xl border border-dashed border-violet/25 bg-white/50 p-5 text-center">
             <div>
               <h3 className="text-base font-bold text-indigo-deep">دروسك ستظهر هنا</h3>
-              <p className="mt-1.5 text-[11px] leading-5 text-indigo-deep/55">ارفع ملفك الأول بالأعلى، ويجهز في أقل من دقيقة.</p>
+              <p className="mt-1.5 text-xs leading-5 text-indigo-deep/70">ارفع ملفك الأول بالأعلى، ويجهز في أقل من دقيقة.</p>
             </div>
           </div>
         )}
@@ -80,10 +80,10 @@ export function MyLessonsPreview() {
           <Art>
             <Network className="size-5" />
           </Art>
-          <span className="absolute end-3 top-3 z-10 rounded-full bg-sun px-3 py-1 text-[10px] font-bold text-indigo-deep">درس نموذجي</span>
+          <span className="absolute end-3 top-3 z-10 rounded-full bg-sun px-3 py-1 text-xs font-bold text-indigo-deep">درس نموذجي</span>
           <div className="p-4">
             <h3 className="text-base font-bold text-indigo-deep">جرّبه كطالب في 30 ثانية</h3>
-            <p className="mt-1 text-[11px] text-indigo-deep/55">العب درسًا جاهزًا كما سيلعبه طلابك</p>
+            <p className="mt-1 text-xs text-indigo-deep/70">العب درسًا جاهزًا كما سيلعبه طلابك</p>
           </div>
         </Link>
       </div>

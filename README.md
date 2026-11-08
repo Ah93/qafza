@@ -53,6 +53,16 @@ All data lives in Firestore and is only ever touched by server code (the browser
 - **Google / Microsoft / Apple sign-in** and **PowerPoint / video** sources.
 - The sample lesson (code `7QK4`) is a rehearsal: its live session is scripted so a teacher can try the screens without students.
 
+## Installable app, share previews, accessibility
+
+- **App:** `src/app/manifest.ts` + icons from `/pwa-icon/{192,512,1024,512-maskable}` + `public/sw.js` (registered in production only). The service worker only gives an Arabic "no connection" page; it never caches lessons, scores or API calls.
+- **Share previews:** `metadataBase` comes from `APP_URL` (or Vercel's production domain). `/join?code=XX` previews the lesson title; `/og/card` is the student's achievement card (no name in it). Images are drawn with Cairo Bold (`src/assets/cairo-700.woff`, SIL OFL), because Satori cannot read the tables of Readex or Noto Sans Arabic.
+- **Font:** the site uses Readex Pro (free). The paid GE SS Two needs a web licence; with the files, replace `Readex_Pro` in `src/app/layout.tsx` with `next/font/local`.
+- **Source passages:** `/api/generate` keeps the numbered source pages (collection `sources`, then the lesson's `sourcePages`). The "المصدر: صفحة N" badge opens the page with the matching sentence highlighted. Lessons built before this have no stored source and say so.
+- **Report an error:** students/teachers on a lesson code send reports (`reports`); the owner sees them on the lesson page, the team at `/admin`.
+- **Checks:** `npx axe` style runs are in the session scratchpad only; to re-check, run axe-core on the pages (the sheet of what was run is in the PR notes). Contrast tokens (`mint`, `teal-card`, `pink-card`, text opacities ≥ 70%) were darkened for 4.5:1.
+- **Quality gates tooling:** `node scripts/load-test.mjs --email … --password … --code …` (35 simulated phones on one server) and `node scripts/quality-sheet.mjs` (CSV to score lessons 1-5 on five criteria).
+
 ## Running more than one server
 
 Live sessions and the rate limiter are kept in process memory. On a host that runs one long-lived Node process this is fine. On serverless or multiple instances, move the live state to Firestore (or Redis) first, and make the host overwrite `x-forwarded-for` (the rate limiter trusts it).

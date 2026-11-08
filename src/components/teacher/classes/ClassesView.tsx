@@ -24,7 +24,7 @@ function Stat({ value, label, tone }: { value: string; label: string; tone: stri
   return (
     <div className="rounded-3xl border border-violet/10 bg-white px-5 py-4 shadow-sm">
       <p className={`whitespace-nowrap text-[28px] font-bold leading-tight ${tone}`}>{value}</p>
-      <p className="mt-0.5 text-[11px] font-semibold text-indigo-deep/60">{label}</p>
+      <p className="mt-0.5 text-xs font-semibold text-indigo-deep/70">{label}</p>
     </div>
   );
 }
@@ -49,7 +49,7 @@ function StudentsTable({ c }: { c: ClassInfo }) {
         <div className="min-w-[620px]">
           <div
             role="row"
-            className={`sticky top-0 z-10 grid ${COLS} items-center gap-3 border-b border-violet/10 bg-white px-2 pb-3 text-[11px] font-semibold text-indigo-deep/50`}
+            className={`sticky top-0 z-10 grid ${COLS} items-center gap-3 border-b border-violet/10 bg-white px-2 pb-3 text-xs font-semibold text-indigo-deep/70`}
           >
             <span>الطالب ({c.students.length})</span>
             <span>الحساب</span>
@@ -63,20 +63,20 @@ function StudentsTable({ c }: { c: ClassInfo }) {
             const weak = played && (s.mastery ?? 0) < c.struggleBelow;
             return (
               <div key={s.name} role="row" className={`grid ${COLS} items-center gap-3 border-b border-violet/[0.07] px-2 py-2.5 last:border-0`}>
-                <span className="flex items-center gap-2.5 text-[13px] font-bold text-indigo-deep">
+                <span className="flex items-center gap-2.5 text-sm font-bold text-indigo-deep">
                   <Avatar name={s.name} i={i} />
                   {s.name}
                 </span>
                 <span>
                   <span
-                    className={`rounded-full px-3 py-1 text-[11px] font-bold ${
+                    className={`rounded-full px-3 py-1 text-xs font-bold ${
                       s.registered ? "bg-mint/15 text-emerald-700" : "bg-slate-100 text-slate-500"
                     }`}
                   >
                     {s.registered ? "مسجّل" : "ضيف"}
                   </span>
                 </span>
-                <span className="flex items-center gap-2 text-[11px] font-semibold text-indigo-deep/55">
+                <span className="flex items-center gap-2 text-xs font-semibold text-indigo-deep/70">
                   <span className="flex gap-1" aria-hidden>
                     {Array.from({ length: Math.min(c.required, 12) }, (_, k) => (
                       <span key={k} className={`size-2.5 rounded-[3px] ${k < s.done ? "bg-mint" : "bg-slate-200"}`} />
@@ -85,10 +85,10 @@ function StudentsTable({ c }: { c: ClassInfo }) {
                   {c.required === 0 ? "لا دروس بعد" : `${s.done} من ${c.required}`}
                 </span>
                 {!played ? (
-                  <span className="text-[11px] font-medium text-indigo-deep/45">لم يلعب بعد</span>
+                  <span className="text-xs font-medium text-indigo-deep/70">لم يلعب بعد</span>
                 ) : (
                 <span className="flex items-center gap-2.5">
-                  <span className="w-9 text-[13px] font-bold text-indigo-deep">{s.mastery}%</span>
+                  <span className="w-9 text-sm font-bold text-indigo-deep">{s.mastery}%</span>
                   <span className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
                     <span
                       className={`block h-full rounded-full ${weak ? "bg-amber-500" : "bg-violet"}`}
@@ -98,7 +98,7 @@ function StudentsTable({ c }: { c: ClassInfo }) {
                 </span>
                 )}
                 <span
-                  className={`text-xs font-bold ${st === "متقن" ? "text-emerald-600" : st === "متعثّر" ? "text-[#c0174f]" : "text-indigo-deep/30"}`}
+                  className={`text-xs font-bold ${st === "متقن" ? "text-emerald-700" : st === "متعثّر" ? "text-[#c0174f]" : "text-indigo-deep/70"}`}
                 >
                   {st ?? "—"}
                 </span>
@@ -108,7 +108,7 @@ function StudentsTable({ c }: { c: ClassInfo }) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-2 border-t border-violet/10 pt-4 text-[11px] font-medium leading-6 text-indigo-deep/65">
+      <div className="mt-4 space-y-2 border-t border-violet/10 pt-4 text-xs font-medium leading-6 text-indigo-deep/70">
         <p>
           <b className="text-emerald-700">مسجّل:</b> له حساب، فتُحفظ نتائجه عبر كل الدروس.
         </p>
@@ -138,7 +138,7 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
       <div className="grid min-h-[220px] place-items-center rounded-3xl border border-dashed border-violet/25 bg-white/60 p-8 text-center">
         <div>
           <p className="text-sm font-bold text-indigo-deep">هذا الصف بلا مجموعات</p>
-          <p className="mt-1 text-[11px] text-indigo-deep/60">توزّعهم قفزة متكافئين في العدد والمستوى، وتعدّلهم متى شئت.</p>
+          <p className="mt-1 text-xs text-indigo-deep/70">توزّعهم قفزة متكافئين في العدد والمستوى، وتعدّلهم متى شئت.</p>
           <button
             onClick={() => patchClass(c.id, { groups: 3 })}
             className="mt-4 rounded-full bg-brand px-6 py-2.5 text-xs font-bold text-white shadow-md shadow-violet/30"
@@ -161,7 +161,7 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
   return (
     <div>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-        <p className="min-w-0 flex-1 text-[11px] font-medium leading-5 text-indigo-deep/65">
+        <p className="min-w-0 flex-1 text-xs font-medium leading-5 text-indigo-deep/70">
           موزّعة بحسب الإتقان لتتقارب في العدد والمستوى. اضغط اسم طالب لتختار له المجموعة التي تريدها، وسيبقى فيها، وتوزّع قفزة الباقين حوله.
         </p>
         <button
@@ -172,7 +172,7 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
             setBusy(false);
             notify(ok ? "أُعيد التوزيع المتكافئ لكل الطلاب" : "تعذّرت إعادة التوزيع");
           }}
-          className="rounded-full border border-violet/15 bg-white px-4 py-2 text-[11px] font-bold text-violet transition hover:border-violet/40 disabled:opacity-50"
+          className="rounded-full border border-violet/15 bg-white px-4 py-2 text-xs font-bold text-violet transition hover:border-violet/40 disabled:opacity-50"
         >
           أعد التوزيع{pinned ? ` (يلغي ${pinned} نقلًا)` : ""}
         </button>
@@ -188,7 +188,7 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
                 <span className="size-3 rounded-[4px]" style={{ background: grp.color }} />
                 <h3 className="text-base font-bold text-indigo-deep">مجموعة {grp.name}</h3>
               </div>
-              <p className="mt-1 text-[11px] font-semibold text-indigo-deep/55">
+              <p className="mt-1 text-xs font-semibold text-indigo-deep/70">
                 {studentsLabel(members.length)} · {avg === null ? "لم يلعبوا بعد" : `إتقان ${avg}%`}
               </p>
               <ul className="mt-3 flex flex-wrap gap-1.5">
@@ -202,7 +202,7 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
                         aria-expanded={menu === s.id}
                         aria-haspopup="menu"
                         title={by ? "وضعته بيدك في هذه المجموعة" : "اضغط لتنقله إلى مجموعة أخرى"}
-                        className={`rounded-full px-3 py-1.5 text-[11px] font-bold text-indigo-deep transition hover:bg-violet/15 ${by ? "bg-violet/15 ring-1 ring-violet/40" : "bg-violet/[0.07]"}`}
+                        className={`rounded-full px-3 py-1.5 text-xs font-bold text-indigo-deep transition hover:bg-violet/15 ${by ? "bg-violet/15 ring-1 ring-violet/40" : "bg-violet/[0.07]"}`}
                       >
                         {by && <span aria-hidden className="me-1 text-violet">●</span>}
                         {s.name}
@@ -211,7 +211,7 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
                         <>
                           <button aria-label="إغلاق" className="fixed inset-0 z-20 cursor-default" onClick={() => setMenu(null)} />
                           <div role="menu" className="absolute start-0 top-full z-30 mt-1.5 min-w-[190px] rounded-2xl border border-violet/10 bg-white p-1.5 shadow-xl shadow-indigo-deep/15">
-                            <p className="px-3 pb-1 pt-1.5 text-[10px] font-bold text-indigo-deep/50">انقل {s.name} إلى</p>
+                            <p className="px-3 pb-1 pt-1.5 text-xs font-bold text-indigo-deep/70">انقل {s.name} إلى</p>
                             {Array.from({ length: count }, (_, t) => (
                               <button
                                 key={t}
@@ -222,11 +222,11 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
                               >
                                 <span className="size-2.5 rounded-[3px]" style={{ background: GROUP_POOL[t].color }} />
                                 مجموعة {GROUP_POOL[t].name}
-                                {t === g && <span className="ms-auto text-[10px] font-medium text-indigo-deep/50">الحالية</span>}
+                                {t === g && <span className="ms-auto text-xs font-medium text-indigo-deep/70">الحالية</span>}
                               </button>
                             ))}
                             {by && (
-                              <button role="menuitem" onClick={() => place(s.id, s.name, null)} className="mt-0.5 w-full rounded-xl border-t border-violet/10 px-3 py-2 text-start text-[11px] font-bold text-violet transition hover:bg-violet/[0.07]">
+                              <button role="menuitem" onClick={() => place(s.id, s.name, null)} className="mt-0.5 w-full rounded-xl border-t border-violet/10 px-3 py-2 text-start text-xs font-bold text-violet transition hover:bg-violet/[0.07]">
                                 أعده إلى التوزيع التلقائي
                               </button>
                             )}
@@ -241,7 +241,7 @@ function GroupsPanel({ c, notify }: { c: ClassInfo; notify: (m: string) => void 
           );
         })}
       </div>
-      {pinned > 0 && <p className="mt-3 text-[11px] font-medium text-indigo-deep/55">● الطلاب المعلَّمون وضعتهم بيدك، ويبقون في مجموعاتهم في الحصص المباشرة.</p>}
+      {pinned > 0 && <p className="mt-3 text-xs font-medium text-indigo-deep/70">● الطلاب المعلَّمون وضعتهم بيدك، ويبقون في مجموعاتهم في الحصص المباشرة.</p>}
     </div>
   );
 }
@@ -326,7 +326,7 @@ function EditClass({ c, onClose, notify }: { c: ClassInfo; onClose: () => void; 
             ))}
           </div>
         </div>
-        <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">رمز الصف ثابت ولا يتغيّر، فلا ينقطع عنه طلابك.</p>
+        <p className="mt-3 text-xs font-medium leading-5 text-indigo-deep/70">رمز الصف ثابت ولا يتغيّر، فلا ينقطع عنه طلابك.</p>
         <div className="mt-5 flex gap-2.5">
           <button disabled={busy || !name.trim()} className="flex-1 rounded-full bg-brand py-3 text-sm font-bold text-white shadow-lg shadow-violet/30 disabled:opacity-50">
             {busy ? "جارٍ الحفظ…" : "احفظ"}
@@ -374,11 +374,11 @@ export function ClassesView() {
         <TeacherHeader />
         <main className="mx-auto grid w-full max-w-[1000px] flex-1 place-items-center px-5 py-16 text-center">
           {!classes ? (
-            <p className="text-sm font-bold text-indigo-deep/50">جارٍ تحميل صفوفك…</p>
+            <p className="text-sm font-bold text-indigo-deep/70">جارٍ تحميل صفوفك…</p>
           ) : (
             <div className="max-w-sm">
               <h1 className="text-[30px] font-bold text-indigo-deep">صفوفي</h1>
-              <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+              <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">
                 الصف يجمع طلابًا تتابع تقدّمهم عبر الدروس. أنشئ صفك الأول وأعطِ طلابك رمزه ليدخلوا.
               </p>
               <Link href="/classes/new" className="mt-5 inline-block rounded-full bg-brand px-9 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
@@ -412,7 +412,7 @@ export function ClassesView() {
                     className={`block w-full rounded-2xl px-4 py-3 text-start transition ${on ? "bg-violet/10" : "hover:bg-violet/5"}`}
                   >
                     <span className={`block text-sm font-bold ${on ? "text-violet" : "text-indigo-deep"}`}>{x.name}</span>
-                    <span className="mt-0.5 block text-[11px] font-medium text-indigo-deep/55">
+                    <span className="mt-0.5 block text-xs font-medium text-indigo-deep/70">
                       {studentsLabel(x.students.length)} · {CLASS_KIND_LABEL[x.kind]}
                     </span>
                   </button>
@@ -421,7 +421,7 @@ export function ClassesView() {
             </nav>
             <Link
               href="/classes/new"
-              className="mt-3 block rounded-2xl border border-dashed border-violet/30 py-3 text-center text-[11px] font-bold text-violet transition hover:bg-violet/5"
+              className="mt-3 block rounded-2xl border border-dashed border-violet/30 py-3 text-center text-xs font-bold text-violet transition hover:bg-violet/5"
             >
               + صف جديد
             </Link>
@@ -431,18 +431,18 @@ export function ClassesView() {
             <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
               <div>
                 <h2 className="text-[34px] font-bold leading-tight text-indigo-deep">{c.name}</h2>
-                <p className="mt-1 text-xs font-semibold text-indigo-deep/60">
+                <p className="mt-1 text-xs font-semibold text-indigo-deep/70">
                   {studentsLabel(c.students.length)} · {CLASS_KIND_LABEL[c.kind]} · رمز الصف{" "}
                   <button onClick={() => copy("code")} title="انسخ الرمز" className="font-bold text-indigo-deep">
                     <span dir="ltr">{c.code}</span>
                   </button>
-                  {copied && <span className="ms-2 text-emerald-600">تم النسخ</span>}
+                  {copied && <span className="ms-2 text-emerald-700">تم النسخ</span>}
                 </p>
                 <div className="mt-2.5 flex flex-wrap gap-2">
-                  <button onClick={() => copy("link")} className="rounded-full border border-violet/15 bg-white px-4 py-1.5 text-[11px] font-bold text-violet transition hover:border-violet/40">
+                  <button onClick={() => copy("link")} className="rounded-full border border-violet/15 bg-white px-4 py-1.5 text-xs font-bold text-violet transition hover:border-violet/40">
                     {copied === "link" ? "تم نسخ الرابط" : "انسخ رابط الصف"}
                   </button>
-                  <button onClick={() => setEditing(true)} className="rounded-full border border-violet/15 bg-white px-4 py-1.5 text-[11px] font-bold text-violet transition hover:border-violet/40">
+                  <button onClick={() => setEditing(true)} className="rounded-full border border-violet/15 bg-white px-4 py-1.5 text-xs font-bold text-violet transition hover:border-violet/40">
                     تعديل بيانات الصف
                   </button>
                 </div>
@@ -464,10 +464,10 @@ export function ClassesView() {
               <>
                 <div className="grid gap-3 sm:grid-cols-4">
                   <Stat value={stats.avg === null ? "—" : `${stats.avg}%`} label="متوسط الإتقان" tone="text-violet" />
-                  <Stat value={stats.completion === null ? "—" : `${stats.completion}%`} label="نسبة الإكمال" tone="text-emerald-600" />
+                  <Stat value={stats.completion === null ? "—" : `${stats.completion}%`} label="نسبة الإكمال" tone="text-emerald-700" />
                   <div className="rounded-3xl border border-violet/10 bg-white px-5 py-4 shadow-sm">
                     <p className="text-[28px] font-bold leading-tight text-[#c0174f]">{stats.struggling}</p>
-                    <label className="mt-0.5 flex flex-wrap items-center gap-1 text-[11px] font-semibold text-indigo-deep/60">
+                    <label className="mt-0.5 flex flex-wrap items-center gap-1 text-xs font-semibold text-indigo-deep/70">
                       طلاب متعثّرون (أقل من
                       <select
                         value={c.struggleBelow}
@@ -477,7 +477,7 @@ export function ClassesView() {
                           toast.show(ok ? `المتعثّر عندك من يقلّ إتقانه عن ${line}%` : "تعذّر حفظ التغيير");
                         }}
                         aria-label="حدّ التعثّر بالنسبة المئوية"
-                        className="rounded-lg border border-violet/20 bg-violet/[0.05] px-1.5 py-0.5 text-[11px] font-bold text-violet outline-none focus:border-violet"
+                        className="rounded-lg border border-violet/20 bg-violet/[0.05] px-1.5 py-0.5 text-xs font-bold text-violet outline-none focus:border-violet"
                       >
                         {[...new Set([...STRUGGLE_CHOICES, c.struggleBelow])].sort((a, b) => a - b).map((n) => (
                           <option key={n} value={n}>
@@ -490,7 +490,7 @@ export function ClassesView() {
                   </div>
                   <Stat value={`${stats.registered} من ${c.students.length}`} label="لهم حساب" tone="text-indigo-deep" />
                 </div>
-                <p className="mt-3 text-[11px] font-medium leading-6 text-indigo-deep/60">
+                <p className="mt-3 text-xs font-medium leading-6 text-indigo-deep/70">
                   متوسط إتقان الطالب = متوسط إتقانه في دروس هذا الصف، من المحاولة الأولى في كل درس. ومتوسط الصف = متوسط طلابه.
                 </p>
 
@@ -505,7 +505,7 @@ export function ClassesView() {
                       aria-selected={tab === id}
                       onClick={() => setTab(id)}
                       className={`rounded-full px-6 py-2 text-xs font-bold transition ${
-                        tab === id ? "bg-indigo-deep text-white" : "text-indigo-deep/55 hover:text-indigo-deep"
+                        tab === id ? "bg-indigo-deep text-white" : "text-indigo-deep/70 hover:text-indigo-deep"
                       }`}
                     >
                       {label}
@@ -519,7 +519,7 @@ export function ClassesView() {
               <div className="grid min-h-[320px] place-items-center rounded-3xl border border-dashed border-violet/25 bg-white/60 p-8 text-center">
                 <div>
                   <h3 className="text-xl font-bold text-indigo-deep">لا طلاب في هذا الصف بعد</h3>
-                  <p className="mx-auto mt-2 max-w-sm text-xs font-medium leading-6 text-indigo-deep/65">
+                  <p className="mx-auto mt-2 max-w-sm text-xs font-medium leading-6 text-indigo-deep/70">
                     اطلب من طلابك إدخال رمز الصف عند أول دخول، فيُضاف كل طالب تلقائيًا ويظهر هنا مع نتائجه.
                   </p>
                   <p dir="ltr" className="mt-4 text-4xl font-bold tracking-widest text-indigo-deep">

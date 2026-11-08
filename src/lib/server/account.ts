@@ -23,6 +23,8 @@ export async function deleteAccount(user: User): Promise<void> {
     deleteWhere("checkouts", "userId", uid),
     deleteWhere("events", "userId", uid),
     deleteWhere("invoices", "userId", uid),
+    deleteWhere("sources", "userId", uid),
+    deleteWhere("reports", "ownerId", uid),
     fs().collection("progress").doc(uid).delete(),
     fs().collection("verifications").doc(uid).delete(),
     fs().collection("subscriptions").doc(uid).delete(),

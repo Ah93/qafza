@@ -27,7 +27,7 @@ export function MobileNav({ items, label }: { items: NavItem[]; label: string })
               <Link
                 href={href}
                 aria-current={on ? "page" : undefined}
-                className={`flex flex-col items-center gap-1 rounded-2xl px-1 py-2.5 text-[10px] font-bold transition ${on ? "text-violet" : "text-indigo-deep/50"}`}
+                className={`flex flex-col items-center gap-1 rounded-2xl px-1 py-2.5 text-xs font-bold transition ${on ? "text-violet" : "text-indigo-deep/70"}`}
               >
                 <span className={`grid h-7 w-12 place-items-center rounded-full transition ${on ? "bg-violet/10" : ""}`}>
                   <Icon className="size-[18px]" strokeWidth={on ? 2.4 : 2} />

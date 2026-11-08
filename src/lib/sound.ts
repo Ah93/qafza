@@ -10,12 +10,47 @@ const listeners = new Set<() => void>();
 let ctx: AudioContext | null = null;
 let master: GainNode | null = null;
 
+/** in a live class on a shared room, sound starts off (a whole class buzzing at once is noise); the student can switch it on */
+let live = false;
+export const setSoundContext = (isLive: boolean) => {
+  live = isLive;
+  listeners.forEach((l) => l());
+};
+
 export const soundOn = (): boolean => {
   try {
-    return localStorage.getItem(KEY) !== "0";
+    const v = localStorage.getItem(KEY);
+    return v === null ? !live : v === "1";
   } catch {
-    return true;
+    return !live;
   }
+};
+
+/* ---------- calm motion and small vibrations (phones), remembered on this device ---------- */
+const CALM = "qafza:calm";
+const HAPTIC = "qafza:haptics";
+const flag = (k: string, dflt: boolean) => {
+  try {
+    const v = localStorage.getItem(k);
+    return v === null ? dflt : v === "1";
+  } catch {
+    return dflt;
+  }
+};
+export const calmOn = () => flag(CALM, false);
+export const hapticsOn = () => flag(HAPTIC, true) && !calmOn();
+export function applyCalm() {
+  if (typeof document !== "undefined") document.documentElement.dataset.calm = calmOn() ? "1" : "0";
+}
+export function setCalm(on: boolean) {
+  try {
+    localStorage.setItem(CALM, on ? "1" : "0");
+  } catch {}
+  applyCalm();
+  listeners.forEach((l) => l());
+}
+const buzz = (pattern: number | number[]) => {
+  if (typeof navigator !== "undefined" && "vibrate" in navigator && hapticsOn()) navigator.vibrate(pattern);
 };
 
 export function setSound(on: boolean) {
@@ -86,18 +121,22 @@ export const sfx = {
   /** a light tap on a choice or button */
   tap: () => play([{ f: 880, at: 0, dur: 0.06, type: "sine", gain: 0.12 }]),
   /** a right answer: two bright notes and a sparkle */
-  right: () =>
+  right: () => {
+    buzz(18);
     play([
       { f: E5, at: 0, dur: 0.22 },
       { f: A5, at: 0.09, dur: 0.34 },
       { f: E6, at: 0.2, dur: 0.3, type: "sine", gain: 0.1 },
-    ]),
+    ]);
+  },
   /** a wrong answer: soft and low, never harsh */
-  wrong: () =>
+  wrong: () => {
+    buzz([30, 50, 30]);
     play([
       { f: G4, at: 0, dur: 0.24, type: "sine", gain: 0.22 },
       { f: D4, at: 0.14, dur: 0.38, type: "sine", gain: 0.2 },
-    ]),
+    ]);
+  },
   /** three right in a row */
   streak: () =>
     play([

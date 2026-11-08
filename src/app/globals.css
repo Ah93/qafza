@@ -20,9 +20,9 @@
   --color-lavender: #f6f2ff;
   --color-blush: #fcecf6;
   --color-sun: #fad66b;
-  --color-mint: #12b886;
-  --color-teal-card: #0f9f8f;
-  --color-pink-card: #e0307f;
+  --color-mint: #0a8060;
+  --color-teal-card: #0b7f73;
+  --color-pink-card: #c2185b;
 }
 
 body {
@@ -153,4 +153,36 @@ body::before {
   html[data-student="1"] .text-\[11px\] {
     font-size: 12px;
   }
+}
+
+/* calm motion: the student's own switch, and the device's "reduce motion" setting */
+html[data-calm="1"] *,
+html[data-calm="1"] *::before,
+html[data-calm="1"] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* a visible focus ring for keyboard users on every control */
+:focus-visible {
+  outline: 3px solid #7b26cc;
+  outline-offset: 2px;
+}
+.bg-brand:focus-visible,
+[class*="bg-violet"]:focus-visible,
+[class*="bg-indigo"]:focus-visible {
+  outline-color: #251353;
+  box-shadow: 0 0 0 5px #fff;
 }

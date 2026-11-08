@@ -15,7 +15,7 @@ export function BetaBar() {
     <>
       <div className="bg-gradient-to-l from-indigo-deep to-[#4a1d96] px-5 py-2.5 text-center text-xs font-bold text-white">
         نبحث عن 100 معلّم لاختبار المنصة سويًّا، من الابتدائي إلى الجامعة.{" "}
-        <button onClick={() => setOpen(true)} className="ms-2 rounded-full bg-white px-4 py-1.5 text-[11px] font-bold text-indigo-deep transition hover:bg-white/90">
+        <button onClick={() => setOpen(true)} className="ms-2 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-indigo-deep transition hover:bg-white/90">
           سجّل الآن
         </button>
       </div>
@@ -60,7 +60,7 @@ function WaitlistForm({ onClose }: { onClose: () => void }) {
           <div className="py-4 text-center">
             <span className="mx-auto grid size-14 place-items-center rounded-full bg-mint text-2xl text-white">✓</span>
             <h2 id="wl-title" className="mt-4 text-2xl font-bold text-indigo-deep">{done.already ? "أنت مسجّل عندنا" : "سُجّلت في القائمة"}</h2>
-            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">
               {done.already ? "سبق أن سجّلت بهذا البريد، فلا حاجة إلى شيء آخر." : done.mailed ? "أرسلنا إلى بريدك رسالة تأكيد. نتواصل معك حين يحين دورك." : "حُفظ تسجيلك. تعذّر إرسال رسالة التأكيد الآن، لكننا سنتواصل معك."}
             </p>
             <button onClick={onClose} className="mt-5 rounded-full bg-brand px-10 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
@@ -70,7 +70,7 @@ function WaitlistForm({ onClose }: { onClose: () => void }) {
         ) : (
           <form ref={ref} onSubmit={submit} noValidate>
             <h2 id="wl-title" className="text-2xl font-bold text-indigo-deep">انضم إلى المعلّمين المئة</h2>
-            <p className="mt-1 text-xs font-medium text-indigo-deep/60">أخبرنا قليلًا عنك وعن صفك، وسنتواصل معك.</p>
+            <p className="mt-1 text-xs font-medium text-indigo-deep/70">أخبرنا قليلًا عنك وعن صفك، وسنتواصل معك.</p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               <div>
                 <Label htmlFor="wn">الاسم</Label>

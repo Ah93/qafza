@@ -77,13 +77,13 @@ export function ParentConsent() {
       <header className="border-b border-violet/5 bg-white/80">
         <div className="mx-auto flex h-[56px] max-w-[1080px] items-center justify-between px-5">
           <Logo />
-          <span className="text-[11px] font-bold text-indigo-deep/70">حساب طالب دون 13 سنة</span>
+          <span className="text-xs font-bold text-indigo-deep/70">حساب طالب دون 13 سنة</span>
         </div>
       </header>
 
       <main className="mx-auto grid w-full max-w-[960px] flex-1 grid-cols-1 items-start gap-5 px-5 py-9 md:grid-cols-2">
         <section className="min-w-0 rounded-[28px] border border-violet/10 bg-white p-6 shadow-xl shadow-violet/5 sm:p-7">
-          <span className="inline-block rounded-full bg-pink-card/10 px-4 py-1.5 text-[11px] font-bold text-pink-card">ما يراه الطالب</span>
+          <span className="inline-block rounded-full bg-pink-card/10 px-4 py-1.5 text-xs font-bold text-pink-card">ما يراه الطالب</span>
           <h1 className="mt-3 text-[32px] font-bold leading-tight text-indigo-deep">لنفتح حسابك بأمان</h1>
 
           <ol className="mt-5 space-y-4">
@@ -92,10 +92,10 @@ export function ParentConsent() {
               const on = s.n === step && stage !== "approved";
               return (
                 <li key={s.n} className="flex items-start gap-3.5" aria-current={on ? "step" : undefined}>
-                  <span className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold ${done ? "bg-mint text-white" : on ? "bg-violet text-white" : "bg-violet/10 text-indigo-deep/45"}`}>{done ? "✓" : s.n}</span>
+                  <span className={`grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold ${done ? "bg-mint text-white" : on ? "bg-violet text-white" : "bg-violet/10 text-indigo-deep/70"}`}>{done ? "✓" : s.n}</span>
                   <div className={done || on ? "" : "opacity-60"}>
                     <p className="text-sm font-bold text-indigo-deep">{s.title}</p>
-                    <p className="mt-0.5 text-[11px] font-medium text-indigo-deep/60">{s.body}</p>
+                    <p className="mt-0.5 text-xs font-medium text-indigo-deep/70">{s.body}</p>
                   </div>
                 </li>
               );
@@ -121,10 +121,10 @@ export function ParentConsent() {
                 placeholder="parent@example.com"
                 aria-label="بريد ولي الأمر"
                 aria-invalid={touched && !valid}
-                className={`w-full rounded-2xl border-2 bg-white px-5 py-3.5 text-start text-sm font-medium text-indigo-deep outline-none transition placeholder:text-indigo-deep/35 focus:ring-4 focus:ring-violet/10 ${touched && !valid ? "border-rose-400" : "border-violet/30 focus:border-violet"}`}
+                className={`w-full rounded-2xl border-2 bg-white px-5 py-3.5 text-start text-sm font-medium text-indigo-deep outline-none transition placeholder:text-indigo-deep/65 focus:ring-4 focus:ring-violet/10 ${touched && !valid ? "border-rose-400" : "border-violet/30 focus:border-violet"}`}
               />
-              {touched && !valid && <p className="mt-1.5 text-[11px] font-semibold text-[#c0174f]">اكتب بريد ولي أمرك كاملًا.</p>}
-              {error && <p role="alert" className="mt-2 text-[11px] font-bold text-[#c0174f]">{error}</p>}
+              {touched && !valid && <p className="mt-1.5 text-xs font-semibold text-[#c0174f]">اكتب بريد ولي أمرك كاملًا.</p>}
+              {error && <p role="alert" className="mt-2 text-xs font-bold text-[#c0174f]">{error}</p>}
               <button disabled={busy} className="mt-3 w-full rounded-full bg-brand py-3.5 text-base font-bold text-white shadow-lg shadow-violet/30 transition hover:brightness-110 disabled:opacity-60">
                 {busy ? "جارٍ الإرسال…" : "أرسل طلب الموافقة"}
               </button>
@@ -135,14 +135,14 @@ export function ParentConsent() {
             <div role="status" className="mt-5 rounded-2xl bg-violet/[0.06] px-4 py-3.5 text-xs font-semibold leading-6 text-indigo-deep/80">
               أرسلنا الطلب إلى <b dir="ltr">{masked}</b>. حين يوافق ولي أمرك ستتحدّث هذه الصفحة وحدها. الطلب محفوظ 7 أيام.
               {devLink && (
-                <span className="mt-2 block rounded-xl border border-dashed border-amber-300 bg-amber-50 px-3 py-2 text-[11px] text-amber-900">
+                <span className="mt-2 block rounded-xl border border-dashed border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
                   (للتجربة فقط، لم يُربط مزوّد بريد بعد){" "}
                   <a href={devLink} target="_blank" rel="noreferrer" className="font-bold text-violet underline underline-offset-4">
                     افتح رابط ولي الأمر
                   </a>
                 </span>
               )}
-              <button onClick={() => setInfo((i) => (i ? { ...i, parent: null } : i))} className="mt-2 block text-[11px] font-bold text-violet underline underline-offset-4">
+              <button onClick={() => setInfo((i) => (i ? { ...i, parent: null } : i))} className="mt-2 block text-xs font-bold text-violet underline underline-offset-4">
                 أرسل إلى بريد آخر
               </button>
             </div>
@@ -186,9 +186,9 @@ export function ParentConsent() {
         </section>
 
         <section className="min-w-0 rounded-[28px] border border-slate-200 bg-slate-50/80 p-5 sm:p-6">
-          <span className="inline-block rounded-full bg-sky-100 px-4 py-1.5 text-[11px] font-bold text-sky-700">ما يصل ولي الأمر</span>
+          <span className="inline-block rounded-full bg-sky-100 px-4 py-1.5 text-xs font-bold text-sky-700">ما يصل ولي الأمر</span>
           <div className="mt-3 rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
-            <p dir="auto" className="text-[11px] font-semibold text-indigo-deep/55">
+            <p dir="auto" className="text-xs font-semibold text-indigo-deep/70">
               من: قفزة · إلى: <span dir="ltr">{masked || "parent@…"}</span>
             </p>
             <h2 className="mt-2 text-[22px] font-bold leading-snug text-indigo-deep">{child} يريد إنشاء حساب في قفزة</h2>
@@ -196,14 +196,14 @@ export function ParentConsent() {
             <div className="mt-3 grid grid-cols-1 gap-2.5 sm:grid-cols-2">
               <div className="rounded-2xl bg-mint/10 p-3.5">
                 <p className="text-xs font-bold text-emerald-800">ما نحفظه</p>
-                <p className="mt-1 text-[11px] font-medium leading-5 text-emerald-900/80">الاسم الأول والبريد، والتقدّم في الدروس، والنقاط والشارات.</p>
+                <p className="mt-1 text-xs font-medium leading-5 text-emerald-900/80">الاسم الأول والبريد، والتقدّم في الدروس، والنقاط والشارات.</p>
               </div>
               <div className="rounded-2xl bg-rose-50 p-3.5">
                 <p className="text-xs font-bold text-rose-800">ما لا نجمعه أبدًا</p>
-                <p className="mt-1 text-[11px] font-medium leading-5 text-rose-900/80">الصور، والموقع، وجهات الاتصال، والإعلانات.</p>
+                <p className="mt-1 text-xs font-medium leading-5 text-rose-900/80">الصور، والموقع، وجهات الاتصال، والإعلانات.</p>
               </div>
             </div>
-            <p className="mt-3 text-[11px] font-medium text-indigo-deep/55">يفتح ولي الأمر رابطًا آمنًا، ويوافق أو يرفض بضغطة. وتستطيع حذف الحساب في أي وقت.</p>
+            <p className="mt-3 text-xs font-medium text-indigo-deep/70">يفتح ولي الأمر رابطًا آمنًا، ويوافق أو يرفض بضغطة. وتستطيع حذف الحساب في أي وقت.</p>
             <div className="mt-3 rounded-full bg-violet/10 py-3 text-center text-sm font-bold text-violet">اقرأ الطلب وقرّر</div>
           </div>
         </section>

@@ -8,7 +8,7 @@ export default function ForgotPage() {
   return (
     <AuthShell>
       <h1 className="text-4xl font-bold text-indigo-deep">نسيت كلمة المرور؟</h1>
-      <p className="mt-2 text-xs text-indigo-deep/60">اكتب بريدك وسنرسل إليه رابطًا لاختيار كلمة جديدة.</p>
+      <p className="mt-2 text-xs text-indigo-deep/70">اكتب بريدك وسنرسل إليه رابطًا لاختيار كلمة جديدة.</p>
       <ForgotForm />
     </AuthShell>
   );

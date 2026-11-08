@@ -35,7 +35,7 @@ export function InvoiceView() {
       </div>
       <main className="mx-auto w-full max-w-[720px] flex-1 px-5 py-7 print:max-w-none print:p-0">
         <div className="mb-4 flex items-center justify-between print:hidden">
-          <Link href="/account" className="text-[11px] font-bold text-violet underline underline-offset-4">
+          <Link href="/account" className="text-xs font-bold text-violet underline underline-offset-4">
             ← حسابي
           </Link>
           {inv && (
@@ -45,14 +45,14 @@ export function InvoiceView() {
           )}
         </div>
         {error && <p role="alert" className="rounded-2xl bg-rose-50 px-5 py-4 text-sm font-bold text-rose-800">{error}</p>}
-        {!inv && !error && <p role="status" className="text-sm font-bold text-indigo-deep/60">جارٍ التحميل…</p>}
+        {!inv && !error && <p role="status" className="text-sm font-bold text-indigo-deep/70">جارٍ التحميل…</p>}
         {inv && (
           <article className="rounded-3xl border border-violet/10 bg-white p-7 shadow-sm print:border-0 print:shadow-none">
             <header className="flex flex-wrap items-start justify-between gap-4">
               <div>
                 <p className="text-2xl font-bold text-violet">قفزة</p>
                 <h1 className="mt-1 text-xl font-bold text-indigo-deep">{inv.kind === "tax" ? "فاتورة ضريبية" : "إيصال دفع"}</h1>
-                {inv.kind === "receipt" && <p className="mt-1 text-[11px] font-semibold text-amber-700">هذا إيصال وليس فاتورة ضريبية.</p>}
+                {inv.kind === "receipt" && <p className="mt-1 text-xs font-semibold text-amber-700">هذا إيصال وليس فاتورة ضريبية.</p>}
               </div>
               <div className="text-end text-xs font-semibold leading-6 text-indigo-deep/70">
                 <p>
@@ -64,7 +64,7 @@ export function InvoiceView() {
 
             <div className="mt-6 grid gap-5 sm:grid-cols-2">
               <section>
-                <h2 className="text-[11px] font-bold text-indigo-deep/50">البائع</h2>
+                <h2 className="text-xs font-bold text-indigo-deep/70">البائع</h2>
                 {inv.seller ? (
                   <p className="mt-1 text-sm font-semibold leading-7 text-indigo-deep">
                     {inv.seller.name}
@@ -82,7 +82,7 @@ export function InvoiceView() {
                 )}
               </section>
               <section>
-                <h2 className="text-[11px] font-bold text-indigo-deep/50">العميل</h2>
+                <h2 className="text-xs font-bold text-indigo-deep/70">العميل</h2>
                 <p className="mt-1 text-sm font-semibold leading-7 text-indigo-deep">
                   {inv.customer.name}
                   <br />

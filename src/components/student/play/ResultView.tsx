@@ -38,7 +38,7 @@ function Ring({ pct }: { pct: number }) {
       </svg>
       <div className="text-center">
         <p className="text-[28px] font-bold leading-none">{pct}%</p>
-        <p className="mt-1 text-[10px] font-semibold text-white/70">دقّة</p>
+        <p className="mt-1 text-xs font-semibold text-white/70">دقّة</p>
       </div>
     </div>
   );
@@ -49,7 +49,7 @@ function StatCard({ icon: Icon, tone, value, label }: { icon: typeof Zap; tone: 
     <div className="flex items-center justify-between gap-3 rounded-3xl border border-violet/10 bg-white px-5 py-4 shadow-sm">
       <div>
         <p className="text-[26px] font-bold leading-tight text-indigo-deep">{value}</p>
-        <p className="text-[11px] font-semibold text-indigo-deep/55">{label}</p>
+        <p className="text-xs font-semibold text-indigo-deep/70">{label}</p>
       </div>
       <span className={`grid size-11 place-items-center rounded-2xl text-white ${tone}`}>
         <Icon className="size-5" />
@@ -88,7 +88,10 @@ export function ResultView() {
   async function share() {
     const text = `أنهيت درس «${lesson.title}» في قفزة بدقّة ${r.accuracy}%، وجمعت ${plural.knowledgePoints(r.points)}!`;
     try {
-      if (navigator.share) await navigator.share({ text });
+      const img = `/og/card?${new URLSearchParams({ title: lesson.title, points: String(r.points), acc: String(r.accuracy), rank: rank.name })}`;
+      const file = await fetch(img).then((x) => x.blob()).then((b) => new File([b], "qafza-card.png", { type: "image/png" })).catch(() => null);
+      if (file && navigator.canShare?.({ files: [file] })) await navigator.share({ text, files: [file] });
+      else if (navigator.share) await navigator.share({ text });
       else {
         await navigator.clipboard.writeText(text);
         toast.show("نُسخ إنجازك، الصقه حيث تشاء");
@@ -186,8 +189,8 @@ export function ResultView() {
                     <span className="mx-auto block w-fit">
                       <BadgeShape color={b.color} locked={!earned} />
                     </span>
-                    <p className={`mt-2 text-xs font-bold leading-5 ${earned ? "text-indigo-deep" : "text-indigo-deep/40"}`}>{b.name}</p>
-                    <p className={`mt-0.5 text-[10px] font-medium leading-4 ${earned ? "text-indigo-deep/60" : "text-indigo-deep/35"}`}>{earned ? b.earned : b.how}</p>
+                    <p className={`mt-2 text-xs font-bold leading-5 ${earned ? "text-indigo-deep" : "text-indigo-deep/70"}`}>{b.name}</p>
+                    <p className={`mt-0.5 text-xs font-medium leading-4 ${earned ? "text-indigo-deep/70" : "text-indigo-deep/70"}`}>{earned ? b.earned : b.how}</p>
                   </li>
                 );
               })}
@@ -200,15 +203,15 @@ export function ResultView() {
                 return (
                   <li
                     key={c.name}
-                    className={`grid aspect-[3/4] place-items-center rounded-xl p-1.5 text-center text-[10px] font-bold leading-4 ${
-                      has ? (c.rare ? "bg-gradient-to-br from-amber-400 to-pink-500 text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/30"
+                    className={`grid aspect-[3/4] place-items-center rounded-xl p-1.5 text-center text-xs font-bold leading-4 ${
+                      has ? (c.rare ? "bg-gradient-to-br from-amber-400 to-pink-500 text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/70"
                     }`}
                   >
                     {has ? (
                       <span>
                         {c.rare ? "★" : <Check className="mx-auto size-4" strokeWidth={3} />}
                         <span className="mt-1 block">{cardName(i, r.lesson.stations.map((s) => s.title))}</span>
-                        {c.rare && <span className="block text-[8px] opacity-90">نادرة</span>}
+                        {c.rare && <span className="block text-xs opacity-90">نادرة</span>}
                       </span>
                     ) : (
                       <span>
@@ -219,13 +222,13 @@ export function ResultView() {
                 );
               })}
             </ul>
-            <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
+            <p className="mt-3 text-xs font-medium leading-5 text-indigo-deep/70">{CARDS_HELP}</p>
           </section>
 
           <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
             <h2 className="text-xl font-bold text-indigo-deep">عالمك: مكتبة المعرفة</h2>
             <div className="dots relative mt-3 flex h-32 items-end justify-center gap-2 overflow-hidden rounded-2xl bg-gradient-to-br from-[#241356] to-[#5b21b6] px-4 pb-0">
-              <span className="absolute start-3 top-3 rounded-full bg-sun px-3 py-1 text-[10px] font-bold text-indigo-deep">+1 كتاب</span>
+              <span className="absolute start-3 top-3 rounded-full bg-sun px-3 py-1 text-xs font-bold text-indigo-deep">+1 كتاب</span>
               {[
                 ["#8b5cf6", 70],
                 ["#f59e0b", 52],
@@ -238,11 +241,11 @@ export function ResultView() {
             </div>
             <p className="mt-3 text-xs font-medium leading-6 text-indigo-deep/70">كل درس تُنهيه يضيف كتابًا إلى رفّك. 5 كتب، والرف القادم يُفتح بعد 3 دروس.</p>
             {r.missed.length > 0 ? (
-              <p className="mt-3 rounded-2xl bg-violet/10 px-4 py-3 text-[11px] font-semibold leading-6 text-violet">
+              <p className="mt-3 rounded-2xl bg-violet/10 px-4 py-3 text-xs font-semibold leading-6 text-violet">
                 تثبيت الغد جاهز: أخطأت في «{lesson.stations[r.missed[0]].challenge.kind === "mcq" ? (lesson.stations[r.missed[0]].challenge as { question: string }).question : lesson.stations[r.missed[0]].title}»، فتعود إليك غدًا في دقيقتين.
               </p>
             ) : (
-              <p className="mt-3 rounded-2xl bg-mint/10 px-4 py-3 text-[11px] font-semibold leading-6 text-emerald-800">لم تُخطئ في شيء، فلا تثبيت عليك غدًا. أحسنت!</p>
+              <p className="mt-3 rounded-2xl bg-mint/10 px-4 py-3 text-xs font-semibold leading-6 text-emerald-800">لم تُخطئ في شيء، فلا تثبيت عليك غدًا. أحسنت!</p>
             )}
           </section>
 
@@ -252,8 +255,8 @@ export function ResultView() {
               <ol className="mt-3 space-y-2">
                 {people.map((p, i) => (
                   <li key={p.name} className={`flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-xs font-bold ${p.me ? "border-2 border-violet bg-violet/[0.06]" : "bg-violet/[0.03]"}`}>
-                    <span className="w-3 text-[10px] text-indigo-deep/50">{i + 1}</span>
-                    <span className="grid size-6 place-items-center rounded-full text-[10px] text-white" style={{ background: p.color }}>
+                    <span className="w-3 text-xs text-indigo-deep/70">{i + 1}</span>
+                    <span className="grid size-6 place-items-center rounded-full text-xs text-white" style={{ background: p.color }}>
                       {p.initial}
                     </span>
                     <span className="flex-1 truncate text-indigo-deep">{p.name}</span>
@@ -282,7 +285,7 @@ export function ResultView() {
           ) : (
             <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
               <h2 className="text-xl font-bold text-indigo-deep">ترتيب الصف</h2>
-              <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">ترتيبك بين زملائك ظهر لك في لوحة الصدارة وأنت تلعب، ويرى معلّمك نتائج الصف كلها في صفحته.</p>
+              <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">ترتيبك بين زملائك ظهر لك في لوحة الصدارة وأنت تلعب، ويرى معلّمك نتائج الصف كلها في صفحته.</p>
             </section>
           )}
         </div>
@@ -291,6 +294,13 @@ export function ResultView() {
           <button onClick={share} className="rounded-full border border-violet/15 bg-white px-7 py-3.5 text-sm font-bold text-indigo-deep shadow-sm transition hover:border-violet/40">
             شارك إنجازك
           </button>
+          <a
+            href={`/og/card?${new URLSearchParams({ title: lesson.title, points: String(r.points), acc: String(r.accuracy), rank: rank.name })}`}
+            download="qafza-card.png"
+            className="rounded-full border border-violet/15 bg-white px-7 py-3.5 text-sm font-bold text-indigo-deep shadow-sm transition hover:border-violet/40"
+          >
+            نزّل بطاقة إنجازك
+          </a>
           <Link href={demo ? "/play/demo" : joined ? `/join?code=${joined.code}` : "/learn"} className="rounded-full bg-brand px-10 py-3.5 text-sm font-bold text-white shadow-lg shadow-violet/30 transition hover:brightness-110">
             العب مرة أخرى
           </Link>

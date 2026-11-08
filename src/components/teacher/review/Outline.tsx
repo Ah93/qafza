@@ -38,7 +38,7 @@ export function Outline({ lesson }: { lesson: Lesson }) {
                   onClick={() => jump(`ch-${i}`)}
                   className="flex w-full items-center gap-2.5 rounded-xl px-2 py-2 text-start transition hover:bg-pink-card/5"
                 >
-                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-pink-card/10 text-[10px] font-bold text-pink-card">
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-pink-card/10 text-xs font-bold text-pink-card">
                     ت{i + 1}
                   </span>
                   <span className="truncate text-xs font-bold text-pink-card">{CHALLENGE_LABELS[s.challenge.kind]}</span>
@@ -60,10 +60,10 @@ export function Outline({ lesson }: { lesson: Lesson }) {
 
       <aside className="rounded-3xl border border-mint/25 bg-mint/10 p-4">
         <h2 className="text-base font-bold text-emerald-800">جودة التوليد</h2>
-        <p className="mt-1.5 text-[11px] font-medium leading-6 text-emerald-800/80">
+        <p className="mt-1.5 text-xs font-medium leading-6 text-emerald-800/80">
           كل محطة وتحدٍّ مربوط بصفحته في ملفك. وما لا مصدر له لا يُولَّد.
         </p>
-        <p className="mt-3 rounded-2xl bg-white px-3.5 py-3 text-[11px] font-semibold leading-6 text-indigo-deep">
+        <p className="mt-3 rounded-2xl bg-white px-3.5 py-3 text-xs font-semibold leading-6 text-indigo-deep">
           {pending === 0 ? "لا شيء يحتاج مراجعة. راجع المحتوى بنفسك قبل أن تشارك." : pending === 1 ? "محطة واحدة فيها ملاحظة تحتاج نظرتك." : `${pending} محطات فيها ملاحظات تحتاج نظرتك.`}
         </p>
       </aside>

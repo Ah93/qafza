@@ -177,7 +177,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
       <header className="border-b border-violet/5 bg-white/80">
         <div className="mx-auto flex h-[56px] max-w-[1080px] items-center justify-between px-5">
           <Logo />
-          <Link href="/" className="text-[11px] font-bold text-violet underline underline-offset-4">
+          <Link href="/" className="text-xs font-bold text-violet underline underline-offset-4">
             خروج
           </Link>
         </div>
@@ -195,7 +195,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
               }}
             >
               <h1 className="mt-5 text-[30px] font-bold leading-tight text-indigo-deep">ادخل رمز اللعبة</h1>
-              <p className="mt-2 text-xs font-medium text-indigo-deep/60">تجده على السبورة أو في رسالة معلّمك. لا تحتاج حسابًا.</p>
+              <p className="mt-2 text-xs font-medium text-indigo-deep/70">تجده على السبورة أو في رسالة معلّمك. لا تحتاج حسابًا.</p>
 
               <div dir="ltr" className={`mt-5 flex justify-center gap-2.5 ${error ? "animate-[shake_.35s]" : ""}`}>
                 {chars.map((c, i) => (
@@ -237,7 +237,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
               >
                 {busy ? "جارٍ التحقق…" : "ادخل"}
               </button>
-              <p className="mt-3 text-[11px] font-semibold text-indigo-deep/55">أو امسح رمز QR من السبورة بكاميرا جوالك</p>
+              <p className="mt-3 text-xs font-semibold text-indigo-deep/70">أو امسح رمز QR من السبورة بكاميرا جوالك</p>
             </form>
           )}
 
@@ -259,7 +259,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
               {(klass?.className ?? joined?.className) && (
                 <p className="mt-2 text-xs font-semibold text-violet">الصف: {klass?.className ?? joined?.className}</p>
               )}
-              <p className="mt-2 text-xs font-medium text-indigo-deep/60">اسمك الأول فقط يكفي. سيراه معلّمك وزملاؤك.</p>
+              <p className="mt-2 text-xs font-medium text-indigo-deep/70">اسمك الأول فقط يكفي. سيراه معلّمك وزملاؤك.</p>
               <input
                 autoFocus
                 value={first}
@@ -270,7 +270,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
                 placeholder="مثال: ريان"
                 aria-label="اسمك الأول"
                 maxLength={20}
-                className="mt-5 w-full rounded-2xl border-2 border-violet/25 bg-white px-5 py-4 text-center text-xl font-bold text-indigo-deep outline-none transition placeholder:text-indigo-deep/30 focus:border-violet focus:ring-4 focus:ring-violet/10"
+                className="mt-5 w-full rounded-2xl border-2 border-violet/25 bg-white px-5 py-4 text-center text-xl font-bold text-indigo-deep outline-none transition placeholder:text-indigo-deep/65 focus:border-violet focus:ring-4 focus:ring-violet/10"
               />
               {error && (
                 <p role="alert" className="mt-3 text-xs font-bold text-[#c0174f]">
@@ -288,7 +288,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
               >
                 {busy ? "لحظة…" : klass ? "انضم إلى الصف" : selfPaced ? "ابدأ الدرس" : groups ? "التالي: اعرف مجموعتك" : "ادخل الحصة"}
               </button>
-              <button type="button" onClick={() => { setStep("code"); setJoined(null); setKlass(null); }} className="mt-3 text-[11px] font-bold text-violet underline underline-offset-4">
+              <button type="button" onClick={() => { setStep("code"); setJoined(null); setKlass(null); }} className="mt-3 text-xs font-bold text-violet underline underline-offset-4">
                 رمز آخر
               </button>
             </form>
@@ -298,10 +298,10 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
             <div role="status" aria-live="polite">
               <span className="mx-auto mt-6 block size-14 animate-pulse rounded-full bg-brand/15" />
               <h1 className="mt-4 text-[26px] font-bold leading-tight text-indigo-deep">بانتظار المعلّم</h1>
-              <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+              <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">
                 لم يفتح المعلّم الحصة بعد. اترك هذه الصفحة مفتوحة، وتدخل تلقائيًا ما إن تبدأ.
               </p>
-              <button onClick={() => setStep("name")} className="mt-4 text-[11px] font-bold text-violet underline underline-offset-4">
+              <button onClick={() => setStep("name")} className="mt-4 text-xs font-bold text-violet underline underline-offset-4">
                 غيّر اسمي
               </button>
             </div>
@@ -310,17 +310,17 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
           {step === "group" && (
             <div>
               <h1 className="mt-5 text-[28px] font-bold leading-tight text-indigo-deep">وجدنا مجموعتك!</h1>
-              <p className="mt-2 text-xs font-medium text-indigo-deep/60">
+              <p className="mt-2 text-xs font-medium text-indigo-deep/70">
                 {joined?.className ? `من «صفوفي»: ${joined.className}. مجموعتك جاهزة، ولا تختارها بنفسك.` : "وزّعنا الطلاب على المجموعات بالتناوب، فأنت هنا."}
               </p>
               <div className="mt-5 rounded-3xl border-2 p-5" style={{ borderColor: group.color }}>
                 <span className="mx-auto block size-5 rounded-md" style={{ background: group.color }} />
                 <p className="mt-2 text-2xl font-bold text-indigo-deep">مجموعة {group.name}</p>
-                <p className="mt-1 text-[11px] font-semibold text-indigo-deep/55">من {groupCount} مجموعات متقاربة في العدد والمستوى</p>
+                <p className="mt-1 text-xs font-semibold text-indigo-deep/70">من {groupCount} مجموعات متقاربة في العدد والمستوى</p>
                 {mates.length > 0 && (
                   <ul className="mt-3 flex flex-wrap justify-center gap-1.5">
                     {mates.map((m) => (
-                      <li key={m} className="rounded-full bg-violet/[0.07] px-3 py-1 text-[11px] font-bold text-indigo-deep">
+                      <li key={m} className="rounded-full bg-violet/[0.07] px-3 py-1 text-xs font-bold text-indigo-deep">
                         {m}
                       </li>
                     ))}
@@ -336,7 +336,7 @@ export function JoinFlow({ initialCode = "" }: { initialCode?: string }) {
           {step === "class" && klass && (
             <div>
               <h1 className="mt-5 text-[28px] font-bold leading-tight text-indigo-deep">أهلاً في «{klass.className}»</h1>
-              <p className="mt-2 text-xs font-medium text-indigo-deep/60">أُضفت إلى الصف، وستظهر نتائجك عند معلّمك.</p>
+              <p className="mt-2 text-xs font-medium text-indigo-deep/70">أُضفت إلى الصف، وستظهر نتائجك عند معلّمك.</p>
               {klass.lessons.length ? (
                 <ul className="mt-5 space-y-2.5 text-start">
                   {klass.lessons.map((l) => (

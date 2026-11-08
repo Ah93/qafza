@@ -40,7 +40,9 @@ const FEATURES = [
 export default function Home() {
   return (
     <>
-      <BetaBar />
+      <aside aria-label="دعوة المعلّمين للتجربة">
+        <BetaBar />
+      </aside>
       <SiteHeader />
       <main className="mx-auto w-full max-w-[1080px] flex-1 px-5">
         {/* hero */}
@@ -68,7 +70,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="mt-3">
-              <span className="text-[11px] text-indigo-deep/55">جرّب بنفسك: الدرس نفسه بأربعة أشكال.</span>
+              <span className="text-xs text-indigo-deep/70">جرّب بنفسك: الدرس نفسه بأربعة أشكال.</span>
             </div>
           </div>
           <HeroDemo />
@@ -83,7 +85,7 @@ export default function Home() {
             >
               <div>
                 <div className="text-xl font-bold">{s.title}</div>
-                <div className="mt-1 text-[11px] text-white/80">{s.body}</div>
+                <div className="mt-1 text-xs text-white/80">{s.body}</div>
               </div>
               <span className="text-4xl font-bold text-white/25">{s.n}</span>
             </div>
@@ -106,7 +108,7 @@ export default function Home() {
                   {f.title}
                   <span className={`mt-1 block text-xs font-semibold ${f.tone}`}>{f.count}</span>
                 </h3>
-                <p className="mt-2 text-xs leading-6 text-indigo-deep/60">{f.body}</p>
+                <p className="mt-2 text-xs leading-6 text-indigo-deep/70">{f.body}</p>
                 <Link href={f.href} className={`mt-4 inline-block text-xs font-semibold ${f.tone}`}>
                   جرّب الأمثلة
                 </Link>
@@ -122,7 +124,7 @@ export default function Home() {
             <article className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
               <div className="text-sm font-semibold text-indigo-deep">التجربة المجانية</div>
               <div className="mt-1 text-3xl font-bold text-indigo-deep">مجانًا</div>
-              <p className="mt-2 text-xs text-indigo-deep/60">درسك الأول علينا: كاملًا بكل مزاياه، مع حصته وتقريره.</p>
+              <p className="mt-2 text-xs text-indigo-deep/70">درسك الأول علينا: كاملًا بكل مزاياه، مع حصته وتقريره.</p>
               <Link
                 href="/signup"
                 className="mt-5 block rounded-full border border-violet/15 py-2.5 text-center text-xs font-bold text-violet"
@@ -132,7 +134,7 @@ export default function Home() {
             </article>
 
             <article className="relative rounded-3xl bg-indigo-deep p-5 text-white shadow-xl shadow-indigo-deep/30 sm:-my-3 sm:py-8">
-              <span className="absolute -top-3 end-5 rounded-full bg-sun px-3 py-1 text-[10px] font-bold text-indigo-deep">
+              <span className="absolute -top-3 end-5 rounded-full bg-sun px-3 py-1 text-xs font-bold text-indigo-deep">
                 الأكثر اختيارًا
               </span>
               <div className="text-sm font-semibold">قفزة الكاملة</div>
@@ -151,7 +153,7 @@ export default function Home() {
             <article className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
               <div className="text-sm font-semibold text-indigo-deep">المؤسسات</div>
               <div className="mt-1 text-3xl font-bold text-indigo-deep">عرض خاص</div>
-              <p className="mt-2 text-xs text-indigo-deep/60">لمدرستك أو جامعتك: عرض يناسب حجمكم واحتياجكم.</p>
+              <p className="mt-2 text-xs text-indigo-deep/70">لمدرستك أو جامعتك: عرض يناسب حجمكم واحتياجكم.</p>
               <Link
                 href="/pricing#contact"
                 className="mt-5 block rounded-full border border-violet/15 py-2.5 text-center text-xs font-bold text-violet"

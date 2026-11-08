@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   if (!b) return fail("طلب غير صالح.");
   if (!(await reserveLessonSlot(user.id))) return fail(PAYWALL_MESSAGE, 402);
   try {
-    const made = await createLesson(user.id, b.lesson, text(b.sourceName, 120), b.status === "draft" ? "draft" : "published");
+    const made = await createLesson(user.id, b.lesson, text(b.sourceName, 120), b.status === "draft" ? "draft" : "published", text(b.sourceId, 40));
     if ((await planStatus(user.id)).lessonsCreated === 2) track("second_lesson_started", { userId: user.id });
     return Response.json({ lesson: made });
   } catch (e) {

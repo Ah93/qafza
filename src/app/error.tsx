@@ -16,7 +16,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
           !
         </p>
         <h1 className="mt-3 text-3xl font-bold text-indigo-deep">حدث خطأ من جهتنا.</h1>
-        <p className="mt-2 text-sm font-medium leading-7 text-indigo-deep/65">أعد المحاولة بعد لحظات. إن تكرّر الأمر فسنكون ممتنّين لو أخبرتنا.</p>
+        <p className="mt-2 text-sm font-medium leading-7 text-indigo-deep/70">أعد المحاولة بعد لحظات. إن تكرّر الأمر فسنكون ممتنّين لو أخبرتنا.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button onClick={reset} className="rounded-full bg-brand px-9 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
             أعد المحاولة

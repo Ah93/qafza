@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Check, Pause, Play, Star } from "lucide-react";
 import { PARTS, PartsMap, Stage, type PartId } from "./GalleryShell";
 
-const detailBar = "mt-2 rounded-xl bg-white px-4 py-3 text-[13px] font-medium text-indigo-deep";
+const detailBar = "mt-2 rounded-xl bg-white px-4 py-3 text-sm font-medium text-indigo-deep";
 
 /* ---------- 1. interactive diagram ---------- */
 
@@ -39,14 +39,14 @@ export function SlidesDemo() {
     <Stage className="flex flex-col">
       <div className="flex items-start justify-between">
         <h3 className="text-[22px] font-bold">خلايا الدم الحمراء</h3>
-        <span className="text-[10px] font-semibold text-white/70">
+        <span className="text-xs font-semibold text-white/70">
           الشريحة {shown} من {SLIDE_POINTS.length}
         </span>
       </div>
       <ol className="relative mt-3 flex-1 space-y-2">
         {SLIDE_POINTS.slice(0, shown).map(([h, b], i) => (
-          <li key={h} className="flex animate-[pop_.3s_ease-out] items-center gap-2.5 rounded-xl bg-white/10 px-3.5 py-2.5 text-[13px] font-medium">
-            <span className="grid size-5 shrink-0 place-items-center rounded-full bg-sun text-[10px] font-bold text-indigo-deep">{i + 1}</span>
+          <li key={h} className="flex animate-[pop_.3s_ease-out] items-center gap-2.5 rounded-xl bg-white/10 px-3.5 py-2.5 text-sm font-medium">
+            <span className="grid size-5 shrink-0 place-items-center rounded-full bg-sun text-xs font-bold text-indigo-deep">{i + 1}</span>
             <span>
               {h}: {b}
             </span>
@@ -56,7 +56,7 @@ export function SlidesDemo() {
       <div className="relative mt-2 flex justify-center">
         <button
           onClick={() => setShown(done ? 1 : shown + 1)}
-          className="rounded-full bg-white/15 px-5 py-2 text-[12px] font-bold transition hover:bg-white/25"
+          className="rounded-full bg-white/15 px-5 py-2 text-xs font-bold transition hover:bg-white/25"
         >
           {done ? "ابدأ من جديد" : "اكشف النقطة التالية"}
         </button>
@@ -115,7 +115,7 @@ export function VideoDemo() {
           <Icon className="size-6 fill-current" />
         </button>
         {(playing || t > 0) && (
-          <p className="absolute inset-x-4 bottom-2 animate-[pop_.3s_ease-out] rounded-lg bg-black/40 px-3 py-1.5 text-center text-[11px] font-medium" aria-live="polite">
+          <p className="absolute inset-x-4 bottom-2 animate-[pop_.3s_ease-out] rounded-lg bg-black/40 px-3 py-1.5 text-center text-xs font-medium" aria-live="polite">
             {CHAPTERS[chapter].line}
           </p>
         )}
@@ -134,8 +134,8 @@ export function VideoDemo() {
             aria-pressed={chapter === i}
             className={`rounded-xl px-3 py-2 text-start transition ${chapter === i ? "bg-white text-indigo-deep" : "bg-white/10 hover:bg-white/15"}`}
           >
-            <span className="block text-[10px] font-semibold opacity-70">{clock(c.at)}</span>
-            <span className="block text-[12px] font-bold">{c.label}</span>
+            <span className="block text-xs font-semibold opacity-70">{clock(c.at)}</span>
+            <span className="block text-xs font-bold">{c.label}</span>
           </button>
         ))}
       </div>
@@ -166,11 +166,11 @@ export function CardsDemo() {
         ) : (
           <span>
             <span className="block text-[32px] font-bold leading-tight">{FLASH[i][0]}</span>
-            <span className="mt-1 block text-[11px] font-medium text-indigo-deep/55">اضغط لتقلبها</span>
+            <span className="mt-1 block text-xs font-medium text-indigo-deep/70">اضغط لتقلبها</span>
           </span>
         )}
       </button>
-      <div className="relative flex items-center gap-3 text-[11px] font-bold">
+      <div className="relative flex items-center gap-3 text-xs font-bold">
         <span>
           البطاقة {i + 1} من {FLASH.length}
         </span>
@@ -240,12 +240,12 @@ export function PathDemo() {
                       ? "size-12 bg-sun text-lg text-indigo-deep ring-8 ring-sun/30"
                       : done
                         ? "size-9 bg-violet text-white"
-                        : "size-9 border-2 border-violet/15 bg-white text-sm text-violet/60"
+                        : "size-9 border-2 border-violet/15 bg-white text-sm text-violet/75"
                 }`}
               >
                 {boss ? <Star className="size-5 fill-white" /> : done ? <Check className="size-4" strokeWidth={3.5} /> : i + 1}
               </span>
-              <span dir="rtl" className="absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold text-indigo-deep">
+              <span dir="rtl" className="absolute left-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap text-xs font-bold text-indigo-deep">
                 {p.label}
               </span>
             </button>
@@ -258,13 +258,13 @@ export function PathDemo() {
             key={p.label}
             onClick={() => setCur(i)}
             aria-pressed={cur === i}
-            className={`rounded-full border px-3.5 py-1.5 text-[11px] font-bold transition ${cur === i ? "border-violet bg-violet text-white" : "border-violet/15 bg-white text-indigo-deep hover:border-violet/40"}`}
+            className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${cur === i ? "border-violet bg-violet text-white" : "border-violet/15 bg-white text-indigo-deep hover:border-violet/40"}`}
           >
             {p.label}
           </button>
         ))}
       </div>
-      <p className="mt-2.5 rounded-xl border border-violet/10 bg-white px-4 py-3 text-[13px] font-medium" aria-live="polite">
+      <p className="mt-2.5 rounded-xl border border-violet/10 bg-white px-4 py-3 text-sm font-medium" aria-live="polite">
         <b className="text-violet">{PATH[cur].label}:</b> {PATH[cur].text}
       </p>
     </Stage>
@@ -294,7 +294,7 @@ export function SimulationDemo() {
             role="radio"
             aria-checked={lv === i}
             onClick={() => setLv(i)}
-            className={`rounded-full py-2 text-[11px] font-bold transition ${lv === i ? "bg-white text-indigo-deep" : "text-white/80 hover:text-white"}`}
+            className={`rounded-full py-2 text-xs font-bold transition ${lv === i ? "bg-white text-indigo-deep" : "text-white/80 hover:text-white"}`}
           >
             {l.label}
           </button>
@@ -306,10 +306,10 @@ export function SimulationDemo() {
         ))}
       </div>
       <div className="mt-4 grid grid-cols-2 gap-2.5" aria-live="polite">
-        <p className="rounded-xl bg-white/10 px-4 py-3 text-[12px] font-bold">
+        <p className="rounded-xl bg-white/10 px-4 py-3 text-xs font-bold">
           أكسجين يصل: <span className="text-emerald-300">{oxygen}%</span>
         </p>
-        <p className="rounded-xl bg-white/10 px-4 py-3 text-[12px] font-bold">
+        <p className="rounded-xl bg-white/10 px-4 py-3 text-xs font-bold">
           نقص: <span className="text-pink-300">{100 - oxygen}%</span>
         </p>
       </div>
@@ -371,7 +371,7 @@ export function AudioDemo() {
         {AUDIO_LINES.map((l, i) => (
           <li
             key={l}
-            className={`rounded-xl px-4 py-3 transition-all duration-300 ${i === line ? "bg-white/20 text-[15px] font-bold" : "bg-white/[0.07] text-[13px] font-medium text-white/80"}`}
+            className={`rounded-xl px-4 py-3 transition-all duration-300 ${i === line ? "bg-white/20 text-[15px] font-bold" : "bg-white/[0.07] text-sm font-medium text-white/80"}`}
           >
             {l}
           </li>
@@ -405,7 +405,7 @@ export function InfographicDemo() {
             className={`rounded-xl border px-2 py-2.5 text-center transition ${sel === i ? "border-white/70 bg-white/20" : "border-white/10 bg-white/[0.07] hover:bg-white/10"}`}
           >
             <span className={`block text-[22px] font-bold leading-none ${tone}`}>{n}</span>
-            <span className="mt-1.5 block text-[11px] font-bold">{label}</span>
+            <span className="mt-1.5 block text-xs font-bold">{label}</span>
           </button>
         ))}
       </div>
@@ -443,13 +443,13 @@ export function TimelineDemo() {
             >
               {i + 1}
             </button>
-            <span className="text-[11px] font-bold">{label}</span>
+            <span className="text-xs font-bold">{label}</span>
           </li>
         ))}
       </ol>
       <div key={at} className="mt-4 animate-[pop_.25s_ease-out] rounded-xl bg-white/15 px-4 py-3.5" aria-live="polite">
         <p className="text-[18px] font-bold">{TL[at][0]}</p>
-        <p className="mt-0.5 text-[13px] font-medium text-white/85">{TL[at][1]}</p>
+        <p className="mt-0.5 text-sm font-medium text-white/85">{TL[at][1]}</p>
       </div>
     </Stage>
   );
@@ -475,15 +475,15 @@ export function DialogueDemo() {
           return (
             <li key={i} dir="ltr" className={`flex animate-[pop_.3s_ease-out] items-center gap-2 ${guide ? "justify-end" : "justify-start"}`}>
               {!guide && (
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-pink-400 text-[10px] font-bold text-white" title="الطالب">
+                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-pink-400 text-xs font-bold text-white" title="الطالب">
                   {who}
                 </span>
               )}
-              <p dir="rtl" className={`rounded-2xl px-4 py-2.5 text-[13px] font-bold ${guide ? "bg-white text-indigo-deep shadow-sm" : "bg-violet text-white"}`}>
+              <p dir="rtl" className={`rounded-2xl px-4 py-2.5 text-sm font-bold ${guide ? "bg-white text-indigo-deep shadow-sm" : "bg-violet text-white"}`}>
                 {text}
               </p>
               {guide && (
-                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-sun text-[10px] font-bold text-indigo-deep" title="المرشد">
+                <span className="grid size-6 shrink-0 place-items-center rounded-full bg-sun text-xs font-bold text-indigo-deep" title="المرشد">
                   {who}
                 </span>
               )}
@@ -494,7 +494,7 @@ export function DialogueDemo() {
       <div className="mt-3 flex justify-center">
         <button
           onClick={() => setShown(done ? 2 : shown + 1)}
-          className="rounded-full bg-white px-6 py-2 text-[12px] font-bold text-violet shadow-sm transition hover:shadow-md"
+          className="rounded-full bg-white px-6 py-2 text-xs font-bold text-violet shadow-sm transition hover:shadow-md"
         >
           {done ? "ابدأ الحوار من جديد" : "تابع الحوار"}
         </button>

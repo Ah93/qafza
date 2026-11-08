@@ -11,7 +11,7 @@ export default function VerifyPage() {
       <header className="border-b border-violet/5 bg-white/80">
         <div className="mx-auto flex h-[52px] max-w-[1080px] items-center justify-between px-5">
           <Logo />
-          <Link href="/signup" className="text-[11px] font-semibold text-violet underline underline-offset-4">
+          <Link href="/signup" className="text-xs font-semibold text-violet underline underline-offset-4">
             العودة
           </Link>
         </div>

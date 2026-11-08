@@ -41,7 +41,7 @@ function Stat({ icon: Icon, tone, value, label }: { icon: LucideIcon; tone: stri
     <div className="flex items-center justify-between gap-3 rounded-3xl border border-violet/10 bg-white px-5 py-4 shadow-sm">
       <div>
         <p className="text-[26px] font-bold leading-tight text-indigo-deep">{value}</p>
-        <p className="text-[11px] font-semibold text-indigo-deep/55">{label}</p>
+        <p className="text-xs font-semibold text-indigo-deep/70">{label}</p>
       </div>
       <span className={`grid size-10 place-items-center rounded-xl ${tone}`}>
         <Icon className="size-[18px]" />
@@ -50,7 +50,7 @@ function Stat({ icon: Icon, tone, value, label }: { icon: LucideIcon; tone: stri
   );
 }
 
-const accTone = (a: number) => (a >= 80 ? "text-emerald-600" : a >= 70 ? "text-indigo-deep" : "text-amber-600");
+const accTone = (a: number) => (a >= 80 ? "text-emerald-700" : a >= 70 ? "text-indigo-deep" : "text-amber-600");
 
 export function ProfileView() {
   const { account } = useFlow();
@@ -103,11 +103,11 @@ export function ProfileView() {
               </div>
             </div>
             <div className="w-full max-w-[260px]">
-              <div className="flex items-center justify-between text-[11px] font-bold">
+              <div className="flex items-center justify-between text-xs font-bold">
                 <span>{next ? `إلى «${next.name}»` : "أعلى رتبة"}</span>
                 <span>{next ? `${points} من ${next.from}` : points}</span>
               </div>
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/15" role="progressbar" aria-valuenow={toNext} aria-valuemin={0} aria-valuemax={100}>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-white/15" role="progressbar" aria-label="التقدّم نحو الرتبة التالية" aria-valuenow={toNext} aria-valuemin={0} aria-valuemax={100}>
                 <div className="h-full rounded-full bg-gradient-to-l from-pink-400 to-sun transition-[width] duration-700" style={{ width: `${toNext}%` }} />
               </div>
             </div>
@@ -128,7 +128,7 @@ export function ProfileView() {
                     {done ? <Check className="size-4" strokeWidth={3} /> : i + 1}
                   </span>
                   <span className="mt-2 text-xs font-bold">{r.name}</span>
-                  <span className="text-[10px] font-medium text-white/60">{r.from} نقطة</span>
+                  <span className="text-xs font-medium text-white/80">{r.from} نقطة</span>
                 </li>
               );
             })}
@@ -136,7 +136,7 @@ export function ProfileView() {
         </section>
 
         <div className="mt-3 grid gap-3 sm:grid-cols-4">
-          <Stat icon={Zap} tone="bg-mint/15 text-emerald-600" value={String(points)} label="نقطة معرفة" />
+          <Stat icon={Zap} tone="bg-mint/15 text-emerald-700" value={String(points)} label="نقطة معرفة" />
           <Stat icon={FlameIcon} tone="bg-orange-100 text-orange-500" value={plural.days(streak)} label="الشعلة" />
           <Stat icon={Network} tone="bg-violet/10 text-violet" value={String(lessonsDone)} label="دروس مكتملة" />
           <Stat icon={Layers} tone="bg-teal-100 text-teal-600" value={progress?.accuracy == null ? "—" : `${progress.accuracy}%`} label="متوسط الدقّة" />
@@ -146,7 +146,7 @@ export function ProfileView() {
           <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
             <div className="flex items-baseline justify-between">
               <h2 className="text-xl font-bold text-indigo-deep">الشارات</h2>
-              <span className="text-[11px] font-semibold text-indigo-deep/50">
+              <span className="text-xs font-semibold text-indigo-deep/70">
                 {badges.length} من {BADGES.length}
               </span>
             </div>
@@ -158,8 +158,8 @@ export function ProfileView() {
                     <span className="mx-auto block w-fit">
                       <BadgeShape color={b.color} locked={!earned} size={42} />
                     </span>
-                    <p className={`mt-2 text-[11px] font-bold leading-4 ${earned ? "text-indigo-deep" : "text-indigo-deep/40"}`}>{b.name}</p>
-                    <p className={`mt-0.5 text-[9px] font-medium leading-[13px] ${earned ? "text-indigo-deep/60" : "text-indigo-deep/35"}`}>{b.how}</p>
+                    <p className={`mt-2 text-xs font-bold leading-4 ${earned ? "text-indigo-deep" : "text-indigo-deep/70"}`}>{b.name}</p>
+                    <p className={`mt-0.5 text-xs font-medium leading-5 ${earned ? "text-indigo-deep/70" : "text-indigo-deep/70"}`}>{b.how}</p>
                   </li>
                 );
               })}
@@ -169,7 +169,7 @@ export function ProfileView() {
           <section className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
             <div className="flex items-baseline justify-between">
               <h2 className="text-xl font-bold text-indigo-deep">بطاقاتي</h2>
-              <span className="text-[11px] font-semibold text-indigo-deep/50">
+              <span className="text-xs font-semibold text-indigo-deep/70">
                 {cards.size} من {CARDS.length}
               </span>
             </div>
@@ -179,15 +179,15 @@ export function ProfileView() {
                 return (
                   <li
                     key={c.name}
-                    className={`grid aspect-[4/5] place-items-center rounded-xl p-1.5 text-center text-[10px] font-bold leading-4 ${
-                      has ? (c.rare ? "bg-gradient-to-br from-violet to-orchid text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/30"
+                    className={`grid aspect-[4/5] place-items-center rounded-xl p-1.5 text-center text-xs font-bold leading-4 ${
+                      has ? (c.rare ? "bg-gradient-to-br from-violet to-orchid text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/70"
                     }`}
                   >
                     {has ? (
                       <span>
                         {c.rare ? "★" : <Check className="mx-auto size-4" strokeWidth={3} />}
                         <span className="mt-1 block">{c.name}</span>
-                        {c.rare && <span className="mt-1 block rounded-full bg-sun px-2 py-0.5 text-[8px] text-indigo-deep">نادرة</span>}
+                        {c.rare && <span className="mt-1 block rounded-full bg-sun px-2 py-0.5 text-xs text-indigo-deep">نادرة</span>}
                       </span>
                     ) : (
                       <span>
@@ -198,7 +198,7 @@ export function ProfileView() {
                 );
               })}
             </ul>
-            <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
+            <p className="mt-3 text-xs font-medium leading-5 text-indigo-deep/70">{CARDS_HELP}</p>
           </section>
         </div>
 
@@ -206,7 +206,7 @@ export function ProfileView() {
           <h2 className="text-xl font-bold text-indigo-deep">الدروس</h2>
           {progress && progress.history.length ? (
             <div role="table" className="mt-3">
-              <div role="row" className="grid grid-cols-[1.6fr_1fr_1fr_.6fr] gap-3 border-b border-violet/10 pb-2.5 text-[11px] font-semibold text-indigo-deep/45">
+              <div role="row" className="grid grid-cols-[1.6fr_1fr_1fr_.6fr] gap-3 border-b border-violet/10 pb-2.5 text-xs font-semibold text-indigo-deep/70">
                 {["الدرس", "النوع", "متى", "الدقّة"].map((h) => (
                   <span key={h} role="columnheader">{h}</span>
                 ))}
@@ -214,14 +214,14 @@ export function ProfileView() {
               {progress.history.map((l) => (
                 <div key={`${l.lessonId}-${l.at}`} role="row" className="grid grid-cols-[1.6fr_1fr_1fr_.6fr] items-center gap-3 border-b border-violet/[0.07] py-3.5 text-xs last:border-0">
                   <span className="truncate font-bold text-indigo-deep">{l.title}</span>
-                  <span className="font-medium text-indigo-deep/50">{l.mode === "live" ? "حصة مباشرة" : "تعلّم ذاتي"}</span>
+                  <span className="font-medium text-indigo-deep/70">{l.mode === "live" ? "حصة مباشرة" : "تعلّم ذاتي"}</span>
                   <span className="font-medium text-indigo-deep/70">{ago(l.at)}</span>
                   <span className={`font-bold ${accTone(l.accuracy)}`}>{l.accuracy}%</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="mt-3 rounded-2xl bg-violet/[0.05] px-4 py-5 text-center text-xs font-bold text-indigo-deep/60">لم تُنهِ أي درس بعد. ستظهر دروسك ودقّتك هنا.</p>
+            <p className="mt-3 rounded-2xl bg-violet/[0.05] px-4 py-5 text-center text-xs font-bold text-indigo-deep/70">لم تُنهِ أي درس بعد. ستظهر دروسك ودقّتك هنا.</p>
           )}
         </section>
 
@@ -233,7 +233,7 @@ export function ProfileView() {
                 <Switch label="أظهر اسمي في لوحات الصدارة" checked={showName} onChange={setShowName} />
                 <span>
                   <span className="block text-sm font-bold text-indigo-deep">أظهر اسمي في لوحات الصدارة</span>
-                  <span className="mt-0.5 block text-[11px] font-medium text-indigo-deep/55">
+                  <span className="mt-0.5 block text-xs font-medium text-indigo-deep/70">
                     {showName ? "وإلا تظهر باسم مجموعتك أو «لاعب»." : "تظهر الآن باسم مجموعتك أو «لاعب»."}
                   </span>
                 </span>
@@ -242,22 +242,22 @@ export function ProfileView() {
                 <Switch label="ذكّرني بالتثبيت اليومي" checked={remind} onChange={setRemind} />
                 <span>
                   <span className="block text-sm font-bold text-indigo-deep">ذكّرني بالتثبيت اليومي</span>
-                  <span className="mt-0.5 block text-[11px] font-medium text-indigo-deep/55">إشعار واحد في اليوم حين تحين مراجعة.</span>
+                  <span className="mt-0.5 block text-xs font-medium text-indigo-deep/70">إشعار واحد في اليوم حين تحين مراجعة.</span>
                 </span>
               </label>
             </div>
             <div className="rounded-2xl bg-violet/[0.05] p-4">
               <h3 className="text-sm font-bold text-indigo-deep">بياناتك</h3>
-              <p className="mt-1.5 text-[11px] font-medium leading-6 text-indigo-deep/65">
+              <p className="mt-1.5 text-xs font-medium leading-6 text-indigo-deep/70">
                 الخياران يُحفظان على هذا الجهاز. إن كان عمرك أقل من 13 سنة فحسابك مرتبط بولي أمرك، يرى تقدّمك ويستطيع حذف الحساب.
               </p>
             </div>
           </div>
           <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-violet/10 pt-3.5">
-            <button disabled={!account} onClick={() => setDeleting(true)} className="text-[11px] font-bold text-[#c0174f] underline underline-offset-4">
+            <button disabled={!account} onClick={() => setDeleting(true)} className="text-xs font-bold text-[#c0174f] underline underline-offset-4">
               احذف حسابي وبياناتي
             </button>
-            <a href="/api/auth/export" className="text-[11px] font-bold text-violet underline underline-offset-4">
+            <a href="/api/auth/export" className="text-xs font-bold text-violet underline underline-offset-4">
               نزّل نسخة من بياناتي
             </a>
           </div>
@@ -268,7 +268,7 @@ export function ProfileView() {
         <div className="fixed inset-0 z-50 grid place-items-center bg-indigo-deep/40 p-5 backdrop-blur-sm" onMouseDown={(e) => e.target === e.currentTarget && setDeleting(false)}>
           <div role="alertdialog" aria-modal="true" aria-labelledby="del-st" className="w-full max-w-[400px] animate-[pop_.25s_ease-out] rounded-3xl bg-white p-6 shadow-2xl">
             <h2 id="del-st" className="text-xl font-bold text-indigo-deep">حذف حسابك وبياناتك؟</h2>
-            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">تُحذف نقاطك وشاراتك وبطاقاتك نهائيًا. للتأكيد اكتب «احذف».</p>
+            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">تُحذف نقاطك وشاراتك وبطاقاتك نهائيًا. للتأكيد اكتب «احذف».</p>
             <input
               autoFocus
               value={confirmText}

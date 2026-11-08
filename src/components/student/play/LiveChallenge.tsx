@@ -48,7 +48,7 @@ export function LiveChallenge({
           </span>
           <div>
             <h2 className="text-xl font-bold text-indigo-deep">تحدّي الزعيم</h2>
-            <p className="text-[11px] font-semibold text-indigo-deep/55">اختر صحيحة أو خاطئة لكل عبارة، ثم أرسل.</p>
+            <p className="text-xs font-semibold text-indigo-deep/70">اختر صحيحة أو خاطئة لكل عبارة، ثم أرسل.</p>
           </div>
         </div>
         <ul className="mt-4 space-y-2.5">
@@ -62,7 +62,7 @@ export function LiveChallenge({
                     onClick={() => setBossVals((x) => x.map((y, k) => (k === i ? v : y)))}
                     aria-pressed={bossVals[i] === v}
                     className={`rounded-xl border-2 py-2.5 text-sm font-bold transition ${
-                      bossVals[i] === v ? (v ? "border-mint bg-mint/10 text-emerald-700" : "border-rose-400 bg-rose-50 text-[#c0174f]") : "border-violet/10 text-indigo-deep/60 hover:border-violet/30"
+                      bossVals[i] === v ? (v ? "border-mint bg-mint/10 text-emerald-700" : "border-rose-400 bg-rose-50 text-[#c0174f]") : "border-violet/10 text-indigo-deep/70 hover:border-violet/30"
                     }`}
                   >
                     {v ? "صحيحة" : "خاطئة"}
@@ -135,7 +135,7 @@ export function LiveChallenge({
     return (
       <div>
         <h2 className="text-[21px] font-bold leading-snug text-indigo-deep">{challenge.prompt}</h2>
-        <p className="mt-1 text-[11px] font-semibold text-indigo-deep/55">اضغط البطاقة ثم الخانة التي تخصها.</p>
+        <p className="mt-1 text-xs font-semibold text-indigo-deep/70">اضغط البطاقة ثم الخانة التي تخصها.</p>
         <div className="mt-4 grid gap-2.5 sm:grid-cols-3">
           {challenge.slots.map((s, i) => (
             <div key={s.label} className="rounded-2xl bg-violet/[0.05] p-3">
@@ -157,7 +157,7 @@ export function LiveChallenge({
                       })
                 }
                 aria-label={`خانة ${s.label}${placed[i] ? `: ${placed[i]}` : ""}`}
-                className={`grid min-h-12 w-full place-items-center rounded-xl border-2 border-dashed px-2 py-2.5 text-[13px] font-bold transition ${placed[i] ? "border-violet/40 bg-white text-indigo-deep" : held ? "border-violet bg-white text-violet" : "border-violet/25 text-indigo-deep/40"}`}
+                className={`grid min-h-12 w-full place-items-center rounded-xl border-2 border-dashed px-2 py-2.5 text-sm font-bold transition ${placed[i] ? "border-violet/40 bg-white text-indigo-deep" : held ? "border-violet bg-white text-violet" : "border-violet/25 text-indigo-deep/70"}`}
               >
                 {placed[i] ?? "أفلِت هنا"}
               </button>
@@ -166,7 +166,7 @@ export function LiveChallenge({
         </div>
         <div className="mt-3 flex min-h-11 flex-wrap gap-2">
           {cards.map((c) => (
-            <button key={c} onClick={() => setHeld((h) => (h === c ? null : c))} aria-pressed={held === c} className={`rounded-full px-4 py-2 text-[13px] font-bold shadow-sm transition ${held === c ? "bg-violet text-white ring-4 ring-violet/20" : "bg-white text-indigo-deep ring-1 ring-violet/15 hover:ring-violet/40"}`}>
+            <button key={c} onClick={() => setHeld((h) => (h === c ? null : c))} aria-pressed={held === c} className={`rounded-full px-4 py-2 text-sm font-bold shadow-sm transition ${held === c ? "bg-violet text-white ring-4 ring-violet/20" : "bg-white text-indigo-deep ring-1 ring-violet/15 hover:ring-violet/40"}`}>
               {c}
             </button>
           ))}
@@ -185,7 +185,7 @@ export function LiveChallenge({
   return (
     <div>
       <h2 className="text-[21px] font-bold leading-snug text-indigo-deep">{challenge.prompt}</h2>
-      <p className="mt-1 text-[11px] font-semibold text-indigo-deep/55">اضغط العنصر ثم وصفه ليتصلا.</p>
+      <p className="mt-1 text-xs font-semibold text-indigo-deep/70">اضغط العنصر ثم وصفه ليتصلا.</p>
       <div className="mt-4 grid grid-cols-2 gap-x-5 gap-y-2.5">
         <div className="space-y-2.5">
           {challenge.pairs.map((p, i) => (
@@ -214,7 +214,7 @@ export function LiveChallenge({
                 });
                 setTerm(null);
               }}
-              className={`block w-full rounded-2xl border-2 px-3.5 py-3 text-start text-[13px] font-semibold text-indigo-deep transition ${owner(m) !== undefined ? "border-violet/50 bg-violet/[0.04]" : term !== null ? "border-violet/50 bg-white" : "border-violet/15 bg-white"}`}
+              className={`block w-full rounded-2xl border-2 px-3.5 py-3 text-start text-sm font-semibold text-indigo-deep transition ${owner(m) !== undefined ? "border-violet/50 bg-violet/[0.04]" : term !== null ? "border-violet/50 bg-white" : "border-violet/15 bg-white"}`}
             >
               {challenge.pairs[m].meaning}
             </button>
@@ -235,16 +235,16 @@ export function LiveReveal({ challenge, boss, outcome, points }: { challenge?: C
 
   return (
     <div>
-      <div role="status" className={`rounded-2xl px-4 py-3 text-[13px] font-bold ${!answered ? "bg-slate-100 text-slate-700" : full ? "bg-mint/15 text-emerald-800" : outcome!.right > 0 ? "bg-amber-50 text-amber-900" : "bg-rose-50 text-rose-800"}`}>
+      <div role="status" className={`rounded-2xl px-4 py-3 text-sm font-bold ${!answered ? "bg-slate-100 text-slate-700" : full ? "bg-mint/15 text-emerald-800" : outcome!.right > 0 ? "bg-amber-50 text-amber-900" : "bg-rose-50 text-rose-800"}`}>
         {!answered ? "لم ترسل إجابة لهذا التحدي." : full ? `أحسنت! إجابتك صحيحة. +${points} نقاط` : outcome!.of > 1 ? `أصبت ${outcome!.right} من ${outcome!.of}. +${points} نقطة` : "ليست هذه الإجابة. الصحيحة أمامك."}
       </div>
 
       <div className="mt-3 rounded-2xl border border-violet/10 bg-white p-4">
-        <p className="text-[11px] font-bold text-violet">الإجابة الصحيحة</p>
+        <p className="text-xs font-bold text-violet">الإجابة الصحيحة</p>
         {boss ? (
           <ul className="mt-2 space-y-2">
             {boss.map((b, i) => (
-              <li key={i} className="flex items-start gap-2.5 text-[13px] font-semibold leading-6 text-indigo-deep">
+              <li key={i} className="flex items-start gap-2.5 text-sm font-semibold leading-6 text-indigo-deep">
                 <span className={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full text-white ${b.answer ? "bg-mint" : "bg-rose-500"}`}>
                   {b.answer ? <Check className="size-3" strokeWidth={3.5} /> : <X className="size-3" strokeWidth={3.5} />}
                 </span>
@@ -259,19 +259,19 @@ export function LiveReveal({ challenge, boss, outcome, points }: { challenge?: C
               {AR_LETTERS[challenge.correct]}. {challenge.options[challenge.correct].text}
             </p>
             <ul className="mt-2 space-y-1">
-              {challenge.options.map((o, i) => i !== challenge.correct && o.explanation && <li key={i} className="text-[11px] font-medium leading-5 text-indigo-deep/65">• {o.text}: {o.explanation}</li>)}
+              {challenge.options.map((o, i) => i !== challenge.correct && o.explanation && <li key={i} className="text-xs font-medium leading-5 text-indigo-deep/70">• {o.text}: {o.explanation}</li>)}
             </ul>
           </>
         ) : challenge?.kind === "tf" ? (
           <>
             <p className="mt-1.5 text-[15px] font-bold text-indigo-deep">{challenge.statement}</p>
             <p className={`mt-2 rounded-xl px-3.5 py-2.5 text-[14px] font-bold ${challenge.answer ? "bg-mint/10 text-emerald-800" : "bg-rose-50 text-rose-800"}`}>{challenge.answer ? "صحيحة" : "خاطئة"}</p>
-            {challenge.explanation && <p className="mt-2 text-[11px] font-medium leading-5 text-indigo-deep/65">{challenge.explanation}</p>}
+            {challenge.explanation && <p className="mt-2 text-xs font-medium leading-5 text-indigo-deep/70">{challenge.explanation}</p>}
           </>
         ) : challenge?.kind === "dnd" ? (
           <ul className="mt-2 space-y-1.5">
             {challenge.slots.map((s) => (
-              <li key={s.label} className="flex items-center justify-between gap-3 rounded-xl bg-mint/10 px-3.5 py-2 text-[13px] font-bold text-emerald-900">
+              <li key={s.label} className="flex items-center justify-between gap-3 rounded-xl bg-mint/10 px-3.5 py-2 text-sm font-bold text-emerald-900">
                 <span>{s.label}</span>
                 <span>{s.card}</span>
               </li>
@@ -280,7 +280,7 @@ export function LiveReveal({ challenge, boss, outcome, points }: { challenge?: C
         ) : challenge?.kind === "match" ? (
           <ul className="mt-2 space-y-1.5">
             {challenge.pairs.map((p) => (
-              <li key={p.term} className="flex items-center justify-between gap-3 rounded-xl bg-mint/10 px-3.5 py-2 text-[13px] font-bold text-emerald-900">
+              <li key={p.term} className="flex items-center justify-between gap-3 rounded-xl bg-mint/10 px-3.5 py-2 text-sm font-bold text-emerald-900">
                 <span>{p.term}</span>
                 <span className="text-end font-semibold">{p.meaning}</span>
               </li>

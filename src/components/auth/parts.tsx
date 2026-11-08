@@ -6,7 +6,7 @@ import Link from "next/link";
 export function AuthTabs({ active }: { active: "login" | "signup" }) {
   const tab = (on: boolean) =>
     `flex-1 rounded-full py-2.5 text-center text-xs font-bold transition ${
-      on ? "bg-white text-indigo-deep shadow-md shadow-violet/15" : "text-indigo-deep/50"
+      on ? "bg-white text-indigo-deep shadow-md shadow-violet/15" : "text-indigo-deep/70"
     }`;
   return (
     <div className="flex gap-1 rounded-full bg-violet/10 p-1">
@@ -44,11 +44,11 @@ export function SocialButtons() {
         ))}
       </div>
       {note && (
-        <p role="status" className="mt-3 rounded-xl bg-amber-50 px-4 py-2.5 text-[11px] font-semibold leading-5 text-amber-900">
+        <p role="status" className="mt-3 rounded-xl bg-amber-50 px-4 py-2.5 text-xs font-semibold leading-5 text-amber-900">
           {note}
         </p>
       )}
-      <div className="relative my-5 text-center text-[11px] text-indigo-deep/50">
+      <div className="relative my-5 text-center text-xs text-indigo-deep/70">
         <span className="absolute inset-x-0 top-1/2 h-px bg-violet/10" />
         <span className="relative bg-lavender px-3">أو بالبريد الإلكتروني</span>
       </div>
@@ -86,7 +86,7 @@ export function Field({
 }
 
 export const inputCls =
-  "w-full rounded-2xl border border-violet/10 bg-white px-4 py-3 text-sm text-indigo-deep shadow-sm outline-none transition placeholder:text-indigo-deep/45 focus:border-violet focus:ring-4 focus:ring-violet/10";
+  "w-full rounded-2xl border border-violet/10 bg-white px-4 py-3 text-sm text-indigo-deep shadow-sm outline-none transition placeholder:text-indigo-deep/65 focus:border-violet focus:ring-4 focus:ring-violet/10";
 
 export function PrimaryButton({
   children,

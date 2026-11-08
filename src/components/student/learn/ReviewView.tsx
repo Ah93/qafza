@@ -72,7 +72,7 @@ export function ReviewView() {
           </div>
           <div className="flex items-center gap-3">
             <p className="hidden text-sm font-bold text-indigo-deep sm:block">تثبيت اليوم</p>
-            <div className="flex gap-1.5" role="progressbar" aria-valuemin={0} aria-valuemax={count} aria-valuenow={finished ? count : at}>
+            <div className="flex gap-1.5" role="progressbar" aria-label="تقدّم المراجعة" aria-valuemin={0} aria-valuemax={count} aria-valuenow={finished ? count : at}>
               {(questions ?? []).map((_, i) => (
                 <span key={i} className={`h-1.5 w-7 rounded-full sm:w-9 ${i < at || finished ? "bg-violet" : i === at ? "bg-violet/60" : "bg-violet/15"}`} />
               ))}
@@ -80,7 +80,7 @@ export function ReviewView() {
           </div>
           <div className="flex items-center gap-3 justify-self-end">
             <Flame n={streak} />
-            <Link href="/learn" aria-label="أغلق التثبيت" className="grid size-9 place-items-center rounded-xl border border-violet/10 bg-white text-indigo-deep/60 shadow-sm transition hover:text-indigo-deep">
+            <Link href="/learn" aria-label="أغلق التثبيت" className="grid size-9 place-items-center rounded-xl border border-violet/10 bg-white text-indigo-deep/70 shadow-sm transition hover:text-indigo-deep">
               <X className="size-4" />
             </Link>
           </div>
@@ -92,21 +92,21 @@ export function ReviewView() {
           {loadError ? (
             <p role="alert" className="py-6 text-center text-sm font-bold text-[#c0174f]">{loadError}</p>
           ) : !questions ? (
-            <p role="status" className="py-8 text-center text-sm font-bold text-indigo-deep/60">جارٍ تحضير أسئلة اليوم…</p>
+            <p role="status" className="py-8 text-center text-sm font-bold text-indigo-deep/70">جارٍ تحضير أسئلة اليوم…</p>
           ) : count === 0 ? (
             <div className="py-6 text-center">
               <span className="mx-auto grid size-16 place-items-center rounded-full bg-mint text-white">
                 <Check className="size-8" strokeWidth={3} />
               </span>
               <h1 className="mt-4 text-[26px] font-bold text-indigo-deep">لا شيء يحتاج تثبيتًا اليوم</h1>
-              <p className="mx-auto mt-2 max-w-xs text-xs font-medium leading-6 text-indigo-deep/65">كل سؤال تخطئ فيه في درس يعود إليك هنا بعد يوم، ثم بعد أيام، حتى يثبت.</p>
+              <p className="mx-auto mt-2 max-w-xs text-xs font-medium leading-6 text-indigo-deep/70">كل سؤال تخطئ فيه في درس يعود إليك هنا بعد يوم، ثم بعد أيام، حتى يثبت.</p>
               <Link href="/learn" className="mt-5 inline-block rounded-full bg-brand px-10 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
                 عُد إلى مساحتي
               </Link>
             </div>
           ) : !finished && q ? (
             <>
-              <span className="inline-block rounded-full bg-pink-card/10 px-4 py-1.5 text-[11px] font-bold text-pink-card">أخطأت فيها {ago(q.missedAt)} · {q.title}</span>
+              <span className="inline-block rounded-full bg-pink-card/10 px-4 py-1.5 text-xs font-bold text-pink-card">أخطأت فيها {ago(q.missedAt)} · {q.title}</span>
               <h1 className="mt-3 text-[24px] font-bold leading-snug text-indigo-deep">{q.question}</h1>
               <ul className="mt-4 space-y-2.5">
                 {q.options.map((o, i) => {
@@ -134,7 +134,7 @@ export function ReviewView() {
               </ul>
 
               {answered && (
-                <div role="status" className={`mt-4 animate-[pop_.25s_ease-out] rounded-2xl px-4 py-3 text-[13px] font-bold ${picked === q.correct ? "bg-mint/15 text-emerald-800" : "bg-amber-50 text-amber-900"}`}>
+                <div role="status" className={`mt-4 animate-[pop_.25s_ease-out] rounded-2xl px-4 py-3 text-sm font-bold ${picked === q.correct ? "bg-mint/15 text-emerald-800" : "bg-amber-50 text-amber-900"}`}>
                   {picked === q.correct ? `تذكّرتها! +${POINTS.review} نقاط.` : "ليست هذه. الصحيح ظاهر بالأخضر، وستراها مجددًا بعد أيام."}
                   {picked !== q.correct && q.options[picked!].explanation && <span className="mt-1 block font-medium">{q.options[picked!].explanation}</span>}
                 </div>
@@ -155,7 +155,7 @@ export function ReviewView() {
               <p className="mt-2 text-sm font-semibold text-indigo-deep/70">
                 تذكّرت {right} من {count}، وربحت {plural.points(right * POINTS.review)}.
               </p>
-              <p className="mt-1 text-xs font-medium text-indigo-deep/60">شعلتك اليومية الآن {plural.days(streak)}.</p>
+              <p className="mt-1 text-xs font-medium text-indigo-deep/70">شعلتك اليومية الآن {plural.days(streak)}.</p>
               <Link href="/learn" className="mt-5 inline-block rounded-full bg-brand px-10 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
                 عُد إلى مساحتي
               </Link>

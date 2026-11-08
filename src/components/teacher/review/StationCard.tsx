@@ -8,7 +8,7 @@ import { ContentEditor, convertContent } from "./ContentEditor";
 import { useFlow } from "../FlowProvider";
 
 export function StationCard({ station, index }: { station: Station; index: number }) {
-  const { patchStation } = useFlow();
+  const { patchStation, saved } = useFlow();
   const ModeIcon = MODE_ICONS[station.mode];
   const id = station.id;
 
@@ -17,7 +17,7 @@ export function StationCard({ station, index }: { station: Station; index: numbe
       id={`st-${index}`}
       className="scroll-mt-24 rounded-[26px] border border-violet/10 bg-white p-5 shadow-lg shadow-violet/5 sm:p-6"
     >
-      <CardHead icon={ModeIcon} iconClass="bg-gradient-to-br from-indigo-deep to-indigo-ink" page={station.page}>
+      <CardHead icon={ModeIcon} iconClass="bg-gradient-to-br from-indigo-deep to-indigo-ink" page={station.page} from={{ id: saved?.id, query: `${station.keyIdea} ${station.title}` }}>
         <span className="text-sm font-bold text-violet">
           المحطة {index + 1} · هدف تعلّم
         </span>
@@ -44,7 +44,7 @@ export function StationCard({ station, index }: { station: Station; index: numbe
       )}
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <span className="me-1 text-[11px] font-bold text-indigo-deep/60">نمط العرض</span>
+        <span className="me-1 text-xs font-bold text-indigo-deep/70">نمط العرض</span>
         {MODES.map((m) => {
           const Icon = MODE_ICONS[m.id];
           const on = station.mode === m.id;
@@ -53,7 +53,7 @@ export function StationCard({ station, index }: { station: Station; index: numbe
               key={m.id}
               onClick={() => patchStation(id, { mode: m.id, content: convertContent(station.content, station.mode, m.id) })}
               aria-pressed={on}
-              className={`flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[11px] font-bold transition ${
+              className={`flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${
                 on
                   ? "border-violet bg-violet text-white shadow-md shadow-violet/25"
                   : "border-violet/15 bg-white text-indigo-deep hover:border-violet/40"
@@ -64,9 +64,9 @@ export function StationCard({ station, index }: { station: Station; index: numbe
             </button>
           );
         })}
-        <span className="flex items-center gap-1.5 rounded-full border border-dashed border-violet/25 px-3 py-1.5 text-[11px] font-bold text-indigo-deep/45">
+        <span className="flex items-center gap-1.5 rounded-full border border-dashed border-violet/25 px-3 py-1.5 text-xs font-bold text-indigo-deep/70">
           +4 أنماط
-          <span className="rounded-full bg-violet/10 px-2 py-0.5 text-[10px]">قريبًا</span>
+          <span className="rounded-full bg-violet/10 px-2 py-0.5 text-xs">قريبًا</span>
         </span>
       </div>
 
@@ -83,14 +83,14 @@ export function StationCard({ station, index }: { station: Station; index: numbe
       <ContentEditor station={station} onChange={(content) => patchStation(id, { content })} />
 
       <div className="mt-4 flex items-center gap-3 rounded-2xl bg-amber-50 px-4 py-3">
-        <label htmlFor={`${id}-k`} className="shrink-0 text-[11px] font-bold text-amber-700">
+        <label htmlFor={`${id}-k`} className="shrink-0 text-xs font-bold text-amber-700">
           الفكرة الأهم
         </label>
         <input
           id={`${id}-k`}
           value={station.keyIdea}
           onChange={(e) => patchStation(id, { keyIdea: e.target.value })}
-          className="min-w-0 flex-1 bg-transparent text-[13px] font-bold text-amber-950 outline-none"
+          className="min-w-0 flex-1 bg-transparent text-sm font-bold text-amber-950 outline-none"
         />
       </div>
     </article>

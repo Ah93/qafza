@@ -10,7 +10,7 @@ export function BadgeShape({ color, locked, size = 48 }: { color: string; locked
       style={{ width: size, height: size, clipPath: OCTAGON, background: locked ? "rgba(123,38,204,.10)" : color }}
     >
       {locked ? (
-        <Lock className="text-violet/35" style={{ width: size * 0.38, height: size * 0.38 }} />
+        <Lock className="text-violet/75" style={{ width: size * 0.38, height: size * 0.38 }} />
       ) : (
         <Star className="fill-white text-white" style={{ width: size * 0.42, height: size * 0.42 }} />
       )}

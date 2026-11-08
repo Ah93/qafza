@@ -76,8 +76,8 @@ export function PricingView() {
                 role="radio"
                 aria-checked={currency === c.id}
                 onClick={() => setCurrency(c.id)}
-                className={`rounded-full px-4 py-2 text-[11px] font-bold transition ${
-                  currency === c.id ? "bg-white text-indigo-deep shadow-sm" : "text-indigo-deep/55 hover:text-indigo-deep"
+                className={`rounded-full px-4 py-2 text-xs font-bold transition ${
+                  currency === c.id ? "bg-white text-indigo-deep shadow-sm" : "text-indigo-deep/70 hover:text-indigo-deep"
                 }`}
               >
                 {c.label}
@@ -91,13 +91,13 @@ export function PricingView() {
             <div className="flex items-start justify-between gap-3">
               <h2 className="text-xl font-bold text-indigo-deep">التجربة المجانية</h2>
               {status && (
-                <span className={`rounded-full px-3 py-1 text-[10px] font-bold ${status.lessonsCreated >= status.freeLimit ? "bg-mint/15 text-emerald-700" : "bg-violet/10 text-violet"}`}>
+                <span className={`rounded-full px-3 py-1 text-xs font-bold ${status.lessonsCreated >= status.freeLimit ? "bg-mint/15 text-emerald-700" : "bg-violet/10 text-violet"}`}>
                   {status.lessonsCreated >= status.freeLimit ? "استُخدمت" : "متاحة"}
                 </span>
               )}
             </div>
             <p className="mt-1 text-[40px] font-bold leading-tight text-indigo-deep">مجانًا</p>
-            <p className="mt-3 text-xs font-medium leading-6 text-indigo-deep/65">
+            <p className="mt-3 text-xs font-medium leading-6 text-indigo-deep/70">
               درس واحد كامل بكل المزايا: الحصة المباشرة والمجموعات والنتائج. وطلابك يلعبون مجانًا دائمًا.
             </p>
           </section>
@@ -115,7 +115,7 @@ export function PricingView() {
                     role="radio"
                     aria-checked={plan === id}
                     onClick={() => setPlan(id)}
-                    className={`rounded-full px-3.5 py-1.5 text-[11px] font-bold transition ${
+                    className={`rounded-full px-3.5 py-1.5 text-xs font-bold transition ${
                       plan === id ? "bg-white text-indigo-deep" : "text-white/75 hover:text-white"
                     }`}
                   >
@@ -131,7 +131,7 @@ export function PricingView() {
             </p>
             <p className="relative mt-2 text-xs font-bold text-sun">
               {plan === "monthly" ? "ألغِ متى شئت" : `أي نحو ${sym(perMonth)} شهريًا`}
-              {currency === "sar" && <span className="mt-1 block text-[11px] font-semibold text-white/80">الأسعار بالريال شاملة ضريبة القيمة المضافة (15%). وتصلك فاتورة بعد كل دفعة.</span>}
+              {currency === "sar" && <span className="mt-1 block text-xs font-semibold text-white/80">الأسعار بالريال شاملة ضريبة القيمة المضافة (15%). وتصلك فاتورة بعد كل دفعة.</span>}
             </p>
 
             <ul className="relative mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs font-semibold">
@@ -170,12 +170,12 @@ export function PricingView() {
             ستُكمل الدفع في نافذة {methodWindow} الآمنة.
           </p>
           {status?.payments === "test" && (
-            <p className="mt-3 rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-3 text-[11px] font-semibold leading-6 text-amber-900">
+            <p className="mt-3 rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-3 text-xs font-semibold leading-6 text-amber-900">
               وضع التجربة: بوابة الدفع تجريبية ولا يُسحب أي مال. تُفعَّل البوابة الحقيقية عند ربط مزوّد الدفع.
             </p>
           )}
           {status?.payments === "off" && (
-            <p role="status" className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-[11px] font-semibold leading-6 text-amber-900">
+            <p role="status" className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-xs font-semibold leading-6 text-amber-900">
               الدفع الإلكتروني قريبًا. <a href="#contact" className="font-bold text-violet underline underline-offset-4">تواصل معنا لتفعيل اشتراكك</a>.
             </p>
           )}
@@ -186,7 +186,7 @@ export function PricingView() {
           <div className="mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-violet/10 pt-4">
             <div>
               <p className="text-sm font-bold text-indigo-deep">قفزة الكاملة · {plan === "monthly" ? "شهري (30 يومًا)" : "العام الدراسي (365 يومًا)"}</p>
-              <p className="mt-0.5 text-[11px] font-medium text-indigo-deep/55">
+              <p className="mt-0.5 text-xs font-medium text-indigo-deep/70">
                 {status?.entitled ? `اشتراكك ساري حتى ${dateAr(status.until!)}. الدفع الآن يمدّده.` : "دفعة واحدة، بلا تجديد تلقائي."}
               </p>
             </div>
@@ -207,7 +207,7 @@ export function PricingView() {
                 <Check className="size-6" strokeWidth={3} />
               </span>
               <h2 className="mt-4 text-2xl font-bold text-indigo-deep">وصل طلبك</h2>
-              <p className="mt-2 text-xs font-medium text-indigo-deep/65">نعود إليك بعرض خاص قريبًا، على البريد الذي كتبته.</p>
+              <p className="mt-2 text-xs font-medium text-indigo-deep/70">نعود إليك بعرض خاص قريبًا، على البريد الذي كتبته.</p>
             </div>
           ) : (
             <form
@@ -218,7 +218,7 @@ export function PricingView() {
               className="space-y-3"
             >
               <h2 className="text-2xl font-bold text-indigo-deep">للمؤسسات: تواصل معنا</h2>
-              <p className="text-xs font-medium text-indigo-deep/60">
+              <p className="text-xs font-medium text-indigo-deep/70">
                 مدرسة أو معهد أو جامعة أو قسم تدريب. نعود إليك بعرض خاص.
               </p>
 

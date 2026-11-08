@@ -5,13 +5,13 @@ import { Check, Pause, Play, Quote, RotateCcw, X } from "lucide-react";
 import { PARTS, PartsMap, Stage, type PartId } from "./GalleryShell";
 
 const row =
-  "flex w-full items-center rounded-2xl border bg-white px-4 py-3 text-start text-[13px] font-bold text-indigo-deep transition disabled:cursor-default";
+  "flex w-full items-center rounded-2xl border bg-white px-4 py-3 text-start text-sm font-bold text-indigo-deep transition disabled:cursor-default";
 
 function Verdict({ ok, children }: { ok: boolean; children: React.ReactNode }) {
   return (
     <p
       role="status"
-      className={`mt-2.5 animate-[pop_.25s_ease-out] rounded-xl px-4 py-2.5 text-[12px] font-bold leading-6 ${ok ? "bg-mint/15 text-emerald-800" : "bg-rose-50 text-rose-800"}`}
+      className={`mt-2.5 animate-[pop_.25s_ease-out] rounded-xl px-4 py-2.5 text-xs font-bold leading-6 ${ok ? "bg-mint/15 text-emerald-800" : "bg-rose-50 text-rose-800"}`}
     >
       {children}
     </p>
@@ -20,7 +20,7 @@ function Verdict({ ok, children }: { ok: boolean; children: React.ReactNode }) {
 
 function Again({ onClick }: { onClick: () => void }) {
   return (
-    <button onClick={onClick} className="mt-2 flex items-center gap-1.5 text-[11px] font-bold text-violet underline underline-offset-4">
+    <button onClick={onClick} className="mt-2 flex items-center gap-1.5 text-xs font-bold text-violet underline underline-offset-4">
       <RotateCcw className="size-3" />
       جرّب مرة أخرى
     </button>
@@ -53,7 +53,7 @@ export function McqDemo() {
                 className={`${row} ${right ? "border-mint border-2 bg-mint/10" : wrong ? "border-rose-300 bg-rose-50" : "border-violet/10 hover:border-violet/40"}`}
               >
                 <span className="flex-1">{o.text}</span>
-                {right && <Check className="size-4 text-emerald-600" strokeWidth={3} />}
+                {right && <Check className="size-4 text-emerald-700" strokeWidth={3} />}
                 {wrong && <X className="size-4 text-rose-500" strokeWidth={3} />}
               </button>
             </li>
@@ -78,8 +78,8 @@ export function TrueFalseDemo() {
   return (
     <Stage light className="min-h-[300px]">
       <div className="relative rounded-2xl bg-white px-5 pb-5 pt-6 shadow-sm">
-        <span className="absolute -top-2.5 end-4 rounded-full bg-indigo-deep px-3 py-1 text-[10px] font-bold text-white">عبارة</span>
-        <Quote className="absolute start-3 top-3 size-5 text-violet/20" />
+        <span className="absolute -top-2.5 end-4 rounded-full bg-indigo-deep px-3 py-1 text-xs font-bold text-white">عبارة</span>
+        <Quote className="absolute start-3 top-3 size-5 text-violet/75" />
         <p className="text-[19px] font-bold leading-9 text-indigo-deep">خلايا الدم الحمراء تحمل الأكسجين بالهيموغلوبين.</p>
       </div>
       <div className="mt-3 grid grid-cols-2 gap-3">
@@ -97,10 +97,10 @@ export function TrueFalseDemo() {
                 tone === "emerald" ? "border-emerald-200 hover:border-emerald-400" : "border-rose-200 hover:border-rose-400"
               } ${chosen ? (tone === "emerald" ? "!border-emerald-500 bg-emerald-50" : "!border-rose-500 bg-rose-50") : ""}`}
             >
-              <span className={`grid size-10 place-items-center rounded-full ${tone === "emerald" ? "bg-emerald-100 text-emerald-600" : "bg-rose-100 text-rose-500"}`}>
+              <span className={`grid size-10 place-items-center rounded-full ${tone === "emerald" ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-500"}`}>
                 <Icon className="size-5" strokeWidth={3} />
               </span>
-              <span className={`text-[20px] font-bold ${tone === "emerald" ? "text-emerald-600" : "text-rose-500"}`}>{label}</span>
+              <span className={`text-[20px] font-bold ${tone === "emerald" ? "text-emerald-700" : "text-rose-500"}`}>{label}</span>
             </button>
           );
         })}
@@ -158,32 +158,32 @@ export function DragDropDemo() {
             onDragStart={(e) => e.dataTransfer.setData("text/plain", c)}
             onClick={() => setHeld(held === c ? null : c)}
             aria-pressed={held === c}
-            className={`cursor-grab rounded-full border border-dashed px-3.5 py-2 text-[12px] font-bold transition active:cursor-grabbing ${
+            className={`cursor-grab rounded-full border border-dashed px-3.5 py-2 text-xs font-bold transition active:cursor-grabbing ${
               held === c ? "border-violet bg-violet text-white ring-4 ring-violet/20" : "border-violet/40 bg-white text-indigo-deep hover:border-violet"
             }`}
           >
             {c}
           </button>
         ))}
-        {done && <span className="py-2 text-[12px] font-bold text-emerald-700">لا بطاقات متبقية ✓</span>}
+        {done && <span className="py-2 text-xs font-bold text-emerald-700">لا بطاقات متبقية ✓</span>}
       </div>
       <div className="mt-3 grid grid-cols-3 gap-2.5">
         {DND.map((d) => (
           <div key={d.slot} className="rounded-xl border border-violet/10 bg-white p-2.5">
-            <p className="mb-1.5 text-[11px] font-bold">{d.slot}</p>
+            <p className="mb-1.5 text-xs font-bold">{d.slot}</p>
             <button
               onClick={() => held && drop(d.slot, held)}
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => drop(d.slot, e.dataTransfer.getData("text/plain"))}
               aria-label={`خانة ${d.slot}${placed[d.slot] ? `: ${placed[d.slot]}` : ""}`}
-              className={`grid min-h-10 w-full place-items-center rounded-lg border border-dashed px-1 text-[11px] font-bold transition ${
+              className={`grid min-h-10 w-full place-items-center rounded-lg border border-dashed px-1 text-xs font-bold transition ${
                 placed[d.slot]
                   ? "border-mint bg-mint/15 text-emerald-800"
                   : miss === d.slot
                     ? "animate-[shake_.35s] border-rose-400 bg-rose-50 text-rose-600"
                     : held
                       ? "border-violet bg-violet/5 text-violet"
-                      : "border-violet/30 text-indigo-deep/40"
+                      : "border-violet/30 text-indigo-deep/70"
               }`}
             >
               {placed[d.slot] ?? "أفلِت هنا"}
@@ -297,7 +297,7 @@ export function AudioQuestionDemo() {
   return (
     <Stage light className="min-h-[300px]">
       <div className="dots relative flex items-center justify-between gap-3 overflow-hidden rounded-2xl bg-gradient-to-l from-[#241356] to-[#5b21b6] px-4 py-3 text-white">
-        <span className="relative text-[12px] font-bold">
+        <span className="relative text-xs font-bold">
           {playing ? `يُسمع الآن… 0:0${left}` : `اضغط لتسمع الوصف، 0:0${CLIP_SECONDS}`}
         </span>
         <button
@@ -383,7 +383,7 @@ export function MatchDemo() {
             <li key={m}>
               <button
                 onClick={() => pickMeaning(m)}
-                className={`flex w-full items-center rounded-2xl border border-dashed px-4 py-3 text-start text-[12px] font-bold transition ${
+                className={`flex w-full items-center rounded-2xl border border-dashed px-4 py-3 text-start text-xs font-bold transition ${
                   done.includes(m)
                     ? "border-solid border-mint bg-mint/10 text-emerald-800"
                     : miss === m
@@ -436,17 +436,17 @@ export function ImageTapDemo() {
         <PartsMap onPick={pick} state={state} />
       </div>
       {solved && (
-        <p role="status" className="relative mt-1 animate-[pop_.25s_ease-out] rounded-xl bg-white px-4 py-2.5 text-[12px] font-bold text-emerald-700">
+        <p role="status" className="relative mt-1 animate-[pop_.25s_ease-out] rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-emerald-700">
           أحسنت! الهيموغلوبين: {PARTS.find((p) => p.id === "hemo")!.text}
         </p>
       )}
       {!solved && lastWrong && (
-        <p role="status" className="relative mt-1 animate-[pop_.25s_ease-out] rounded-xl bg-white px-4 py-2.5 text-[12px] font-bold text-rose-700">
+        <p role="status" className="relative mt-1 animate-[pop_.25s_ease-out] rounded-xl bg-white px-4 py-2.5 text-xs font-bold text-rose-700">
           ليس {PARTS.find((p) => p.id === lastWrong)!.label}. جرّب جزءًا آخر.
         </p>
       )}
       {solved && (
-        <button onClick={() => setState({})} className="relative mt-2 flex items-center gap-1.5 text-[11px] font-bold text-white underline underline-offset-4">
+        <button onClick={() => setState({})} className="relative mt-2 flex items-center gap-1.5 text-xs font-bold text-white underline underline-offset-4">
           <RotateCcw className="size-3" />
           جرّب مرة أخرى
         </button>
@@ -467,7 +467,7 @@ export function ScenarioDemo() {
   const [pick, setPick] = useState<number | null>(null);
   return (
     <Stage light className="min-h-[300px]">
-      <p className="rounded-2xl bg-violet/10 px-4 py-3.5 text-[13px] font-bold leading-7 text-violet">يشعر عليّ بتعب دائم، وأظهر تحليله نقص الهيموغلوبين. ما التفسير الأقرب؟</p>
+      <p className="rounded-2xl bg-violet/10 px-4 py-3.5 text-sm font-bold leading-7 text-violet">يشعر عليّ بتعب دائم، وأظهر تحليله نقص الهيموغلوبين. ما التفسير الأقرب؟</p>
       <ul className="mt-3 space-y-2">
         {SCENARIO.map((o, i) => {
           const right = pick !== null && i === 0;
@@ -528,8 +528,8 @@ export function QuickDemo() {
   return (
     <div className="relative flex min-h-[300px] flex-col overflow-hidden rounded-3xl bg-gradient-to-br from-[#5a0620] via-[#9b1342] to-[#d62a76] p-4 text-white">
       <div className="flex items-center justify-between gap-3">
-        <span className="rounded-full bg-white/15 px-3 py-1 text-[12px] font-bold">بلا مؤقّت</span>
-        <p className="text-[11px] font-bold">
+        <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-bold">بلا مؤقّت</span>
+        <p className="text-xs font-bold">
           العبارة {Math.min(i + 1, QUICK.length)} من {QUICK.length} · خطأ واحد ينهي الجولة
         </p>
       </div>
@@ -548,13 +548,13 @@ export function QuickDemo() {
         {state === "lost" && (
           <div role="status" className="animate-[pop_.25s_ease-out]">
             <p className="text-[22px] font-bold">{why}</p>
-            <p className="mt-1 text-[12px] font-medium text-white/80">وصلت إلى العبارة {i + 1} من {QUICK.length}. أعد الجولة متى شئت.</p>
+            <p className="mt-1 text-xs font-medium text-white/80">وصلت إلى العبارة {i + 1} من {QUICK.length}. أعد الجولة متى شئت.</p>
           </div>
         )}
         {state === "won" && (
           <div role="status" className="animate-[pop_.25s_ease-out]">
             <p className="text-[22px] font-bold">أصبت العبارات الأربع!</p>
-            <p className="mt-1 text-[12px] font-medium text-white/80">هكذا يُهزم الزعيم.</p>
+            <p className="mt-1 text-xs font-medium text-white/80">هكذا يُهزم الزعيم.</p>
           </div>
         )}
       </div>
@@ -569,7 +569,7 @@ export function QuickDemo() {
           </button>
         </div>
       ) : (
-        <button onClick={restart} className="mx-auto flex items-center gap-2 rounded-full bg-white px-7 py-3 text-[13px] font-bold text-[#a3124a]">
+        <button onClick={restart} className="mx-auto flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-[#a3124a]">
           <RotateCcw className="size-4" />
           أعد الجولة
         </button>

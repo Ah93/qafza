@@ -121,6 +121,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
   const lessonRef = useRef<Lesson>(SAMPLE);
   const savedRef = useRef<Saved | null>(null);
   const sourceRef = useRef<Source | null>(null);
+  const sourceIdRef = useRef("");
   const history = useRef<Lesson[]>([]);
   const lastPush = useRef(0);
   const queue = useRef<Promise<unknown>>(Promise.resolve());
@@ -264,8 +265,9 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
       if (source.type === "link" || source.type === "video") form.set("url", source.url ?? "");
       form.set("custom", JSON.stringify(custom));
 
-      const r = await api<{ lesson: Lesson; truncated: boolean; pages: number }>("/api/generate", { method: "POST", body: form });
+      const r = await api<{ lesson: Lesson; truncated: boolean; pages: number; sourceId?: string }>("/api/generate", { method: "POST", body: form });
       if (!r.ok) return { ok: false, error: r.error };
+      sourceIdRef.current = r.data.sourceId ?? "";
       replaceLesson(r.data.lesson, true); // unsaved: the autosave makes it a draft within seconds
       setHasDraft(true);
       setSaved(null);
@@ -337,7 +339,7 @@ export function FlowProvider({ children }: { children: React.ReactNode }) {
         if (lessonRef.current === l) setDirty(false);
         return { ok: true, saved: s0 };
       }
-      const r = await postJson<{ lesson: { id: string; code: string } }>("/api/lessons", { lesson: l, sourceName: sourceRef.current?.name ?? "", status: status ?? "draft" });
+      const r = await postJson<{ lesson: { id: string; code: string } }>("/api/lessons", { lesson: l, sourceName: sourceRef.current?.name ?? "", sourceId: sourceIdRef.current, status: status ?? "draft" });
       if (!r.ok) return { ok: false, error: r.error };
       const next = { id: r.data.lesson.id, code: r.data.lesson.code };
       setSaved(next);

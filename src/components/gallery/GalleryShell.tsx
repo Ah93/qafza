@@ -28,7 +28,7 @@ export function GalleryHeader() {
               key={t.href}
               href={t.href}
               aria-current={path === t.href ? "page" : undefined}
-              className={`rounded-full px-4 py-2 transition ${path === t.href ? "bg-violet/10 text-violet" : "text-indigo-deep/55 hover:text-indigo-deep"}`}
+              className={`rounded-full px-4 py-2 transition ${path === t.href ? "bg-violet/10 text-violet" : "text-indigo-deep/70 hover:text-indigo-deep"}`}
             >
               {t.label}
             </Link>
@@ -62,12 +62,12 @@ export function PageTitle({
 }) {
   return (
     <>
-      <p className={`flex items-center gap-2 text-[11px] font-bold ${tone === "pink" ? "text-pink-card" : "text-violet"}`}>
+      <p className={`flex items-center gap-2 text-xs font-bold ${tone === "pink" ? "text-pink-card" : "text-violet"}`}>
         <span className={`size-2 rounded-full ${tone === "pink" ? "bg-pink-card" : "bg-violet"}`} />
         {eyebrow}
       </p>
       <h1 className="mt-1 text-[38px] font-bold leading-tight text-indigo-deep sm:text-[44px]">{title}</h1>
-      <p className="mt-2 text-sm font-medium text-indigo-deep/65">{intro}</p>
+      <p className="mt-2 text-sm font-medium text-indigo-deep/70">{intro}</p>
     </>
   );
 }
@@ -121,15 +121,15 @@ export function ModeCard({
           </span>
           <div>
             <h2 className="text-[22px] font-bold leading-tight text-indigo-deep">{title}</h2>
-            <p className="mt-0.5 text-[11px] font-medium text-indigo-deep/60">يناسب: {fits}</p>
+            <p className="mt-0.5 text-xs font-medium text-indigo-deep/70">يناسب: {fits}</p>
           </div>
         </div>
-        <span className={`shrink-0 rounded-full px-3 py-1.5 text-[10px] font-bold ${launch ? "bg-mint/15 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
+        <span className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-bold ${launch ? "bg-mint/15 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
           {launch ? "عند الإطلاق" : "المرحلة التالية"}
         </span>
       </header>
       <div className="mt-3 flex-1">{children}</div>
-      <p className="mt-3 flex items-center gap-2 rounded-2xl bg-violet/[0.04] px-3.5 py-3 text-[11px] font-medium leading-5 text-indigo-deep/75">
+      <p className="mt-3 flex items-center gap-2 rounded-2xl bg-violet/[0.04] px-3.5 py-3 text-xs font-medium leading-5 text-indigo-deep/75">
         <Zap className="size-3.5 shrink-0 fill-amber-400 text-amber-400" />
         {note}
       </p>
@@ -180,7 +180,7 @@ export function PartsMap({
           <line key={p.id} x1="52" y1="41" x2={p.x} y2={p.y} stroke="rgba(255,255,255,.28)" strokeWidth="0.6" strokeDasharray="1.6 1.6" vectorEffect="non-scaling-stroke" />
         ))}
       </svg>
-      <span className="absolute left-[52%] top-[41%] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl bg-gradient-to-r from-violet to-magenta px-3.5 py-2 text-center text-[13px] font-bold leading-4 text-white shadow-lg" dir="rtl">
+      <span className="absolute left-[52%] top-[41%] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl bg-gradient-to-r from-violet to-magenta px-3.5 py-2 text-center text-sm font-bold leading-4 text-white shadow-lg" dir="rtl">
         خلية الدم
         <br />
         الحمراء
@@ -195,7 +195,7 @@ export function PartsMap({
             onClick={() => onPick(p.id)}
             aria-pressed={on}
             style={{ left: `${p.x}%`, top: `${p.y}%` }}
-            className={`absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3.5 py-1.5 text-[11px] font-bold shadow-md transition ${
+            className={`absolute -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full px-3.5 py-1.5 text-xs font-bold shadow-md transition ${
               st === "right"
                 ? "bg-mint text-white ring-4 ring-mint/30"
                 : st === "wrong"

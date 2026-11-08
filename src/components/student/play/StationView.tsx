@@ -47,7 +47,7 @@ function Slides({ lead, items }: { lead: string; items: Item[] }) {
       <ol className="mt-3 space-y-2.5">
         {items.slice(0, shown).map((it, i) => (
           <li key={i} className="flex animate-[pop_.3s_ease-out] items-center gap-3 rounded-2xl border border-violet/10 bg-violet/[0.03] px-4 py-3.5 text-[14px] text-indigo-deep/85">
-            <span className="grid size-6 shrink-0 place-items-center rounded-full bg-sun text-[11px] font-bold text-indigo-deep">{i + 1}</span>
+            <span className="grid size-6 shrink-0 place-items-center rounded-full bg-sun text-xs font-bold text-indigo-deep">{i + 1}</span>
             <span>
               {it.head && <b className="font-bold text-indigo-deep">{it.head}: </b>}
               {it.body}
@@ -71,7 +71,7 @@ function Infographic({ lead, items }: { lead: string; items: Item[] }) {
   const [open, setOpen] = useState<number | null>(0);
   return (
     <>
-      <p className="mb-3 text-[13px] font-semibold text-indigo-deep/70">{lead}</p>
+      <p className="mb-3 text-sm font-semibold text-indigo-deep/70">{lead}</p>
       <div className="dots relative grid gap-2.5 overflow-hidden rounded-3xl bg-gradient-to-br from-[#241356] to-[#5b21b6] p-3.5 sm:grid-cols-2">
         {items.map((it, i) => {
           const on = open === i;
@@ -82,8 +82,8 @@ function Infographic({ lead, items }: { lead: string; items: Item[] }) {
               aria-expanded={on}
               className={`relative z-10 rounded-2xl p-3.5 text-start text-white transition ${on ? "bg-white/20 ring-2 ring-white/40" : "bg-white/10 hover:bg-white/15"}`}
             >
-              <span className={`block text-[11px] font-bold ${TILE_TONES[i % TILE_TONES.length]}`}>{it.head || `حقيقة ${i + 1}`}</span>
-              <span className="mt-1 block text-[13px] font-semibold leading-6">{on ? it.body : "اضغط لتعرف"}</span>
+              <span className={`block text-xs font-bold ${TILE_TONES[i % TILE_TONES.length]}`}>{it.head || `حقيقة ${i + 1}`}</span>
+              <span className="mt-1 block text-sm font-semibold leading-6">{on ? it.body : "اضغط لتعرف"}</span>
             </button>
           );
         })}
@@ -97,7 +97,7 @@ function Timeline({ lead, items }: { lead: string; items: Item[] }) {
   const cur = items[at];
   return (
     <>
-      <p className="mb-3 text-[13px] font-semibold text-indigo-deep/70">{lead}</p>
+      <p className="mb-3 text-sm font-semibold text-indigo-deep/70">{lead}</p>
       <div className="dots relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#241356] to-[#5b21b6] px-5 pb-5 pt-6 text-white">
         <ol className="relative z-10 flex items-start justify-between">
           <span aria-hidden className="absolute inset-x-6 top-[17px] border-t border-dotted border-white/30" />
@@ -113,7 +113,7 @@ function Timeline({ lead, items }: { lead: string; items: Item[] }) {
               >
                 {i + 1}
               </button>
-              <span className="text-[11px] font-semibold text-white/85">{it.head}</span>
+              <span className="text-xs font-semibold text-white/85">{it.head}</span>
             </li>
           ))}
         </ol>
@@ -130,7 +130,7 @@ function Dialogue({ lead, items }: { lead: string; items: Item[] }) {
   const [shown, setShown] = useState(1);
   return (
     <>
-      <p className="mb-3 text-[13px] font-semibold text-indigo-deep/70">{lead}</p>
+      <p className="mb-3 text-sm font-semibold text-indigo-deep/70">{lead}</p>
       <ul className="space-y-2.5">
         {items.slice(0, shown).map((it, i) => {
           const guide = it.head === "م";
@@ -165,7 +165,7 @@ function Cards({ lead, items }: { lead: string; items: Item[] }) {
   const [flipped, setFlipped] = useState<Record<number, boolean>>({});
   return (
     <>
-      <p className="mb-3 text-[13px] font-semibold text-indigo-deep/70">{lead}</p>
+      <p className="mb-3 text-sm font-semibold text-indigo-deep/70">{lead}</p>
       <div className="grid gap-3 sm:grid-cols-3">
         {items.map((it, i) => {
           const on = flipped[i];
@@ -179,11 +179,11 @@ function Cards({ lead, items }: { lead: string; items: Item[] }) {
               }`}
             >
               {on ? (
-                <span className="text-[13px] font-semibold leading-6">{it.body}</span>
+                <span className="text-sm font-semibold leading-6">{it.body}</span>
               ) : (
                 <>
                   <span className="block text-lg font-bold">{it.head || `بطاقة ${i + 1}`}</span>
-                  <span className="mt-2 block text-[11px] font-medium text-white/75">اضغط لتقلبها</span>
+                  <span className="mt-2 block text-xs font-medium text-white/75">اضغط لتقلبها</span>
                 </>
               )}
             </button>
@@ -198,7 +198,7 @@ function Diagram({ lead, items }: { lead: string; items: Item[] }) {
   const [open, setOpen] = useState(0);
   return (
     <>
-      <p className="mb-3 text-[13px] font-semibold text-indigo-deep/70">{lead}</p>
+      <p className="mb-3 text-sm font-semibold text-indigo-deep/70">{lead}</p>
       <div className="dots relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#241356] to-[#5b21b6] p-5 text-white">
         <div className="relative z-10 grid items-center gap-4 sm:grid-cols-[1fr_auto_1fr]">
           <div className="space-y-2">
@@ -250,7 +250,7 @@ export function StationView({ station }: { station: Station }) {
           <Zap className="size-4" fill="currentColor" />
         </span>
         <div>
-          <p className="text-[10px] font-bold text-amber-700">الفكرة الأهم</p>
+          <p className="text-xs font-bold text-amber-700">الفكرة الأهم</p>
           <p className="text-[14px] font-bold text-amber-950">{station.keyIdea}</p>
         </div>
       </div>

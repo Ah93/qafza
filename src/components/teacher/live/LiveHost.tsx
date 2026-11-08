@@ -38,7 +38,7 @@ function Distribution({ counts, labels }: { counts: number[]; labels: string[] }
       <h3 className="text-xs font-bold text-indigo-deep">ماذا اختاروا</h3>
       <ul className="mt-2.5 space-y-2">
         {counts.map((n, i) => (
-          <li key={i} className="flex items-center gap-2.5 text-[11px] font-bold text-indigo-deep">
+          <li key={i} className="flex items-center gap-2.5 text-xs font-bold text-indigo-deep">
             <span className="grid size-6 shrink-0 place-items-center rounded-lg text-white" style={{ background: ANSWER_CARDS[counts.length === 2 ? 4 + i : i].color }}>
               {labels[i]}
             </span>
@@ -107,7 +107,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
         <main className="grid flex-1 place-items-center px-5 py-16 text-center">
           <div role="alert" className="max-w-sm">
             <h1 className="text-2xl font-bold text-indigo-deep">تعذّر فتح الحصة</h1>
-            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">{problem.text}</p>
+            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">{problem.text}</p>
             <Link href={problem.status === 401 ? "/login" : problem.status === 409 ? "/create/share" : "/lessons"} className="mt-5 inline-block rounded-full bg-brand px-8 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
               {problem.status === 401 ? "تسجيل الدخول" : problem.status === 409 ? "إلى صفحة النشر" : "إلى دروسي"}
             </Link>
@@ -121,7 +121,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
       <>
         <TeacherHeader />
         <main className="grid flex-1 place-items-center px-5 py-16">
-          <p role="status" className="text-sm font-bold text-indigo-deep/60">جارٍ فتح الحصة…</p>
+          <p role="status" className="text-sm font-bold text-indigo-deep/70">جارٍ فتح الحصة…</p>
         </main>
       </>
     );
@@ -205,13 +205,13 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
 
   const panel = (
     <aside className="rounded-[28px] border border-violet/10 bg-white p-5 shadow-xl shadow-violet/5">
-      <span className="inline-block rounded-full bg-indigo-deep px-3.5 py-1.5 text-[11px] font-bold text-white">لوحة المعلّم، لا تظهر على السبورة</span>
+      <span className="inline-block rounded-full bg-indigo-deep px-3.5 py-1.5 text-xs font-bold text-white">لوحة المعلّم، لا تظهر على السبورة</span>
       <h2 className="mt-3 text-2xl font-bold text-indigo-deep">
         {slide.kind === "arena" ? "قبل أن تبدأ" : slide.kind === "finish" ? (ended ? "انتهت الحصة" : "الختام") : isBoss ? "تحدّي الزعيم" : `المحطة ${planIndex + 1} من ${total}`}
       </h2>
 
       {lost && (
-        <p role="alert" className="mt-3 rounded-xl bg-amber-50 px-3.5 py-2 text-[11px] font-bold text-amber-900">
+        <p role="alert" className="mt-3 rounded-xl bg-amber-50 px-3.5 py-2 text-xs font-bold text-amber-900">
           انقطع الاتصال بالخادم، نحاول مجددًا…
         </p>
       )}
@@ -227,7 +227,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
           {boardOnly && (
             <div className="mt-3 rounded-2xl bg-violet/[0.06] p-4">
               <h3 className="text-sm font-bold text-indigo-deep">بطاقات الإجابة</h3>
-              <p className="mt-1.5 text-[11px] font-medium leading-6 text-indigo-deep/65">طقم لكل مجموعة: أ ب ج د، وصح وخطأ. ترفع المجموعة بطاقتها بعد التشاور.</p>
+              <p className="mt-1.5 text-xs font-medium leading-6 text-indigo-deep/70">طقم لكل مجموعة: أ ب ج د، وصح وخطأ. ترفع المجموعة بطاقتها بعد التشاور.</p>
               <div className="mt-3 flex flex-wrap gap-2" dir="rtl">
                 {ANSWER_CARDS.map((c) => (
                   <span key={c.label} className="grid h-10 min-w-10 place-items-center rounded-xl px-2.5 text-sm font-bold text-white shadow-sm" style={{ background: c.color }}>
@@ -236,7 +236,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
                 ))}
               </div>
               <PrintAnswerCards groups={groups} />
-              <p className="mt-2.5 text-[11px] font-medium leading-6 text-indigo-deep/60">لا طابعة؟ يكفي أن تكتب المجموعة الحرف على ورقة، أو أن ترفع أصابعها: 1 إلى 4.</p>
+              <p className="mt-2.5 text-xs font-medium leading-6 text-indigo-deep/70">لا طابعة؟ يكفي أن تكتب المجموعة الحرف على ورقة، أو أن ترفع أصابعها: 1 إلى 4.</p>
             </div>
           )}
         </>
@@ -248,7 +248,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
             {snap.repeats > 0 ? `${snap.repeats} من الطلاب طلبوا إعادة الشرح.` : "لم يطلب أحد إعادة الشرح."}
           </p>
           {snap.repeats > 0 && (
-            <button disabled={busy} onClick={() => act({ action: "clearRepeats" })} className="mt-2 rounded-full bg-white px-4 py-1.5 text-[11px] font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 disabled:opacity-60">
+            <button disabled={busy} onClick={() => act({ action: "clearRepeats" })} className="mt-2 rounded-full bg-white px-4 py-1.5 text-xs font-bold text-amber-900 shadow-sm transition hover:bg-amber-100 disabled:opacity-60">
               انتهى الشرح، أخفِ الطلبات
             </button>
           )}
@@ -262,7 +262,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
           {boardOnly && (
             <div className="rounded-2xl bg-violet/[0.06] p-4">
               <h3 className="text-sm font-bold text-indigo-deep">أدخل إجابات المجموعات</h3>
-              <p className="mt-1 text-[11px] text-indigo-deep/60">
+              <p className="mt-1 text-xs text-indigo-deep/70">
                 حدّد المجموعات التي أجابت صحيحًا: +{isBoss ? POINTS_RIGHT * 2 : POINTS_RIGHT} نقاط لكل منها.
               </p>
               <ul className="mt-3 space-y-2">
@@ -336,7 +336,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
             {mode === "groups" &&
               groups.map((g, i) => (
                 <li key={g.id}>
-                  <button onClick={() => act({ action: "award", group: i, points: 5 })} className="flex w-full items-center justify-between rounded-xl bg-white px-3 py-2 text-[11px] font-bold text-indigo-deep">
+                  <button onClick={() => act({ action: "award", group: i, points: 5 })} className="flex w-full items-center justify-between rounded-xl bg-white px-3 py-2 text-xs font-bold text-indigo-deep">
                     <span className="flex items-center gap-2">
                       <span className="size-2.5 rounded-[3px]" style={{ background: g.color }} />
                       مجموعة {g.name}
@@ -348,7 +348,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
             {!boardOnly &&
               snap.students.slice(0, 12).map((s) => (
                 <li key={s.id}>
-                  <button onClick={() => act({ action: "award", student: s.id, points: 5 })} className="flex w-full items-center justify-between rounded-xl bg-white px-3 py-2 text-[11px] font-bold text-indigo-deep">
+                  <button onClick={() => act({ action: "award", student: s.id, points: 5 })} className="flex w-full items-center justify-between rounded-xl bg-white px-3 py-2 text-xs font-bold text-indigo-deep">
                     <span className="flex items-center gap-2">
                       <span className={`size-2 rounded-full ${s.online ? "bg-mint" : "bg-slate-300"}`} aria-label={s.online ? "متصل" : "غير متصل"} />
                       {s.name}
@@ -370,9 +370,9 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
               <button
                 disabled={ended}
                 onClick={() => go(slides.findIndex((x) => x.kind === "explain" && x.i === i))}
-                className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-start text-xs font-bold transition ${on ? "bg-violet/10 text-violet" : "text-indigo-deep/55 hover:bg-violet/5"}`}
+                className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-start text-xs font-bold transition ${on ? "bg-violet/10 text-violet" : "text-indigo-deep/70 hover:bg-violet/5"}`}
               >
-                <span className={`grid size-5 place-items-center rounded-full text-[10px] ${on ? "bg-violet text-white" : "bg-violet/10 text-indigo-deep/55"}`}>{i + 1}</span>
+                <span className={`grid size-5 place-items-center rounded-full text-xs ${on ? "bg-violet text-white" : "bg-violet/10 text-indigo-deep/70"}`}>{i + 1}</span>
                 {s.title}
               </button>
             </li>
@@ -382,9 +382,9 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
           <button
             disabled={ended}
             onClick={() => go(slides.findIndex((x) => x.kind === "challenge" && x.i === total))}
-            className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-start text-xs font-bold transition ${isBoss ? "bg-pink-card/10 text-pink-card" : "text-indigo-deep/55 hover:bg-violet/5"}`}
+            className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-start text-xs font-bold transition ${isBoss ? "bg-pink-card/10 text-pink-card" : "text-indigo-deep/70 hover:bg-violet/5"}`}
           >
-            <span className="grid size-5 place-items-center rounded-full bg-violet/10 text-[10px]">★</span>
+            <span className="grid size-5 place-items-center rounded-full bg-violet/10 text-xs">★</span>
             تحدّي الزعيم
           </button>
         </li>
@@ -420,7 +420,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
       {!ended && (
         <div className="mt-3 text-center">
           {confirmEnd ? (
-            <p className="text-[11px] font-bold text-indigo-deep">
+            <p className="text-xs font-bold text-indigo-deep">
               تنهي الحصة الآن وتحفظ النتائج؟{" "}
               <button className="text-[#c0174f] underline underline-offset-4" onClick={finish}>
                 نعم، أنهِها
@@ -431,7 +431,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
               </button>
             </p>
           ) : (
-            <button className="text-[11px] font-bold text-indigo-deep/50 underline underline-offset-4 hover:text-indigo-deep" onClick={() => setConfirmEnd(true)}>
+            <button className="text-xs font-bold text-indigo-deep/70 underline underline-offset-4 hover:text-indigo-deep" onClick={() => setConfirmEnd(true)}>
               إنهاء الحصة الآن
             </button>
           )}
@@ -446,7 +446,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
       <main className="mx-auto w-full max-w-[1100px] flex-1 px-5 py-6">
         <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="flex items-center gap-2 text-[11px] font-bold text-violet">
+            <p className="flex items-center gap-2 text-xs font-bold text-violet">
               <span className="size-2 rounded-full bg-violet" />
               {boardOnly ? "حصة على السبورة فقط · مجموعات" : `حصة مباشرة · ${mode === "groups" ? "مجموعات" : "فردي"}`}
             </p>
@@ -464,7 +464,7 @@ export function LiveHost({ lesson, code }: { lesson: Lesson; code: string }) {
                   aria-selected={on}
                   disabled={ended}
                   onClick={() => goTab(t)}
-                  className={`rounded-full border px-4 py-1.5 text-[11px] font-bold transition ${on ? "border-violet bg-violet text-white shadow-md shadow-violet/25" : "border-violet/10 bg-white text-indigo-deep/55 hover:text-indigo-deep"}`}
+                  className={`rounded-full border px-4 py-1.5 text-xs font-bold transition ${on ? "border-violet bg-violet text-white shadow-md shadow-violet/25" : "border-violet/10 bg-white text-indigo-deep/70 hover:text-indigo-deep"}`}
                 >
                   {t}
                 </button>

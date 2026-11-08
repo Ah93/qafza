@@ -10,6 +10,7 @@ import type { LessonReport } from "@/lib/server/results";
 import { TeacherHeader } from "../TeacherHeader";
 import { useFlow } from "../FlowProvider";
 import { CodeCard } from "../share/CodeCard";
+import { ReportsList } from "@/components/ReportsList";
 
 type Loaded = { lesson: Lesson; code: string; status: "draft" | "published"; share: ShareConfig };
 
@@ -59,7 +60,7 @@ export function LessonPage() {
               </Link>
             </div>
           ) : (
-            <p role="status" className="text-sm font-bold text-indigo-deep/60">جارٍ تحميل الدرس…</p>
+            <p role="status" className="text-sm font-bold text-indigo-deep/70">جارٍ تحميل الدرس…</p>
           )}
         </main>
       </>
@@ -74,30 +75,30 @@ export function LessonPage() {
     <>
       <TeacherHeader />
       <main className="mx-auto w-full max-w-[1000px] flex-1 px-5 py-7">
-        <Link href="/lessons" className="text-[11px] font-bold text-violet underline underline-offset-4">
+        <Link href="/lessons" className="text-xs font-bold text-violet underline underline-offset-4">
           ← دروسي
         </Link>
         <div className="mt-3 grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_300px]">
           <section className="min-w-0">
-            <p className="flex items-center gap-2 text-[11px] font-bold text-violet">
+            <p className="flex items-center gap-2 text-xs font-bold text-violet">
               <span className={`size-2 rounded-full ${published ? "bg-mint" : "bg-slate-400"}`} />
               {published ? (live ? "منشور · حصة مباشرة" : "منشور · تعلّم ذاتي") : "مسودة"}
             </p>
             <h1 className="mt-1 text-[34px] font-bold leading-tight text-indigo-deep">{data.lesson.title}</h1>
-            <p className="mt-1 text-xs font-semibold text-indigo-deep/55">
+            <p className="mt-1 text-xs font-semibold text-indigo-deep/70">
               {plural.stations(data.lesson.stations.length)} وتحدّي الزعيم{report?.lesson.className ? ` · ${report.lesson.className}` : ""}
             </p>
 
             {published && report && (
               <div className="mt-5 grid gap-3 sm:grid-cols-3">
                 {[
-                  { n: report.counts.done, l: "أنهوا الدرس", c: "text-emerald-600" },
+                  { n: report.counts.done, l: "أنهوا الدرس", c: "text-emerald-700" },
                   { n: report.counts.going, l: "بدأوا ولم ينهوا", c: "text-amber-600" },
                   { n: report.mastery === null ? "—" : `${report.mastery}%`, l: "متوسط الإتقان", c: "text-violet" },
                 ].map((s) => (
                   <div key={s.l} className="rounded-3xl border border-violet/10 bg-white px-5 py-4 shadow-sm">
                     <p className={`text-[28px] font-bold leading-tight ${s.c}`}>{s.n}</p>
-                    <p className="mt-0.5 text-[11px] font-semibold text-indigo-deep/60">{s.l}</p>
+                    <p className="mt-0.5 text-xs font-semibold text-indigo-deep/70">{s.l}</p>
                   </div>
                 ))}
               </div>
@@ -138,10 +139,11 @@ export function LessonPage() {
                 <li key={s.id} className="flex items-center gap-3 rounded-2xl border border-violet/10 bg-white px-4 py-3 shadow-sm">
                   <span className="grid size-7 shrink-0 place-items-center rounded-full bg-violet/10 text-xs font-bold text-violet">{i + 1}</span>
                   <span className="min-w-0 flex-1 truncate text-sm font-bold text-indigo-deep">{s.title}</span>
-                  {report?.challenges[i]?.pct != null && <span className="text-[11px] font-bold text-indigo-deep/55">{report.challenges[i].pct}%</span>}
+                  {report?.challenges[i]?.pct != null && <span className="text-xs font-bold text-indigo-deep/70">{report.challenges[i].pct}%</span>}
                 </li>
               ))}
             </ol>
+            <ReportsList lessonId={id} endpoint="/api/reports" canResolve />
           </section>
 
           <CodeCard code={data.code} preview={false} />

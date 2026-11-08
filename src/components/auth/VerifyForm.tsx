@@ -129,7 +129,7 @@ export function VerifyForm() {
       </p>
 
       {mailError && !mailCleared && (
-        <p role="alert" className="mx-auto mt-4 rounded-2xl bg-rose-50 px-4 py-2.5 text-[11px] font-bold leading-5 text-rose-700">
+        <p role="alert" className="mx-auto mt-4 rounded-2xl bg-rose-50 px-4 py-2.5 text-xs font-bold leading-5 text-rose-700">
           تعذّر إرسال الرمز: {mailError} اضغط «أعد إرسال الرمز» بعد قليل.
         </p>
       )}
@@ -138,7 +138,7 @@ export function VerifyForm() {
         <button
           type="button"
           onClick={() => setDigits(devCode.split(""))}
-          className="mx-auto mt-4 block rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-2.5 text-[11px] font-semibold leading-5 text-amber-900"
+          className="mx-auto mt-4 block rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-2.5 text-xs font-semibold leading-5 text-amber-900"
         >
           وضع التجربة: لم يُربط مزوّد بريد بعد، فرمزك <b dir="ltr">{devCode}</b>. اضغط لتعبئته.
         </button>
@@ -181,7 +181,7 @@ export function VerifyForm() {
         {busy ? "جارٍ التأكيد…" : "تأكيد"}
       </button>
 
-      <p className="mt-5 text-[11px] text-indigo-deep/60">
+      <p className="mt-5 text-xs text-indigo-deep/70">
         {seconds > 0 ? (
           `يمكنك طلب رمز جديد بعد ${mm}:${ss}`
         ) : (
@@ -190,7 +190,7 @@ export function VerifyForm() {
           </button>
         )}
       </p>
-      <p className="mt-2 text-[11px] text-indigo-deep/60">
+      <p className="mt-2 text-xs text-indigo-deep/70">
         لم يصلك؟ تفقّد الرسائل غير المرغوبة، أو{" "}
         <Link href="/signup" className="font-bold text-violet underline underline-offset-2">
           غيّر البريد

@@ -79,7 +79,7 @@ function userPrompt(pages: { n: number; text: string }[], c: Customization, forc
     .join("\n");
 }
 
-export type Generated = { lesson: Lesson; truncated: boolean; pages: number };
+export type Generated = { lesson: Lesson; truncated: boolean; pages: number; sourcePages: { n: number; text: string }[] };
 
 export async function generateLesson(ex: Extracted, custom: Customization): Promise<Generated> {
   const { pages, truncated } = fit(ex);
@@ -99,7 +99,7 @@ export async function generateLesson(ex: Extracted, custom: Customization): Prom
       : base;
     const raw = await chatJson(messages, { timeoutMs: 50_000 });
     try {
-      return { lesson: spreadAnswers(parseLesson(raw, cons)), truncated, pages: pages.length };
+      return { lesson: spreadAnswers(parseLesson(raw, cons)), truncated, pages: pages.length, sourcePages: pages };
     } catch (e) {
       if (!(e instanceof LessonShapeError)) throw e;
       problem = e.message;

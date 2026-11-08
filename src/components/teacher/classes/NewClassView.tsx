@@ -80,7 +80,7 @@ export function NewClassView() {
       <main className="mx-auto grid w-full max-w-[1000px] flex-1 items-start gap-6 px-5 py-8 lg:grid-cols-[1fr_280px]">
         <form onSubmit={submit} className="rounded-[28px] border border-violet/10 bg-white p-6 shadow-xl shadow-violet/5 sm:p-8" noValidate>
           <h1 className="text-[34px] font-bold leading-tight text-indigo-deep">صف جديد</h1>
-          <p className="mt-1.5 text-xs font-medium text-indigo-deep/60">
+          <p className="mt-1.5 text-xs font-medium text-indigo-deep/70">
             الصف يجمع طلابًا تتابع تقدّمهم عبر الدروس. يمكنك أيضًا مشاركة أي درس بلا صف.
           </p>
 
@@ -94,7 +94,7 @@ export function NewClassView() {
                 aria-invalid={touched && !name.trim()}
                 className={`${fieldCls} ${touched && !name.trim() ? "!border-rose-400" : ""}`}
               />
-              {touched && !name.trim() && <p className="mt-1.5 text-[11px] font-semibold text-[#c0174f]">اكتب اسمًا للصف.</p>}
+              {touched && !name.trim() && <p className="mt-1.5 text-xs font-semibold text-[#c0174f]">اكتب اسمًا للصف.</p>}
             </div>
             <div>
               <Label htmlFor="csubject">المادة</Label>
@@ -132,7 +132,7 @@ export function NewClassView() {
                   {g.label}
                 </Chip>
               ))}
-              <span className="ms-2 text-[11px] font-medium text-indigo-deep/60">توزّعهم قفزة متكافئين، وتعدّلهم متى شئت.</span>
+              <span className="ms-2 text-xs font-medium text-indigo-deep/70">توزّعهم قفزة متكافئين، وتعدّلهم متى شئت.</span>
             </div>
           </div>
 
@@ -140,7 +140,7 @@ export function NewClassView() {
             <Switch label="اطلب تسجيل الدخول" checked={login} onChange={setLogin} />
             <span>
               <span className="block text-sm font-bold text-indigo-deep">اطلب تسجيل الدخول</span>
-              <span className="mt-0.5 block text-[11px] font-medium text-indigo-deep/60">
+              <span className="mt-0.5 block text-xs font-medium text-indigo-deep/70">
                 {login ? "كل طالب بحساب، فتُحفظ نتائجه عبر الدروس." : "يدخل الطالب بالرمز واسمه الأول، وتُحفظ نتائجه في هذا الصف فقط."}
               </span>
             </span>
@@ -169,7 +169,7 @@ export function NewClassView() {
                   placeholder={"اكتب اسمًا في كل سطر، أو الصق قائمتك:\nسارة\nعمر\nنورة"}
                   className={`${fieldCls} resize-none leading-7`}
                 />
-                <p className="mt-1.5 text-[11px] font-medium text-indigo-deep/60">
+                <p className="mt-1.5 text-xs font-medium text-indigo-deep/70">
                   {names.split(/\r?\n/).filter((n) => n.trim()).length} أسماء. تُربط حساباتهم حين يدخلون بالرمز أول مرة.
                 </p>
               </div>
@@ -177,9 +177,9 @@ export function NewClassView() {
             {add === "platform" && (
               <ul className="mt-3 grid gap-2 sm:grid-cols-3">
                 {PLATFORMS.map((p) => (
-                  <li key={p} className="flex items-center justify-between rounded-2xl border border-violet/10 bg-white px-4 py-3 text-xs font-bold text-indigo-deep/60">
+                  <li key={p} className="flex items-center justify-between rounded-2xl border border-violet/10 bg-white px-4 py-3 text-xs font-bold text-indigo-deep/70">
                     <span dir="ltr">{p}</span>
-                    <span className="rounded-full bg-violet/10 px-2.5 py-0.5 text-[10px] text-violet">قريبًا</span>
+                    <span className="rounded-full bg-violet/10 px-2.5 py-0.5 text-xs text-violet">قريبًا</span>
                   </li>
                 ))}
               </ul>
@@ -200,17 +200,17 @@ export function NewClassView() {
         </form>
 
         <aside className="dots relative overflow-hidden rounded-3xl bg-gradient-to-b from-indigo-deep to-[#4a1d96] p-6 text-center text-white shadow-xl shadow-indigo-deep/25 lg:sticky lg:top-20">
-          <p className="relative text-[11px] font-medium text-white/70">رمز الصف الدائم</p>
+          <p className="relative text-xs font-medium text-white/70">رمز الصف الدائم</p>
           <p dir="ltr" className="relative mt-1 text-[44px] font-bold leading-tight tracking-wider">
             {code || "····"}
           </p>
           <div className="relative mx-auto mt-3 grid size-[136px] place-items-center rounded-2xl bg-white p-3">
             {code ? <QRCodeSVG value={link || code} size={112} level="M" fgColor="#1b0f3d" title={`رمز QR للصف ${code}`} /> : null}
           </div>
-          <p dir="ltr" className="relative mt-3 text-[11px] font-bold text-white/90">
+          <p dir="ltr" className="relative mt-3 text-xs font-bold text-white/90">
             {url}
           </p>
-          <p className="relative mt-3 text-[11px] font-medium leading-6 text-white/75">
+          <p className="relative mt-3 text-xs font-medium leading-6 text-white/75">
             يختلف عن رمز الدرس: رمز الصف يضمّ الطالب إلى صفك مرة واحدة، ورمز الدرس يُدخله درسًا بعينه.
           </p>
         </aside>

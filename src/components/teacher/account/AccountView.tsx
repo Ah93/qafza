@@ -61,7 +61,7 @@ function ToggleRow({
       <Switch label={title} checked={checked} onChange={onChange} />
       <span>
         <span className="block text-sm font-bold text-indigo-deep">{title}</span>
-        <span className="mt-0.5 block text-[11px] font-medium leading-5 text-indigo-deep/60">{body}</span>
+        <span className="mt-0.5 block text-xs font-medium leading-5 text-indigo-deep/70">{body}</span>
       </span>
     </label>
   );
@@ -182,7 +182,7 @@ export function AccountView() {
                 <div>
                   <Label htmlFor="pemail">البريد</Label>
                   <input id="pemail" type="email" dir="ltr" value={account?.email ?? ""} readOnly aria-describedby="pemail-note" className={`${fieldCls} cursor-not-allowed bg-violet/[0.04] text-start text-indigo-deep/70`} />
-                  <p id="pemail-note" className="mt-1.5 text-[10px] font-medium text-indigo-deep/50">تغيير البريد يحتاج تأكيدًا جديدًا، وسنفعّله مع ربط مزوّد البريد.</p>
+                  <p id="pemail-note" className="mt-1.5 text-xs font-medium text-indigo-deep/70">تغيير البريد يحتاج تأكيدًا جديدًا، وسنفعّله مع ربط مزوّد البريد.</p>
                 </div>
               </div>
 
@@ -277,7 +277,7 @@ export function AccountView() {
                   <Chip on={false} disabled>
                     English
                   </Chip>
-                  <span className="text-[11px] font-medium text-indigo-deep/55">الإنجليزية قريبًا.</span>
+                  <span className="text-xs font-medium text-indigo-deep/70">الإنجليزية قريبًا.</span>
                 </div>
               </div>
               <div>
@@ -360,9 +360,9 @@ export function AccountView() {
           {section === "plan" && (
             <Card title="الاشتراك">
               <div className="rounded-2xl bg-violet/[0.05] p-5">
-                <p className="text-[11px] font-bold text-violet">خطتك الحالية</p>
+                <p className="text-xs font-bold text-violet">خطتك الحالية</p>
                 <p className="mt-1 text-xl font-bold text-indigo-deep">{plan?.open ? "الدروس مفتوحة" : plan?.entitled ? "قفزة الكاملة" : "التجربة المجانية"}</p>
-                <p className="mt-1 text-xs font-medium text-indigo-deep/65">
+                <p className="mt-1 text-xs font-medium text-indigo-deep/70">
                   {!plan
                     ? "جارٍ التحميل…"
                     : plan.open
@@ -382,7 +382,7 @@ export function AccountView() {
               </Link>
               <h3 className="mt-6 text-sm font-bold text-indigo-deep">الفواتير</h3>
               {invoices.length === 0 ? (
-                <p className="mt-2 text-xs font-medium text-indigo-deep/55">لا فواتير بعد. تصلك فاتورة بالبريد بعد كل دفعة، وتجدها هنا.</p>
+                <p className="mt-2 text-xs font-medium text-indigo-deep/70">لا فواتير بعد. تصلك فاتورة بالبريد بعد كل دفعة، وتجدها هنا.</p>
               ) : (
                 <ul className="mt-2 divide-y divide-violet/10 rounded-2xl border border-violet/10">
                   {invoices.map((i) => (
@@ -405,7 +405,7 @@ export function AccountView() {
         <div className="fixed inset-0 z-50 grid place-items-center bg-indigo-deep/40 p-5 backdrop-blur-sm" onMouseDown={(e) => e.target === e.currentTarget && setDeleting(false)}>
           <div role="alertdialog" aria-modal="true" aria-labelledby="del-acc" className="w-full max-w-[420px] animate-[pop_.25s_ease-out] rounded-3xl bg-white p-6 shadow-2xl">
             <h2 id="del-acc" className="text-xl font-bold text-indigo-deep">حذف حسابك نهائيًا؟</h2>
-            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">
               تُحذف دروسك وصفوفك ونتائج طلابك، ولا يمكن التراجع. للتأكيد اكتب «احذف».
             </p>
             <input

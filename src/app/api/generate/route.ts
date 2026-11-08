@@ -2,7 +2,7 @@ import { isResponse, requireUser } from "@/lib/server/auth";
 import { track } from "@/lib/server/events";
 import { PAYWALL_MESSAGE, planStatus } from "@/lib/server/billing";
 import { AiError } from "@/lib/server/deepseek";
-import { fs, increment } from "@/lib/server/firestore";
+import { fs, increment, newId } from "@/lib/server/firestore";
 import { SourceError, fromFile, fromText, fromUrl, type Extracted } from "@/lib/server/extract";
 import { generateLesson } from "@/lib/server/generate";
 import { fail, limited, tooMany } from "@/lib/server/http";
@@ -78,7 +78,10 @@ export async function POST(req: Request) {
 
     // counted only when a lesson was really produced
     await usage.set({ userId: user.id, day, generations: increment(1) }, { merge: true });
-    return Response.json({ lesson: out.lesson, sourceName, pages: out.pages, truncated: out.truncated });
+    // the original pages stay with the lesson so a station's "source" badge can show where it came from
+    const sourceId = newId();
+    await fs().collection("sources").doc(sourceId).set({ userId: user.id, pages: JSON.stringify(out.sourcePages), createdAt: Date.now() }).catch(() => undefined);
+    return Response.json({ lesson: out.lesson, sourceName, pages: out.pages, truncated: out.truncated, sourceId });
   } catch (e) {
     if (e instanceof SourceError) return fail(e.message, 422);
     track("lesson_build_failed", { userId: user.id }, { reason: e instanceof AiError ? "ai" : "unexpected" });

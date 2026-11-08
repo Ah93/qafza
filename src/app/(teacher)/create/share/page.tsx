@@ -71,7 +71,7 @@ function ModeCard({
       </span>
       <span>
         <span className="block text-lg font-bold text-indigo-deep">{title}</span>
-        <span className="mt-0.5 block text-[11px] leading-5 text-indigo-deep/60">{body}</span>
+        <span className="mt-0.5 block text-xs leading-5 text-indigo-deep/70">{body}</span>
       </span>
     </button>
   );
@@ -121,7 +121,7 @@ export default function SharePage() {
         بلا صف
       </Pill>
       {classes && classes.length === 0 && (
-        <Link href="/classes/new" className="text-[11px] font-bold text-violet underline underline-offset-4">
+        <Link href="/classes/new" className="text-xs font-bold text-violet underline underline-offset-4">
           أنشئ صفًّا لتتابع نتائجه
         </Link>
       )}
@@ -180,7 +180,7 @@ export default function SharePage() {
                 </Pill>
               </div>
 
-              <p className="mt-3 text-[11px] font-medium leading-6 text-indigo-deep/65">
+              <p className="mt-3 text-xs font-medium leading-6 text-indigo-deep/70">
                 {grouping === "groups"
                   ? boardOnly
                     ? "لصف بلا أجهزة: المجموعات ترفع بطاقات الإجابة، وتُدخل أنت النتائج على السبورة."
@@ -199,7 +199,7 @@ export default function SharePage() {
                       </Pill>
                     ))}
                   </div>
-                  <p className="mt-3 text-[11px] font-medium leading-6 text-indigo-deep/70">
+                  <p className="mt-3 text-xs font-medium leading-6 text-indigo-deep/70">
                     {share.classId === ""
                       ? "بلا صف: توزّع قفزة الطلاب على المجموعات بالتناوب عند دخولهم بالرمز."
                       : "المجموعات جاهزة من «صفوفي»، فلا تكتب شيئًا. كل طالب يجد مجموعته حين يدخل، والضيف الجديد يُضاف إلى الأقل عددًا."}
@@ -218,7 +218,7 @@ export default function SharePage() {
           ) : (
             <section className="rounded-[28px] border border-violet/10 bg-white p-5 shadow-xl shadow-violet/5 sm:p-6">
               <h2 className="text-lg font-bold text-indigo-deep">متى ينتهي التعلّم الذاتي؟</h2>
-              <p className="mt-1 text-[11px] text-indigo-deep/60">
+              <p className="mt-1 text-xs text-indigo-deep/70">
                 يلعب كل طالب بسرعته، وتتابع أنت محاولاته ونتيجة كل تحدٍّ.
               </p>
               <div className="mt-4 rounded-2xl bg-violet/[0.05] p-4">{picker}</div>
@@ -259,7 +259,7 @@ export default function SharePage() {
             />
             <span>
               <span className="block text-sm font-bold text-indigo-deep">اطلب من الطلاب تسجيل الدخول</span>
-              <span className="mt-0.5 block text-[11px] leading-5 text-indigo-deep/60">
+              <span className="mt-0.5 block text-xs leading-5 text-indigo-deep/70">
                 {share.requireLogin
                   ? "مفعّل: لا يدخل الطالب إلا بحساب، فتُحفظ نتائجه عبر كل الدروس."
                   : "مطفأ: يدخل الطالب بالرمز واسمه الأول فقط، ويحفظ إنجازاته بحساب إن أراد."}

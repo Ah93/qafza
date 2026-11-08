@@ -54,7 +54,7 @@ export function LoginForm() {
         <Field
           label="كلمة المرور"
           aside={
-            <Link href="/forgot" className="text-[11px] font-semibold text-violet">
+            <Link href="/forgot" className="text-xs font-semibold text-violet">
               نسيت كلمة المرور؟
             </Link>
           }
@@ -69,7 +69,7 @@ export function LoginForm() {
               placeholder="••••••••"
               className={`${inputCls} pe-16 text-start`}
             />
-            <button type="button" onClick={() => setShow(!show)} className="absolute end-4 top-1/2 -translate-y-1/2 text-[11px] font-bold text-violet">
+            <button type="button" onClick={() => setShow(!show)} className="absolute end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-violet">
               {show ? "إخفاء" : "إظهار"}
             </button>
           </div>
@@ -95,7 +95,7 @@ export function LoginForm() {
           dir="ltr"
           placeholder="الرمز"
           aria-label="رمز اللعبة"
-          className="w-24 rounded-xl border border-violet/10 bg-white py-2 text-center text-sm font-bold tracking-widest text-indigo-deep outline-none placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-indigo-deep/35 focus:border-violet"
+          className="w-24 rounded-xl border border-violet/10 bg-white py-2 text-center text-sm font-bold tracking-widest text-indigo-deep outline-none placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-indigo-deep/65 focus:border-violet"
         />
         <button className="rounded-xl bg-indigo-deep px-4 py-2 text-xs font-bold text-white">ادخل</button>
       </form>

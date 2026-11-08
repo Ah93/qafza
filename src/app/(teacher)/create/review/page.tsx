@@ -66,7 +66,7 @@ export default function ReviewPage() {
             <p className="mt-1.5 text-xs font-medium text-white/80">{parts.join(" · ")}</p>
           </div>
           <div className="relative flex flex-wrap items-center gap-2.5">
-            <span role="status" aria-live="polite" className="text-[11px] font-bold text-white/80">
+            <span role="status" aria-live="polite" className="text-xs font-bold text-white/80">
               {autosave === "saving" ? "يحفظ…" : autosave === "saved" ? "حُفظ ✓" : autosave === "error" ? "تعذّر الحفظ التلقائي" : ""}
             </span>
             <button
@@ -102,7 +102,7 @@ export default function ReviewPage() {
         <div className="mt-5 grid items-start gap-5 lg:grid-cols-[1fr_270px]">
           <div className="space-y-5">
             <div className="rounded-[26px] border border-violet/10 bg-white p-5 shadow-lg shadow-violet/5 sm:p-6">
-              <label htmlFor="lesson-title" className="mb-1.5 block text-[11px] font-bold text-indigo-deep/60">
+              <label htmlFor="lesson-title" className="mb-1.5 block text-xs font-bold text-indigo-deep/70">
                 عنوان الدرس
               </label>
               <input

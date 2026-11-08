@@ -30,7 +30,7 @@ export function ForgotForm() {
           إن كان <span dir="ltr">{sentTo}</span> مسجّلًا لدينا فقد أرسلنا إليه رابطًا لاختيار كلمة مرور جديدة. الرابط صالح ساعة واحدة. تفقّد البريد المزعج أيضًا.
         </p>
         {devLink && (
-          <p className="mt-3 rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-3 text-[11px] font-semibold leading-6 text-amber-900">
+          <p className="mt-3 rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-3 text-xs font-semibold leading-6 text-amber-900">
             (للتجربة فقط، لم يُربط مزوّد بريد بعد){" "}
             <a href={devLink} className="font-bold text-violet underline underline-offset-4">
               افتح رابط إعادة التعيين
@@ -53,7 +53,7 @@ export function ForgotForm() {
       <PrimaryButton type="submit" disabled={busy || !email.trim()}>
         {busy ? "جارٍ الإرسال…" : "أرسل رابط إعادة التعيين"}
       </PrimaryButton>
-      <p className="text-center text-xs text-indigo-deep/60">
+      <p className="text-center text-xs text-indigo-deep/70">
         تذكّرتها؟{" "}
         <Link href="/login" className="font-bold text-violet underline underline-offset-4">
           سجّل الدخول

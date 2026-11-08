@@ -11,7 +11,7 @@ function ShowcasePanel() {
   return (
     <aside className="dots relative hidden flex-col justify-between gap-10 overflow-hidden bg-gradient-to-b from-indigo-ink to-violet p-10 text-white lg:flex">
       <div>
-        <span className="rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold">
+        <span className="rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
           بديلك عن شرائح العرض
         </span>
         <h2 className="mt-5 text-[34px] font-bold leading-[1.3]">
@@ -34,7 +34,7 @@ function ShowcasePanel() {
           <div className="mt-2.5 rounded-xl border border-mint bg-mint/10 px-3 py-2 text-xs font-semibold text-emerald-700">
             في نخاع العظم الأحمر ✓
           </div>
-          <div className="mt-2.5 flex items-center justify-between text-[11px] font-semibold">
+          <div className="mt-2.5 flex items-center justify-between text-xs font-semibold">
             <span className="text-rose-500">♥ ♥ ♥</span>
             <span className="text-amber-500">+10 نقاط · شعلة 3</span>
           </div>
@@ -45,7 +45,7 @@ function ShowcasePanel() {
         {STATS.map((s) => (
           <div key={s.label} className="rounded-2xl bg-white/10 p-4">
             <div className="text-xl font-bold text-sun">{s.n}</div>
-            <div className="mt-1 text-[11px] text-white/80">{s.label}</div>
+            <div className="mt-1 text-xs text-white/80">{s.label}</div>
           </div>
         ))}
       </div>
@@ -59,7 +59,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
       <main className="flex flex-col px-6 py-6 sm:px-12">
         <div className="mx-auto flex w-full max-w-[460px] items-center justify-between">
           <Logo />
-          <Link href="/" className="text-[11px] font-semibold text-violet underline underline-offset-4">
+          <Link href="/" className="text-xs font-semibold text-violet underline underline-offset-4">
             العودة للرئيسية
           </Link>
         </div>

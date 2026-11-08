@@ -39,7 +39,7 @@ export function TeacherHeader() {
         <div className="hidden items-center gap-3 md:flex">
           <div className="flex rounded-full border border-violet/10 bg-white p-1 text-xs font-bold shadow-sm">
             <span className="rounded-full bg-indigo-deep px-4 py-2 text-white">أعلّم</span>
-            <Link href="/learn" className="rounded-full px-4 py-2 text-indigo-deep/60">
+            <Link href="/learn" className="rounded-full px-4 py-2 text-indigo-deep/70">
               أتعلّم
             </Link>
           </div>
@@ -51,7 +51,7 @@ export function TeacherHeader() {
                   key={n.href}
                   href={n.href}
                   className={`rounded-full px-4 py-2 transition ${
-                    on ? "bg-violet/10 text-violet" : "text-indigo-deep/55 hover:text-indigo-deep"
+                    on ? "bg-violet/10 text-violet" : "text-indigo-deep/70 hover:text-indigo-deep"
                   }`}
                 >
                   {n.label}
@@ -102,17 +102,17 @@ export function FlowHeader({ current }: { current: 2 | 3 | 4 }) {
                 {i > 0 && <span className="hidden h-px w-4 bg-violet/15 sm:block" />}
                 <span
                   className={`flex items-center gap-2 rounded-full py-1.5 ps-3 pe-2 text-xs font-bold ${
-                    on ? "bg-violet/10 text-violet" : done ? "text-emerald-600" : "text-indigo-deep/40"
+                    on ? "bg-violet/10 text-violet" : done ? "text-emerald-700" : "text-indigo-deep/70"
                   }`}
                 >
                   <span className="hidden sm:inline">{label}</span>
                   <span
-                    className={`grid size-6 place-items-center rounded-full text-[11px] ${
+                    className={`grid size-6 place-items-center rounded-full text-xs ${
                       on
                         ? "bg-violet text-white"
                         : done
                           ? "bg-mint text-white"
-                          : "bg-violet/10 text-indigo-deep/40"
+                          : "bg-violet/10 text-indigo-deep/70"
                     }`}
                   >
                     {done ? <Check className="size-3.5" strokeWidth={3} /> : n}

@@ -73,7 +73,7 @@ export function SignupForm() {
   return (
     <form className="space-y-4" onSubmit={submit} noValidate>
       <div className="flex items-center justify-between rounded-2xl border border-violet/10 bg-violet/5 p-2.5">
-        <span className="px-2 text-[11px] font-semibold text-violet">حساب واحد تعلّم به وتتعلّم.</span>
+        <span className="px-2 text-xs font-semibold text-violet">حساب واحد تعلّم به وتتعلّم.</span>
         <div className="flex gap-1 rounded-full bg-white p-1 text-xs font-bold">
           {(["teach", "learn"] as const).map((r) => (
             <button
@@ -81,7 +81,7 @@ export function SignupForm() {
               type="button"
               onClick={() => setRole(r)}
               className={`rounded-full px-4 py-1.5 transition ${
-                role === r ? "bg-indigo-deep text-white" : "text-indigo-deep/50"
+                role === r ? "bg-indigo-deep text-white" : "text-indigo-deep/70"
               }`}
             >
               {r === "teach" ? "أعلّم" : "أتعلّم"}
@@ -125,7 +125,7 @@ export function SignupForm() {
             <button
               type="button"
               onClick={() => setShow(!show)}
-              className="absolute end-4 top-1/2 -translate-y-1/2 text-[11px] font-bold text-violet"
+              className="absolute end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-violet"
             >
               {show ? "إخفاء" : "إظهار"}
             </button>
@@ -137,7 +137,7 @@ export function SignupForm() {
           ))}
         </div>
         {score > 0 && (
-          <p className={`mt-1.5 text-[11px] font-bold ${score >= 3 ? "text-emerald-600" : "text-amber-600"}`}>
+          <p className={`mt-1.5 text-xs font-bold ${score >= 3 ? "text-emerald-700" : "text-amber-600"}`}>
             {LEVELS[score]}
           </p>
         )}
@@ -174,7 +174,7 @@ export function SignupForm() {
             ))}
           </select>
         </div>
-        <p className="mt-2 text-[11px] text-indigo-deep/60">
+        <p className="mt-2 text-xs text-indigo-deep/70">
           نسأله مرة واحدة: من هم دون 13 يحتاجون موافقة ولي الأمر.
         </p>
       </div>

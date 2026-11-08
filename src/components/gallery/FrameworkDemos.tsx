@@ -25,18 +25,18 @@ export function LeaderboardDemo() {
   const pct = next ? Math.round(((mine - rank.from) / (next.from - rank.from)) * 100) : 100;
   return (
     <Stage className="flex flex-col gap-3">
-      <div className="flex items-center justify-between text-[13px] font-bold">
+      <div className="flex items-center justify-between text-sm font-bold">
         <span className="rounded-full bg-sun px-3 py-1 text-xs text-indigo-deep">الرتبة: {rank.name}</span>
         <span>{plural.points(mine)}</span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-white/15" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="التقدّم إلى الرتبة التالية">
         <div className="h-full rounded-full bg-gradient-to-l from-pink-400 to-sun transition-[width] duration-500" style={{ width: `${pct}%` }} />
       </div>
-      <p className="text-[11px] font-medium text-white/75">{next ? `بقي ${plural.points(next.from - mine)} لرتبة «${next.name}»` : "بلغت أعلى رتبة"}</p>
+      <p className="text-xs font-medium text-white/75">{next ? `بقي ${plural.points(next.from - mine)} لرتبة «${next.name}»` : "بلغت أعلى رتبة"}</p>
       <ol className="space-y-1.5" aria-live="polite">
         {rows.map((r, i) => (
           <li key={r.name} className={`flex items-center gap-2.5 rounded-xl px-3 py-2 text-xs font-bold ${r.me ? "bg-white/25 ring-1 ring-white/40" : "bg-white/10"}`}>
-            <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
+            <span className="w-3 text-xs text-white/80">{i + 1}</span>
             <span className="flex-1">{r.name}</span>
             <span>{r.score}</span>
           </li>
@@ -90,7 +90,7 @@ export function GroupsDemo() {
           أعد
         </button>
       </div>
-      <p className="text-[11px] font-medium text-white/75">تُجمع نقاط أعضاء كل مجموعة، فيتعاون الصف ويتنافس معًا.</p>
+      <p className="text-xs font-medium text-white/75">تُجمع نقاط أعضاء كل مجموعة، فيتعاون الصف ويتنافس معًا.</p>
     </Stage>
   );
 }
@@ -155,7 +155,7 @@ export function SecretsDemo() {
   }
   return (
     <Stage className="flex flex-col gap-3">
-      <p className="text-[13px] font-bold">اختر صندوقًا واحدًا فقط.</p>
+      <p className="text-sm font-bold">اختر صندوقًا واحدًا فقط.</p>
       <div className="grid grid-cols-3 gap-2.5">
         {order.map((p, i) => {
           const prize = PRIZES[p];
@@ -167,7 +167,7 @@ export function SecretsDemo() {
               disabled={open !== null}
               onClick={() => setOpen(i)}
               aria-label={shown ? prize.text : `صندوق ${i + 1}`}
-              className={`grid h-24 place-items-center rounded-2xl text-center text-[11px] font-bold transition ${shown ? "bg-sun text-indigo-deep" : "bg-white/15 hover:bg-white/25"} ${open !== null && !shown ? "opacity-40" : ""}`}
+              className={`grid h-24 place-items-center rounded-2xl text-center text-xs font-bold transition ${shown ? "bg-sun text-indigo-deep" : "bg-white/15 hover:bg-white/25"} ${open !== null && !shown ? "opacity-40" : ""}`}
             >
               <span>
                 <Icon className="mx-auto size-6" />

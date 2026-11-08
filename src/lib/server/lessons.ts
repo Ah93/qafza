@@ -21,7 +21,7 @@ export type LessonRecord = {
   updatedAt: number;
 };
 
-type Doc = Omit<LessonRecord, "id"> & { data: string; share: Partial<ShareConfig> };
+type Doc = Omit<LessonRecord, "id"> & { data: string; share: Partial<ShareConfig>; sourcePages?: string };
 
 const record = (id: string, d: Doc): LessonRecord => ({
   id,
@@ -58,14 +58,21 @@ export async function listLessons(uid: string): Promise<LessonSummary[]> {
 }
 
 /** throws LessonShapeError when the lesson is structurally broken */
-export async function createLesson(uid: string, raw: unknown, sourceName: string, status: "draft" | "published" = "published"): Promise<LessonSummary> {
+export async function createLesson(uid: string, raw: unknown, sourceName: string, status: "draft" | "published" = "published", sourceId = ""): Promise<LessonSummary> {
   const lesson = parseLesson(raw, EDITED_LESSON);
   const id = newId();
   const code = await claimCode("lesson", id);
   const now = Date.now();
-  const doc: Doc = { userId: uid, code, title: lesson.title, data: JSON.stringify(lesson), sourceName: sourceName.slice(0, 120), status, folder: null, archived: false, classId: null, share: {}, createdAt: now, updatedAt: now };
+  let sourcePages: string | undefined;
+  if (sourceId) {
+    const sd = await fs().collection("sources").doc(sourceId).get();
+    const sdata = sd.data() as { userId: string; pages: string } | undefined;
+    if (sdata && sdata.userId === uid) sourcePages = sdata.pages;
+  }
+  const doc: Doc = { userId: uid, code, title: lesson.title, data: JSON.stringify(lesson), sourceName: sourceName.slice(0, 120), status, folder: null, archived: false, classId: null, share: {}, createdAt: now, updatedAt: now, ...(sourcePages ? { sourcePages } : {}) };
   try {
     await lessons().doc(id).set(doc);
+    if (sourcePages) await fs().collection("sources").doc(sourceId).delete().catch(() => undefined);
   } catch (e) {
     await releaseCode(code);
     throw e;
@@ -140,4 +147,24 @@ export async function lessonsOfClass(classId: string): Promise<LessonRecord[]> {
 export async function lessonRecord(id: string): Promise<LessonRecord | null> {
   const [d] = await fs().getAll(lessons().doc(id), { fieldMask: [...LIST_FIELDS] });
   return d.exists ? record(id, d.data() as Doc) : null;
+}
+
+/** the original pages a lesson was built from (kept apart from the lesson body); null when none were kept */
+export async function loadSourcePages(by: "id" | "code", value: string, uid?: string): Promise<{ title: string; pages: { n: number; text: string }[] } | null> {
+  let id = value;
+  if (by === "code") {
+    const c = await lookupCode(value);
+    if (!c || c.kind !== "lesson") return null;
+    id = c.id;
+  }
+  const d = await lessons().doc(id).get();
+  if (!d.exists) return null;
+  const data = d.data() as Doc;
+  if (uid && data.userId !== uid) return null;
+  if (!data.sourcePages) return null;
+  try {
+    return { title: data.sourceName, pages: JSON.parse(data.sourcePages) };
+  } catch {
+    return null;
+  }
 }

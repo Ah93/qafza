@@ -9,7 +9,7 @@ export default function SignupPage() {
   return (
     <AuthShell>
       <h1 className="text-4xl font-bold text-indigo-deep">أنشئ حسابك</h1>
-      <p className="mb-6 mt-2 text-xs text-indigo-deep/60">دقيقة واحدة، ثم ترفع درسك الأول مجانًا.</p>
+      <p className="mb-6 mt-2 text-xs text-indigo-deep/70">دقيقة واحدة، ثم ترفع درسك الأول مجانًا.</p>
       <AuthTabs active="signup" />
       <div className="mt-5">
         <SocialButtons />

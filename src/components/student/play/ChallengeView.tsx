@@ -23,7 +23,7 @@ function Banner({ status, attempt, extra }: { status: Status; attempt: 1 | 2; ex
   return (
     <div
       role="status"
-      className={`mt-4 animate-[pop_.25s_ease-out] rounded-2xl px-4 py-3 text-[13px] font-bold ${
+      className={`mt-4 animate-[pop_.25s_ease-out] rounded-2xl px-4 py-3 text-sm font-bold ${
         good ? "bg-mint/15 text-emerald-800" : status === "wrong" ? "bg-amber-50 text-amber-900" : "bg-rose-50 text-rose-800"
       }`}
     >
@@ -193,7 +193,7 @@ function DragDrop({ challenge, onAttempt, disabled }: Props & { challenge: Extra
   return (
     <>
       <h2 className="text-[22px] font-bold leading-snug text-indigo-deep">{challenge.prompt}</h2>
-      <p className="mt-1 text-[11px] font-semibold text-indigo-deep/55">اسحب كل بطاقة إلى خانتها، أو اضغط البطاقة ثم الخانة.</p>
+      <p className="mt-1 text-xs font-semibold text-indigo-deep/70">اسحب كل بطاقة إلى خانتها، أو اضغط البطاقة ثم الخانة.</p>
       <div className="mt-4 grid gap-3 sm:grid-cols-3">
         {challenge.slots.map((s, i) => {
           const card = placed[i];
@@ -206,7 +206,7 @@ function DragDrop({ challenge, onAttempt, disabled }: Props & { challenge: Extra
                 onDragOver={(e) => e.preventDefault()}
                 onDrop={(e) => drop(i, e.dataTransfer.getData("text/plain"))}
                 aria-label={`خانة ${s.label}${card ? `: ${card}` : ""}`}
-                className={`grid min-h-14 w-full place-items-center rounded-xl border-2 border-dashed px-3 py-3 text-[13px] font-bold transition ${
+                className={`grid min-h-14 w-full place-items-center rounded-xl border-2 border-dashed px-3 py-3 text-sm font-bold transition ${
                   card
                     ? done && !bad
                       ? "border-mint bg-mint/15 text-indigo-deep"
@@ -215,7 +215,7 @@ function DragDrop({ challenge, onAttempt, disabled }: Props & { challenge: Extra
                         : "border-violet/40 bg-white text-indigo-deep"
                     : held
                       ? "border-violet bg-white text-violet"
-                      : "border-violet/25 text-indigo-deep/40"
+                      : "border-violet/25 text-indigo-deep/70"
                 }`}
               >
                 {card ?? "أفلِت هنا"}
@@ -233,7 +233,7 @@ function DragDrop({ challenge, onAttempt, disabled }: Props & { challenge: Extra
               onDragStart={(e) => e.dataTransfer.setData("text/plain", c)}
               onClick={() => setHeld((h) => (h === c ? null : c))}
               aria-pressed={held === c}
-              className={`cursor-grab rounded-full px-4 py-2 text-[13px] font-bold shadow-sm transition active:cursor-grabbing ${
+              className={`cursor-grab rounded-full px-4 py-2 text-sm font-bold shadow-sm transition active:cursor-grabbing ${
                 held === c ? "bg-violet text-white ring-4 ring-violet/20" : "bg-white text-indigo-deep ring-1 ring-violet/15 hover:ring-violet/40"
               }`}
             >
@@ -300,7 +300,7 @@ function Matching({ challenge, onAttempt, disabled }: Props & { challenge: Extra
   return (
     <>
       <h2 className="text-[22px] font-bold leading-snug text-indigo-deep">{challenge.prompt}</h2>
-      <p className="mt-1 text-[11px] font-semibold text-indigo-deep/55">اضغط العنصر ثم وصفه ليتصلا.</p>
+      <p className="mt-1 text-xs font-semibold text-indigo-deep/70">اضغط العنصر ثم وصفه ليتصلا.</p>
       <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5">
         <div className="space-y-2.5">
           {challenge.pairs.map((p, i) => {
@@ -328,7 +328,7 @@ function Matching({ challenge, onAttempt, disabled }: Props & { challenge: Extra
               <button
                 key={m}
                 onClick={() => pickMeaning(m)}
-                className={`block w-full rounded-2xl border-2 px-4 py-3 text-start text-[13px] font-semibold text-indigo-deep transition ${
+                className={`block w-full rounded-2xl border-2 px-4 py-3 text-start text-sm font-semibold text-indigo-deep transition ${
                   owner === undefined ? `bg-white ${term !== null ? "border-violet/50" : "border-violet/15"} hover:border-violet/50` : "bg-white"
                 }`}
                 style={owner !== undefined ? { borderColor: PAIR_COLORS[+owner % 4] } : undefined}
@@ -379,7 +379,7 @@ export function BossView({ items, onWin, onRound }: { items: BossItem[]; onWin: 
         </span>
         <div>
           <h2 className="text-[22px] font-bold text-indigo-deep">تحدّي الزعيم</h2>
-          <p className="text-[11px] font-semibold text-indigo-deep/55">أربع عبارات: خطأ واحد ينهي الجولة، وتعيدها متى شئت.</p>
+          <p className="text-xs font-semibold text-indigo-deep/70">أربع عبارات: خطأ واحد ينهي الجولة، وتعيدها متى شئت.</p>
         </div>
       </div>
 
@@ -391,7 +391,7 @@ export function BossView({ items, onWin, onRound }: { items: BossItem[]; onWin: 
 
       {state === "playing" && (
         <div key={at} className="mt-4 animate-[pop_.25s_ease-out]">
-          <p className="text-[11px] font-bold text-violet">العبارة {at + 1} من {items.length}</p>
+          <p className="text-xs font-bold text-violet">العبارة {at + 1} من {items.length}</p>
           <p className="mt-1 rounded-2xl bg-pink-card/[0.07] px-5 py-5 text-[20px] font-bold leading-snug text-indigo-deep">{items[at].statement}</p>
           <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
             <button onClick={() => answer(true)} className="rounded-2xl border-2 border-mint/40 bg-white py-3.5 text-base font-bold text-emerald-700 transition hover:bg-mint/10">

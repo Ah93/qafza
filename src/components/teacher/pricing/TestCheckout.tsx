@@ -45,18 +45,18 @@ export function TestCheckout() {
       <header className="border-b border-violet/5 bg-white/80">
         <div className="mx-auto flex h-14 max-w-[1080px] items-center justify-between px-5">
           <Logo href="/pricing" />
-          <span className="text-[11px] font-bold text-indigo-deep/70">دفع آمن</span>
+          <span className="text-xs font-bold text-indigo-deep/70">دفع آمن</span>
         </div>
       </header>
       <main className="mx-auto w-full max-w-[460px] flex-1 px-5 py-10">
         <section className="rounded-[28px] border border-violet/10 bg-white p-7 shadow-xl shadow-violet/5">
-          {test && <p className="mb-4 rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-2.5 text-[11px] font-bold leading-6 text-amber-900">بوابة دفع تجريبية: لا يُسحب أي مال.</p>}
+          {test && <p className="mb-4 rounded-2xl border border-dashed border-amber-300 bg-amber-50 px-4 py-2.5 text-xs font-bold leading-6 text-amber-900">بوابة دفع تجريبية: لا يُسحب أي مال.</p>}
           {error && <p role="alert" className="text-sm font-bold text-[#c0174f]">{error}</p>}
-          {!info && !error && <p role="status" className="text-sm font-bold text-indigo-deep/60">جارٍ فتح الدفع…</p>}
+          {!info && !error && <p role="status" className="text-sm font-bold text-indigo-deep/70">جارٍ فتح الدفع…</p>}
           {info && (
             <>
               <h1 className="text-2xl font-bold text-indigo-deep">قفزة الكاملة</h1>
-              <p className="mt-1 text-xs font-medium text-indigo-deep/60">{info.plan === "monthly" ? "شهري" : "العام الدراسي"} · {PLAN_DAYS[info.plan]} يومًا · {method}</p>
+              <p className="mt-1 text-xs font-medium text-indigo-deep/70">{info.plan === "monthly" ? "شهري" : "العام الدراسي"} · {PLAN_DAYS[info.plan]} يومًا · {method}</p>
               <p className="mt-4 text-[40px] font-bold leading-none text-indigo-deep">{money(info.currency, info.amount)}</p>
               {info.status !== "pending" ? (
                 <p role="status" className="mt-5 text-sm font-bold text-indigo-deep/70">عملية الدفع هذه انتهت.</p>

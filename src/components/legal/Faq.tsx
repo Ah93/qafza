@@ -23,7 +23,7 @@ export function Faq({ items }: { items: { q: string; a: string }[] }) {
               </button>
             </h2>
             {on && (
-              <p id={`faq-${i}`} className="px-5 pb-5 text-[13px] font-medium leading-7 text-indigo-deep/75">
+              <p id={`faq-${i}`} className="px-5 pb-5 text-sm font-medium leading-7 text-indigo-deep/75">
                 {it.a}
               </p>
             )}

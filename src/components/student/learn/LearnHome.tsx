@@ -15,7 +15,7 @@ function Stat({ icon: Icon, tone, value, label }: { icon: LucideIcon; tone: stri
     <div className="flex min-w-0 items-center justify-between gap-2 rounded-3xl border border-violet/10 bg-white px-3 py-3 shadow-sm sm:gap-3 sm:px-4">
       <div className="min-w-0">
         <p className="truncate text-lg font-bold leading-tight text-indigo-deep sm:text-xl">{value}</p>
-        <p className="text-[10px] font-semibold text-indigo-deep/50">{label}</p>
+        <p className="text-xs font-semibold text-indigo-deep/70">{label}</p>
       </div>
       <span className={`hidden size-9 shrink-0 place-items-center rounded-xl sm:grid ${tone}`}>
         <Icon className="size-4" />
@@ -34,7 +34,7 @@ function Art({ icon: Icon, badge, badgeCls }: { icon: LucideIcon; badge: string;
           <Icon className="size-5" />
         </span>
       </span>
-      <span className={`absolute start-3 top-3 rounded-full px-3 py-1 text-[10px] font-bold ${badgeCls}`}>{badge}</span>
+      <span className={`absolute start-3 top-3 rounded-full px-3 py-1 text-xs font-bold ${badgeCls}`}>{badge}</span>
     </div>
   );
 }
@@ -62,12 +62,12 @@ export function LearnHome() {
 
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="text-[11px] font-semibold text-indigo-deep/55">أهلاً{name ? `، ${name}` : ""}</p>
+            <p className="text-xs font-semibold text-indigo-deep/70">أهلاً{name ? `، ${name}` : ""}</p>
             <h1 className="mt-1 text-[34px] font-bold leading-tight text-indigo-deep">ماذا ستتعلّم اليوم؟</h1>
           </div>
           <div className="grid w-full grid-cols-3 gap-2 sm:w-auto sm:gap-2.5">
             <Stat icon={FlameIcon} tone="bg-orange-100 text-orange-500" value={plural.days(streak)} label="الشعلة" />
-            <Stat icon={Zap} tone="bg-mint/15 text-emerald-600" value={String(points)} label="نقطة معرفة" />
+            <Stat icon={Zap} tone="bg-mint/15 text-emerald-700" value={String(points)} label="نقطة معرفة" />
             <Stat icon={Trophy} tone="bg-amber-100 text-amber-600" value={progress?.rank ?? "مبتدئ"} label="الرتبة" />
           </div>
         </div>
@@ -81,14 +81,14 @@ export function LearnHome() {
         <div className="mt-4 grid items-stretch gap-3 md:grid-cols-[1.9fr_1fr]">
           {progress?.reviewedToday ? (
             <section className="dots relative overflow-hidden rounded-[28px] bg-gradient-to-br from-emerald-600 to-teal-500 p-6 text-white shadow-xl shadow-emerald-700/20">
-              <span className="relative inline-block rounded-full bg-white/20 px-4 py-1.5 text-[11px] font-bold">تثبيت اليوم · أُنجز ✓</span>
+              <span className="relative inline-block rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold">تثبيت اليوم · أُنجز ✓</span>
               <h2 className="relative mt-4 text-[26px] font-bold leading-snug">أحسنت! ثبّتّ ما نسيته اليوم.</h2>
               <p className="relative mt-1 text-xs font-medium text-white/85">شعلتك الآن {plural.days(streak)}. نراك غدًا.</p>
             </section>
           ) : due > 0 ? (
             <section className="dots relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#b3195f] to-[#ec5d9f] p-6 text-white shadow-xl shadow-pink-700/20">
               <div className="relative flex items-center justify-between gap-3">
-                <span className="rounded-full bg-white/20 px-4 py-1.5 text-[11px] font-bold">تثبيت اليوم · دقيقتان</span>
+                <span className="rounded-full bg-white/20 px-4 py-1.5 text-xs font-bold">تثبيت اليوم · دقيقتان</span>
                 <span className="text-xs font-bold">🔥 يحافظ على شعلتك</span>
               </div>
               <h2 className="relative mt-5 text-[28px] font-bold leading-snug">{due === 1 ? "سؤال واحد يحتاج تثبيتًا" : `${due} أسئلة تحتاج تثبيتًا`}</h2>
@@ -99,7 +99,7 @@ export function LearnHome() {
             </section>
           ) : (
             <section className="dots relative overflow-hidden rounded-[28px] bg-gradient-to-br from-[#241356] to-[#5b21b6] p-6 text-white shadow-xl shadow-indigo-deep/20">
-              <span className="relative inline-block rounded-full bg-white/15 px-4 py-1.5 text-[11px] font-bold">تثبيت اليوم</span>
+              <span className="relative inline-block rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold">تثبيت اليوم</span>
               <h2 className="relative mt-4 text-[26px] font-bold leading-snug">لا شيء يحتاج تثبيتًا الآن.</h2>
               <p className="relative mt-1 text-xs font-medium text-white/80">كل سؤال تخطئ فيه في درس يعود إليك هنا بعد يوم، ثم بعد أيام، حتى تثبت.</p>
             </section>
@@ -122,7 +122,7 @@ export function LearnHome() {
               dir="ltr"
               placeholder="مثال: AB12"
               aria-label="رمز اللعبة"
-              className="mt-3 w-full rounded-2xl border-2 border-violet/25 bg-white py-3 text-center text-lg font-bold tracking-widest text-indigo-deep outline-none transition placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-indigo-deep/35 focus:border-violet"
+              className="mt-3 w-full rounded-2xl border-2 border-violet/25 bg-white py-3 text-center text-lg font-bold tracking-widest text-indigo-deep outline-none transition placeholder:text-sm placeholder:font-medium placeholder:tracking-normal placeholder:text-indigo-deep/65 focus:border-violet"
             />
             <button className="mt-2.5 w-full rounded-2xl bg-indigo-deep py-3 text-xs font-bold text-white transition hover:bg-indigo-ink">ادخل</button>
           </form>
@@ -136,9 +136,9 @@ export function LearnHome() {
               </span>
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[11px] font-bold text-violet">تابع من حيث توقفت</p>
+              <p className="text-xs font-bold text-violet">تابع من حيث توقفت</p>
               <h2 className="truncate text-xl font-bold text-indigo-deep">{next.title}</h2>
-              <p className="mt-0.5 text-[11px] font-medium text-indigo-deep/55">
+              <p className="mt-0.5 text-xs font-medium text-indigo-deep/70">
                 تعلّم ذاتي · المحطة {Math.min(next.total, next.reached + 1)} من {next.total}
               </p>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-violet/10">
@@ -160,7 +160,7 @@ export function LearnHome() {
                   <Art icon={l.mode === "live" ? Orbit : Ellipsis} badge={`مكتمل · ${l.accuracy}%`} badgeCls={l.accuracy >= 70 ? "bg-mint text-white" : "bg-amber-500 text-white"} />
                   <div className="p-4">
                     <h3 className="truncate text-base font-bold text-indigo-deep">{l.title}</h3>
-                    <p className="mt-1 text-[11px] font-medium text-indigo-deep/55">
+                    <p className="mt-1 text-xs font-medium text-indigo-deep/70">
                       {l.mode === "live" ? "حصة مباشرة" : "تعلّم ذاتي"} · {ago(l.at)}
                     </p>
                     <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-100">

@@ -108,7 +108,7 @@ export function ResultsView() {
       <main className="mx-auto w-full max-w-[1100px] flex-1 px-5 py-7">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-[11px] font-semibold text-indigo-deep/55">
+            <p className="text-xs font-semibold text-indigo-deep/70">
               {r.lesson.how === "self" ? "تعلّم ذاتي" : "حصة مباشرة"} · {r.lesson.className ?? "بلا صف"} · {r.counts.total} طالبًا
             </p>
             <h1 className="mt-1 text-[34px] font-bold leading-tight text-indigo-deep">نتائج: {r.lesson.title}</h1>
@@ -126,7 +126,7 @@ export function ResultsView() {
         {plan && !plan.open && !plan.entitled && !plan.canCreate && (
           <p role="status" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet/10 bg-white px-5 py-3 text-xs font-semibold text-indigo-deep/80 shadow-sm">
             <span>استخدمت درسك المجاني. اشترك لتبني درسك الثاني. وطلابك يلعبون مجانًا دائمًا.</span>
-            <Link href="/pricing" className="rounded-full bg-brand px-5 py-2 text-[11px] font-bold text-white shadow-md shadow-violet/25">
+            <Link href="/pricing" className="rounded-full bg-brand px-5 py-2 text-xs font-bold text-white shadow-md shadow-violet/25">
               اشترك
             </Link>
           </p>
@@ -135,7 +135,7 @@ export function ResultsView() {
           <section className="dots relative flex items-center justify-between gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-indigo-deep to-[#4a1d96] p-6 text-white shadow-xl shadow-indigo-deep/25">
             <div className="relative">
               <h2 className="text-xl font-bold">مستوى الإتقان</h2>
-              <p className="mt-1.5 text-[11px] font-medium leading-5 text-white/70">
+              <p className="mt-1.5 text-xs font-medium leading-5 text-white/70">
                 {r.counts.done} من {r.counts.total} أكملوا{r.minutes ? ` · ${plural.minutes(r.minutes)}` : ""}
               </p>
             </div>
@@ -148,7 +148,7 @@ export function ResultsView() {
           <section className="rounded-3xl border border-pink-card/15 bg-gradient-to-l from-pink-card/[0.08] to-amber-50 p-6">
             {r.gaps.length > 0 ? (
               <>
-                <p className="text-[11px] font-bold text-[#a3124a]">افعل الآن · {r.gaps.length === 1 ? "فجوة فهم" : `${r.gaps.length} فجوات فهم`}</p>
+                <p className="text-xs font-bold text-[#a3124a]">افعل الآن · {r.gaps.length === 1 ? "فجوة فهم" : `${r.gaps.length} فجوات فهم`}</p>
                 <ul className="mt-2 space-y-2">
                   {r.gaps.map((g) => (
                     <li key={g.index} className="text-[15px] font-bold leading-7 text-[#a3124a]">
@@ -159,22 +159,22 @@ export function ResultsView() {
                   ))}
                 </ul>
                 {r.players < 5 && (
-                  <p className="mt-2 text-[11px] font-semibold text-[#a3124a]/80">العيّنة صغيرة: {r.players} {r.players === 1 ? "طالب" : "طلاب"} فقط، فاعتبرها إشارة لا حكمًا.</p>
+                  <p className="mt-2 text-xs font-semibold text-[#a3124a]/80">العيّنة صغيرة: {r.players} {r.players === 1 ? "طالب" : "طلاب"} فقط، فاعتبرها إشارة لا حكمًا.</p>
                 )}
                 <div className="mt-4 flex flex-wrap items-center gap-2.5">
                   <Link href={`/live/${r.lesson.code}`} className="rounded-full bg-[#a3124a] px-6 py-2.5 text-xs font-bold text-white shadow-md shadow-[#a3124a]/25 transition hover:brightness-110">
                     أعدها في حصة مباشرة
                   </Link>
-                  <span className="text-[11px] font-semibold text-[#a3124a]/75">والأسئلة التي يخطئ فيها الطلاب المسجّلون تعود إليهم تلقائيًا في «تثبيت اليوم».</span>
+                  <span className="text-xs font-semibold text-[#a3124a]/75">والأسئلة التي يخطئ فيها الطلاب المسجّلون تعود إليهم تلقائيًا في «تثبيت اليوم».</span>
                 </div>
               </>
             ) : (
               <>
-                <p className="text-[11px] font-bold text-emerald-700">{r.counts.done ? "لا فجوة واضحة" : "بانتظار الطلاب"}</p>
+                <p className="text-xs font-bold text-emerald-700">{r.counts.done ? "لا فجوة واضحة" : "بانتظار الطلاب"}</p>
                 <h2 className="mt-2 text-2xl font-bold leading-snug text-indigo-deep">
                   {r.counts.done ? "لم يتعثّر الصف في محطة بعينها. أحسنت." : "لم يُنهِ أحد الدرس بعد، فلا فجوات لنعرضها."}
                 </h2>
-                <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+                <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">
                   {r.counts.done && r.players < 5 ? `العيّنة صغيرة: ${r.players} ${r.players === 1 ? "طالب" : "طلاب"} فقط. ` : ""}
                   حين يلعب طلابك، تظهر هنا كل محطة أصاب فيها أقل من 60%، وكل خيار خاطئ اختاره ربع الصف أو أكثر.
                 </p>
@@ -208,24 +208,24 @@ export function ResultsView() {
                 <p className="mt-2 text-xs font-semibold leading-6 text-indigo-deep/70">{r.weakest.question}</p>
                 <p className="mt-3 flex items-baseline gap-2">
                   <span className="text-4xl font-bold text-[#c0174f]">{r.weakest.pct}%</span>
-                  <span className="text-[11px] font-semibold text-indigo-deep/55">أصابوا من المحاولة الأولى · {r.weakest.hint}</span>
+                  <span className="text-xs font-semibold text-indigo-deep/70">أصابوا من المحاولة الأولى · {r.weakest.hint}</span>
                 </p>
-                <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-[11px] font-semibold leading-6 text-rose-800">
+                <p className="mt-4 rounded-2xl bg-rose-50 px-4 py-3 text-xs font-semibold leading-6 text-rose-800">
                   هذه فجوة فهم في المحطة {r.weakest.index + 1} «{r.stationTitles[r.weakest.index]}». أعد شرحها في الحصة القادمة.
                 </p>
               </>
             ) : (
-              <p className="mt-3 rounded-2xl bg-violet/[0.05] px-4 py-5 text-xs font-bold leading-6 text-indigo-deep/60">لا تحدٍّ واحد تعثّر فيه الصف حتى الآن.</p>
+              <p className="mt-3 rounded-2xl bg-violet/[0.05] px-4 py-5 text-xs font-bold leading-6 text-indigo-deep/70">لا تحدٍّ واحد تعثّر فيه الصف حتى الآن.</p>
             )}
           </section>
 
           <section className="min-w-0 rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
             <div className="flex items-baseline justify-between">
               <h2 className="text-lg font-bold text-indigo-deep">الطلاب</h2>
-              <span className="text-[10px] font-medium text-indigo-deep/50">اضغط طالبًا</span>
+              <span className="text-xs font-medium text-indigo-deep/70">اضغط طالبًا</span>
             </div>
             {r.students.length === 0 ? (
-              <p className="mt-3 rounded-2xl bg-violet/[0.05] px-4 py-5 text-center text-xs font-bold text-indigo-deep/60">لا طلاب بعد.</p>
+              <p className="mt-3 rounded-2xl bg-violet/[0.05] px-4 py-5 text-center text-xs font-bold text-indigo-deep/70">لا طلاب بعد.</p>
             ) : (
               <ul className="mt-3 max-h-[420px] space-y-1 overflow-y-auto">
                 {r.students.map((s) => {
@@ -241,12 +241,12 @@ export function ResultsView() {
                           {s.name[0]}
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-[13px] font-bold text-indigo-deep">{s.name}</span>
-                          <span className="block truncate text-[11px] font-medium text-indigo-deep/55">{s.status === "none" ? "لم يفتح الدرس" : s.status === "going" ? "لم يُنهِ الدرس" : `آخر نتيجة ${s.lastScore}`}</span>
+                          <span className="block truncate text-sm font-bold text-indigo-deep">{s.name}</span>
+                          <span className="block truncate text-xs font-medium text-indigo-deep/70">{s.status === "none" ? "لم يفتح الدرس" : s.status === "going" ? "لم يُنهِ الدرس" : `آخر نتيجة ${s.lastScore}`}</span>
                         </span>
-                        <span className={`text-sm font-bold ${s.mastery === null ? "text-slate-400" : s.mastery < 60 ? "text-[#c0174f]" : "text-emerald-600"}`}>{s.mastery === null ? "—" : `${s.mastery}%`}</span>
+                        <span className={`text-sm font-bold ${s.mastery === null ? "text-slate-400" : s.mastery < 60 ? "text-[#c0174f]" : "text-emerald-700"}`}>{s.mastery === null ? "—" : `${s.mastery}%`}</span>
                       </button>
-                      {on && <p className="mx-2 mb-1 animate-[pop_.2s_ease-out] rounded-xl bg-violet/[0.06] px-3.5 py-2.5 text-[11px] font-semibold leading-6 text-indigo-deep/80">{s.tip}</p>}
+                      {on && <p className="mx-2 mb-1 animate-[pop_.2s_ease-out] rounded-xl bg-violet/[0.06] px-3.5 py-2.5 text-xs font-semibold leading-6 text-indigo-deep/80">{s.tip}</p>}
                     </li>
                   );
                 })}

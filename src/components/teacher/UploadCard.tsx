@@ -17,7 +17,7 @@ const OK_EXT = /\.(pdf|docx|txt|md)$/i;
 const MAX_MB = 10;
 const MIN_TEXT = 120;
 const field =
-  "w-full rounded-2xl border border-violet/15 bg-white px-4 py-3.5 text-sm text-indigo-deep outline-none transition placeholder:text-indigo-deep/45 focus:border-violet focus:ring-4 focus:ring-violet/10";
+  "w-full rounded-2xl border border-violet/15 bg-white px-4 py-3.5 text-sm text-indigo-deep outline-none transition placeholder:text-indigo-deep/65 focus:border-violet focus:ring-4 focus:ring-violet/10";
 
 export function UploadCard() {
   const router = useRouter();
@@ -68,7 +68,7 @@ export function UploadCard() {
 
   return (
     <section className="rounded-[28px] border border-violet/10 bg-white p-6 shadow-xl shadow-violet/5 sm:p-8">
-      <p className="text-xs font-medium text-indigo-deep/55">أهلاً {user.name}</p>
+      <p className="text-xs font-medium text-indigo-deep/70">أهلاً {user.name}</p>
       <h1 className="mt-1 text-3xl font-bold leading-snug text-indigo-deep sm:text-[34px]">
         ما الدرس الذي تريد أن يلعبه طلابك؟
       </h1>
@@ -93,14 +93,14 @@ export function UploadCard() {
               }}
               className={`flex items-center justify-center gap-2 rounded-2xl border py-3 text-xs font-bold transition ${
                 soon
-                  ? "cursor-not-allowed border-dashed border-violet/20 bg-white/60 text-indigo-deep/45"
+                  ? "cursor-not-allowed border-dashed border-violet/20 bg-white/60 text-indigo-deep/70"
                   : on
                     ? "border-violet bg-violet/10 text-violet"
                     : "border-violet/10 bg-white text-indigo-deep hover:border-violet/30"
               }`}
             >
               {t.label}
-              {soon ? <span className="rounded-full bg-violet/10 px-2 py-0.5 text-[10px] font-bold text-violet">قريبًا</span> : <Icon className="size-3.5 text-violet" />}
+              {soon ? <span className="rounded-full bg-violet/10 px-2 py-0.5 text-xs font-bold text-violet">قريبًا</span> : <Icon className="size-3.5 text-violet" />}
             </button>
           );
         })}
@@ -127,10 +127,12 @@ export function UploadCard() {
               <Upload className="size-6" strokeWidth={2.5} />
             </span>
             <p className="mt-4 text-lg font-bold text-indigo-deep">اسحب ملف درسك إلى هنا</p>
-            <p className="mt-1 text-xs text-indigo-deep/55">أو اختر من جهازك</p>
+            <p className="mt-1 text-xs text-indigo-deep/70">أو اختر من جهازك</p>
             <input
               ref={input}
               type="file"
+              aria-label="اختر ملف الدرس"
+              tabIndex={-1}
               accept={ACCEPT}
               className="sr-only"
               onChange={(e) => onFile(e.target.files?.[0])}
@@ -179,10 +181,10 @@ export function UploadCard() {
       )}
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[11px] font-medium text-indigo-deep/55">
+        <p className="text-xs font-medium text-indigo-deep/70">
           PDF أو Word أو نص أو رابط صفحة. أي مادة، وبأي لغة. (PowerPoint والفيديو قريبًا.)
         </p>
-        <span className="rounded-full bg-mint/15 px-3 py-1.5 text-[11px] font-bold text-emerald-700">
+        <span className="rounded-full bg-mint/15 px-3 py-1.5 text-xs font-bold text-emerald-700">
           درسك الأول مجاني وكامل
         </span>
       </div>

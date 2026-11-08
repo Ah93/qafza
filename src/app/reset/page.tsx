@@ -9,7 +9,7 @@ export default function ResetPage() {
   return (
     <AuthShell>
       <h1 className="text-4xl font-bold text-indigo-deep">كلمة مرور جديدة</h1>
-      <p className="mt-2 text-xs text-indigo-deep/60">اختر كلمة لم تستخدمها في مكان آخر.</p>
+      <p className="mt-2 text-xs text-indigo-deep/70">اختر كلمة لم تستخدمها في مكان آخر.</p>
       <Suspense fallback={null}>
         <ResetForm />
       </Suspense>

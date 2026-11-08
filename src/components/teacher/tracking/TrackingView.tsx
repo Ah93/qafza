@@ -46,7 +46,7 @@ function Segments({ n, of, status }: { n: number; of: number; status: Status }) 
           <span key={i} className={`h-1.5 w-[18px] rounded-full ${i < n ? (status === "done" ? "bg-mint" : "bg-amber-500") : "bg-slate-200"}`} />
         ))}
       </span>
-      <span className="text-[11px] font-semibold text-indigo-deep/55">
+      <span className="text-xs font-semibold text-indigo-deep/70">
         {n}/{of}
       </span>
     </span>
@@ -115,7 +115,7 @@ export function TrackingView() {
       <main className="mx-auto w-full max-w-[1100px] flex-1 px-5 py-7">
         <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="flex items-center gap-2 text-[11px] font-bold text-violet">
+            <p className="flex items-center gap-2 text-xs font-bold text-violet">
               <span className="size-2 rounded-full bg-violet" />
               {r.lesson.how === "self" ? "تعلّم ذاتي" : "حصة مباشرة"} · {r.lesson.className ?? "بلا صف"} · الرمز <span dir="ltr">{r.lesson.code}</span>
             </p>
@@ -123,7 +123,7 @@ export function TrackingView() {
           </div>
           <div className="flex flex-wrap items-center gap-2.5">
             <LessonPicker lessons={state.lessons} value={state.id} onChange={choose} />
-            <span className={`rounded-full px-4 py-2 text-[11px] font-bold ${due.late ? "bg-rose-100 text-[#c0174f]" : "bg-pink-card/10 text-[#c0174f]"}`}>{due.text}</span>
+            <span className={`rounded-full px-4 py-2 text-xs font-bold ${due.late ? "bg-rose-100 text-[#c0174f]" : "bg-pink-card/10 text-[#c0174f]"}`}>{due.text}</span>
             <button onClick={reload} className="rounded-full border border-violet/10 bg-white px-4 py-2 text-xs font-bold text-violet shadow-sm transition hover:border-violet/30">
               حدّث
             </button>
@@ -144,13 +144,13 @@ export function TrackingView() {
             <h2 className="text-xl font-bold text-indigo-deep">كل الطلاب</h2>
 
             {r.students.length === 0 ? (
-              <p className="mt-4 rounded-2xl bg-violet/[0.05] px-5 py-8 text-center text-xs font-bold leading-6 text-indigo-deep/65">
+              <p className="mt-4 rounded-2xl bg-violet/[0.05] px-5 py-8 text-center text-xs font-bold leading-6 text-indigo-deep/70">
                 لم يدخل أحد هذا الدرس بعد. أعطهم الرمز <span dir="ltr" className="font-bold text-violet">{r.lesson.code}</span> وسيظهرون هنا فور أن يبدأوا.
               </p>
             ) : (
               <div role="table" aria-label="كل الطلاب" className="mt-4 overflow-x-auto">
                 <div className="min-w-[640px]">
-                  <div role="row" className={`grid ${COLS} items-center gap-2 border-b border-violet/10 px-2 pb-3 text-[11px] font-semibold text-indigo-deep/50`}>
+                  <div role="row" className={`grid ${COLS} items-center gap-2 border-b border-violet/10 px-2 pb-3 text-xs font-semibold text-indigo-deep/70`}>
                     {["الطالب", "الحالة", "المحطات", "المحاولات", "آخر نتيجة", "آخر نشاط"].map((h) => (
                       <span key={h} role="columnheader">
                         {h}
@@ -169,27 +169,27 @@ export function TrackingView() {
                           onClick={() => setOpen(isOpen ? null : s.name)}
                           className={`grid w-full ${COLS} items-center gap-2 px-2 py-3 text-start transition hover:bg-violet/[0.03]`}
                         >
-                          <span className="flex items-center gap-2.5 text-[13px] font-bold text-indigo-deep">
+                          <span className="flex items-center gap-2.5 text-sm font-bold text-indigo-deep">
                             <span className="grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold text-white" style={{ background: colorOf(s.name) }}>
                               {s.name[0]}
                             </span>
                             <span className="truncate">{s.name}</span>
                           </span>
                           <span>
-                            <span className={`rounded-full px-3 py-1 text-[11px] font-bold ${st.cls}`}>{st.label}</span>
+                            <span className={`rounded-full px-3 py-1 text-xs font-bold ${st.cls}`}>{st.label}</span>
                           </span>
                           <Segments n={s.reached} of={total} status={s.status} />
-                          <span className="text-[11px] font-bold text-indigo-deep/60">
+                          <span className="text-xs font-bold text-indigo-deep/70">
                             {s.attempts.length === 0 ? "—" : s.attempts.length > 1 ? <span className="grid size-6 place-items-center rounded-full bg-violet/10 text-violet">{s.attempts.length}</span> : s.attempts.length}
                           </span>
-                          <span className="text-[13px] font-bold text-indigo-deep">{s.lastScore}</span>
-                          <span className="text-[11px] font-medium text-indigo-deep/50">{s.lastAt ? ago(s.lastAt) : "لم يفتح الدرس"}</span>
+                          <span className="text-sm font-bold text-indigo-deep">{s.lastScore}</span>
+                          <span className="text-xs font-medium text-indigo-deep/70">{s.lastAt ? ago(s.lastAt) : "لم يفتح الدرس"}</span>
                         </button>
 
                         {isOpen && (
                           <div className="mx-1 mb-3 animate-[pop_.25s_ease-out] rounded-2xl bg-violet/[0.06] p-4">
                             {s.attempts.length === 0 ? (
-                              <p className="text-xs font-medium text-indigo-deep/60">لم يفتح {s.name} الدرس بعد، فلا محاولات لعرضها.</p>
+                              <p className="text-xs font-medium text-indigo-deep/70">لم يفتح {s.name} الدرس بعد، فلا محاولات لعرضها.</p>
                             ) : (
                               <>
                                 <h3 className="text-xs font-bold text-violet">المحاولات ونتيجة كل تحدٍّ</h3>
@@ -198,14 +198,14 @@ export function TrackingView() {
                                     <li key={i} className="flex items-center justify-between gap-3 rounded-xl bg-white px-4 py-2.5">
                                       <span className="text-xs font-bold text-indigo-deep">
                                         المحاولة {i + 1} · {ago(a.at)}
-                                        {!a.finished && <span className="ms-1.5 text-[10px] font-semibold text-amber-600">(لم تنتهِ)</span>}
+                                        {!a.finished && <span className="ms-1.5 text-xs font-semibold text-amber-600">(لم تنتهِ)</span>}
                                       </span>
                                       <span className="flex items-center gap-1.5">
                                         {a.answers.map((ok, j) => (
                                           <span
                                             key={j}
                                             title={`التحدي ${j + 1}: ${ok === null ? "لم يصل إليه" : ok ? "صحيح" : "خاطئ"}`}
-                                            className={`grid size-6 place-items-center rounded-md ${ok === null ? "bg-slate-100 text-slate-400" : ok ? "bg-mint/15 text-emerald-600" : "bg-rose-100 text-rose-600"}`}
+                                            className={`grid size-6 place-items-center rounded-md ${ok === null ? "bg-slate-100 text-slate-400" : ok ? "bg-mint/15 text-emerald-700" : "bg-rose-100 text-rose-600"}`}
                                           >
                                             {ok === null ? <Minus className="size-3.5" strokeWidth={3} /> : ok ? <Check className="size-3.5" strokeWidth={3} /> : <X className="size-3.5" strokeWidth={3} />}
                                           </span>
@@ -214,7 +214,7 @@ export function TrackingView() {
                                     </li>
                                   ))}
                                 </ul>
-                                <p className="mt-3 text-[11px] font-medium text-indigo-deep/70">{s.tip}</p>
+                                <p className="mt-3 text-xs font-medium text-indigo-deep/70">{s.tip}</p>
                               </>
                             )}
                           </div>
@@ -227,11 +227,11 @@ export function TrackingView() {
             )}
 
             {r.students.length > SHOWN && (
-              <button onClick={() => setAll((a) => !a)} className="mt-4 text-[11px] font-bold text-violet underline underline-offset-4">
+              <button onClick={() => setAll((a) => !a)} className="mt-4 text-xs font-bold text-violet underline underline-offset-4">
                 {all ? "اعرض أقل" : `و${plural.students(r.students.length - SHOWN)} آخرين · اعرض الكل`}
               </button>
             )}
-            {r.students.length > 0 && <p className="mt-3 text-[11px] font-medium text-indigo-deep/55">اضغط أي طالب لترى محاولاته</p>}
+            {r.students.length > 0 && <p className="mt-3 text-xs font-medium text-indigo-deep/70">اضغط أي طالب لترى محاولاته</p>}
           </section>
 
           <div className="space-y-4">
@@ -242,9 +242,9 @@ export function TrackingView() {
                   const good = (c.pct ?? 0) >= 70;
                   return (
                     <li key={c.label}>
-                      <div className="flex items-center justify-between text-[11px] font-bold text-indigo-deep">
+                      <div className="flex items-center justify-between text-xs font-bold text-indigo-deep">
                         <span>{c.label}</span>
-                        <span className={c.pct === null ? "text-slate-400" : good ? "text-emerald-600" : "text-amber-600"}>{c.pct === null ? "لم يُطرح" : `${c.pct}%`}</span>
+                        <span className={c.pct === null ? "text-slate-400" : good ? "text-emerald-700" : "text-amber-600"}>{c.pct === null ? "لم يُطرح" : `${c.pct}%`}</span>
                       </div>
                       <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-slate-100">
                         <div className={`h-full rounded-full ${good ? "bg-mint" : "bg-amber-500"}`} style={{ width: `${c.pct ?? 0}%` }} />
@@ -253,12 +253,12 @@ export function TrackingView() {
                   );
                 })}
               </ul>
-              <p className="mt-4 text-[11px] font-medium leading-5 text-indigo-deep/55">من المحاولة الأولى لكل طالب، لأنها التي يُحسب منها الإتقان.</p>
+              <p className="mt-4 text-xs font-medium leading-5 text-indigo-deep/70">من المحاولة الأولى لكل طالب، لأنها التي يُحسب منها الإتقان.</p>
             </section>
 
             {(stuckN > 0 || r.weakest) && (
               <section className="dots relative overflow-hidden rounded-3xl bg-gradient-to-b from-indigo-deep to-[#4a1d96] p-5 text-white shadow-xl shadow-indigo-deep/25">
-                <p className="relative text-[11px] font-semibold text-white/65">{r.lesson.dueAt && !due.late ? "قبل الموعد" : "ملاحظة"}</p>
+                <p className="relative text-xs font-semibold text-white/80">{r.lesson.dueAt && !due.late ? "قبل الموعد" : "ملاحظة"}</p>
                 {stuckN > 0 && stuckAt !== null && (
                   <h2 className="relative mt-1.5 text-xl font-bold leading-snug">
                     {stuckN} من {stuck.length} متوقفون عند المحطة {stuckAt + 1} «{r.stationTitles[stuckAt]}»
@@ -277,7 +277,7 @@ export function TrackingView() {
               <button onClick={remind} className="mt-2.5 w-full rounded-full bg-brand py-3 text-xs font-bold text-white shadow-md shadow-violet/30 transition hover:brightness-110">
                 انسخ رسالة تذكير للصف
               </button>
-              <p className="mt-2 text-[11px] font-medium leading-5 text-indigo-deep/55">فيها الرمز والرابط وموعد التسليم، لتلصقها في مجموعتكم.</p>
+              <p className="mt-2 text-xs font-medium leading-5 text-indigo-deep/70">فيها الرمز والرابط وموعد التسليم، لتلصقها في مجموعتكم.</p>
 
               <h2 className="mt-5 text-sm font-bold text-indigo-deep">مدّد الموعد</h2>
               <div className="mt-2.5 grid grid-cols-3 gap-2">

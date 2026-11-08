@@ -38,7 +38,7 @@ export function LiveStudent() {
       <PlayHeader />
       <div className="mx-auto mt-20 max-w-sm rounded-3xl border border-violet/10 bg-white p-7 text-center shadow-sm">
         <h1 className="text-xl font-bold text-indigo-deep">لست في حصة الآن</h1>
-        <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/60">اكتب رمز اللعبة الذي يعرضه المعلّم لتدخل الحصة.</p>
+        <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">اكتب رمز اللعبة الذي يعرضه المعلّم لتدخل الحصة.</p>
         <Link href="/join" className="mt-5 inline-block rounded-full bg-brand px-8 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
           أدخل الرمز
         </Link>

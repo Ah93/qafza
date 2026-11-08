@@ -14,6 +14,8 @@ import { Flame, Hearts, NamePill, PlayHeader } from "../StudentHeader";
 import { Overlay } from "../Overlay";
 import { sfx } from "@/lib/sound";
 import { SourceChip } from "@/components/teacher/review/parts";
+import { challengeText } from "@/lib/source-match";
+import { ReportButton } from "../ReportButton";
 import { BossView, ChallengeView } from "./ChallengeView";
 import { StationView } from "./StationView";
 import { accuracy, buildSequence, finalBadges, initialRun, reducer, type Run } from "./run";
@@ -34,6 +36,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   // only a lesson entered with a real code is saved; the demo and the teacher's preview are not
   const real = variant === "joined" && !!joined;
   const needsJoin = variant === "joined" && !joined;
+  const sourceFrom = (query: string) => (real && joined ? { code: joined.code, query } : undefined);
 
   // the first station is already on screen, so its display mode counts
   const [run, dispatch] = useReducer(reducer, null, () => ({ ...initialRun(progress?.points ?? 0), modes: [lesson.stations[0].mode] }));
@@ -279,9 +282,9 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                       <button
                         disabled={!reached}
                         onClick={() => goTo(seq.findIndex((x) => x.kind === "station" && x.i === i))}
-                        className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-start text-xs font-bold transition ${here ? "bg-violet/10 text-violet" : reached ? "text-indigo-deep hover:bg-violet/5" : "text-indigo-deep/35"}`}
+                        className={`flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-start text-xs font-bold transition ${here ? "bg-violet/10 text-violet" : reached ? "text-indigo-deep hover:bg-violet/5" : "text-indigo-deep/70"}`}
                       >
-                        <span className={`grid size-6 shrink-0 place-items-center rounded-full text-[10px] ${here ? "bg-violet text-white" : done ? "bg-mint text-white" : "bg-violet/10"}`}>
+                        <span className={`grid size-6 shrink-0 place-items-center rounded-full text-xs ${here ? "bg-violet text-white" : done ? "bg-mint text-white" : "bg-violet/10"}`}>
                           {done ? <Check className="size-3" strokeWidth={3.5} /> : i + 1}
                         </span>
                         <span className="truncate">{s.title}</span>
@@ -290,8 +293,8 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                   );
                 })}
                 <li>
-                  <span className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-bold ${phase.kind === "boss" ? "bg-pink-card/10 text-pink-card" : "text-indigo-deep/35"}`}>
-                    <span className="grid size-6 place-items-center rounded-full bg-pink-card/10 text-[10px] text-pink-card">★</span>
+                  <span className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-bold ${phase.kind === "boss" ? "bg-pink-card/10 text-pink-card" : "text-indigo-deep/70"}`}>
+                    <span className="grid size-6 place-items-center rounded-full bg-pink-card/10 text-xs text-pink-card">★</span>
                     الزعيم
                   </span>
                 </li>
@@ -310,7 +313,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                   <Trophy className="size-3.5 text-sun" />
                 </h2>
                 {sampleOnly && (
-                  <div className="flex rounded-full bg-white/10 p-0.5 text-[9px] font-bold">
+                  <div className="flex rounded-full bg-white/10 p-0.5 text-xs font-bold">
                     {([
                       ["people", "الأفراد"],
                       ["groups", "المجموعات"],
@@ -326,8 +329,8 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                 {board === "people" || !sampleOnly
                   ? people.map((p, i) => (
                       <li key={`${p.name}-${i}`} className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-bold ${p.me ? "bg-white/20 ring-1 ring-white/40" : "bg-white/10"}`}>
-                        <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
-                        <span className="grid size-5 place-items-center rounded-full text-[10px]" style={{ background: p.color }}>
+                        <span className="w-3 text-xs text-white/80">{i + 1}</span>
+                        <span className="grid size-5 place-items-center rounded-full text-xs" style={{ background: p.color }}>
                           {p.initial}
                         </span>
                         <span className="flex-1 truncate">{p.name}</span>
@@ -336,7 +339,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                     ))
                   : groups.map((g, i) => (
                       <li key={g.name} className={`flex items-center gap-2 rounded-xl px-2.5 py-2 text-xs font-bold ${g.mine ? "bg-white/20 ring-1 ring-white/40" : "bg-white/10"}`}>
-                        <span className="w-3 text-[10px] text-white/60">{i + 1}</span>
+                        <span className="w-3 text-xs text-white/80">{i + 1}</span>
                         <span className="size-2.5 rounded-[3px]" style={{ background: g.color }} />
                         <span className="flex-1">
                           {g.name}
@@ -346,14 +349,14 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                       </li>
                     ))}
               </ol>
-              {!real && !sampleOnly && <p className="relative mt-2.5 text-[10px] font-medium leading-5 text-white/75">هنا تظهر أسماء طلابك حين يلعبون الدرس. هذه معاينة، فلا أحد غيرك فيها.</p>}
-              {real && myRank !== null && live && <p className="relative mt-2.5 text-[10px] font-medium text-white/70">ترتيبك الآن: {myRank} من {live.scores.length + 1}</p>}
+              {!real && !sampleOnly && <p className="relative mt-2.5 text-xs font-medium leading-5 text-white/75">هنا تظهر أسماء طلابك حين يلعبون الدرس. هذه معاينة، فلا أحد غيرك فيها.</p>}
+              {real && myRank !== null && live && <p className="relative mt-2.5 text-xs font-medium text-white/70">ترتيبك الآن: {myRank} من {live.scores.length + 1}</p>}
             </section>
 
             <section className="rounded-3xl border border-violet/10 bg-white p-4 shadow-sm">
               <h2 className="flex items-center justify-between text-base font-bold text-indigo-deep">
                 بطاقاتك
-                <span className="flex items-center gap-1.5 text-[10px] font-semibold text-indigo-deep/50">
+                <span className="flex items-center gap-1.5 text-xs font-semibold text-indigo-deep/70">
                   {run.cards.length} من {CARDS.length}
                   <Layers className="size-3.5 text-pink-card" />
                 </span>
@@ -365,14 +368,14 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                     <li
                       key={c.name}
                       title={has ? cardName(i, lesson.stations.map((s) => s.title)) : "لم تُكتشف"}
-                      className={`grid aspect-[4/3] place-items-center rounded-xl px-1 text-center text-[9px] font-bold leading-4 ${has ? (c.rare ? "bg-gradient-to-br from-amber-400 to-pink-500 text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/30"}`}
+                      className={`grid aspect-[4/3] place-items-center rounded-xl px-1 text-center text-xs font-bold leading-4 ${has ? (c.rare ? "bg-gradient-to-br from-amber-400 to-pink-500 text-white" : "bg-gradient-to-br from-violet to-orchid text-white") : "border border-dashed border-violet/25 bg-violet/[0.04] text-indigo-deep/70"}`}
                     >
                       {has ? cardName(i, lesson.stations.map((s) => s.title)) : "؟"}
                     </li>
                   );
                 })}
               </ul>
-              <p className="mt-3 text-[11px] font-medium leading-5 text-indigo-deep/55">{CARDS_HELP}</p>
+              <p className="mt-3 text-xs font-medium leading-5 text-indigo-deep/70">{CARDS_HELP}</p>
             </section>
 
     </>
@@ -381,7 +384,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
   return (
     <>
       <PlayHeader title={lesson.title}>
-        <span className="hidden rounded-full bg-pink-50 px-4 py-2 text-[11px] font-bold text-pink-600 sm:block">{dueLabel}</span>
+        <span className="hidden rounded-full bg-pink-50 px-4 py-2 text-xs font-bold text-pink-700 sm:block">{dueLabel}</span>
         <NamePill />
       </PlayHeader>
 
@@ -406,13 +409,13 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-3xl border border-violet/10 bg-white px-5 py-3 shadow-sm">
           <Hearts n={run.hearts} />
           <Flame n={run.streak} />
-          <span className="text-[11px] font-semibold text-indigo-deep/55">الشعلة</span>
-          <span className="rounded-full bg-mint px-3.5 py-1.5 text-[11px] font-bold text-white">{plural.knowledgePoints(run.points)}</span>
-          <span className="rounded-full bg-sun px-3.5 py-1.5 text-[11px] font-bold text-indigo-deep">الرتبة: {rank.name}</span>
+          <span className="text-xs font-semibold text-indigo-deep/70">الشعلة</span>
+          <span className="rounded-full bg-mint px-3.5 py-1.5 text-xs font-bold text-white">{plural.knowledgePoints(run.points)}</span>
+          <span className="rounded-full bg-sun px-3.5 py-1.5 text-xs font-bold text-indigo-deep">الرتبة: {rank.name}</span>
         </div>
 
         {/* progress */}
-        <div className="mt-3 flex gap-1.5" role="progressbar" aria-valuemin={0} aria-valuemax={segments.length} aria-valuenow={segments.filter(({ idx }) => idx < run.at).length}>
+        <div className="mt-3 flex gap-1.5" role="progressbar" aria-label="تقدّمك في الدرس" aria-valuemin={0} aria-valuemax={segments.length} aria-valuenow={segments.filter(({ idx }) => idx < run.at).length}>
           {segments.map(({ p, idx }) => {
             const current = idx === run.at;
             const done = idx < run.at;
@@ -452,14 +455,15 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                 <>
                   <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
                     <div>
-                      <p className="text-[11px] font-bold text-violet">
+                      <p className="text-xs font-bold text-violet">
                         المحطة {phase.i + 1} من {total}
                       </p>
                       <h1 className="mt-0.5 text-[30px] font-bold leading-tight text-indigo-deep">{station.title}</h1>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="flex items-center gap-1.5 rounded-full bg-violet/10 px-3 py-1.5 text-[11px] font-bold text-violet">{modeLabel(station.mode)}</span>
-                      <SourceChip page={station.page} />
+                      <span className="flex items-center gap-1.5 rounded-full bg-violet/10 px-3 py-1.5 text-xs font-bold text-violet">{modeLabel(station.mode)}</span>
+                      <SourceChip page={station.page} from={sourceFrom(`${station.keyIdea} ${station.title}`)} />
+                      {real && joined && <ReportButton code={joined.code} stationId={station.id} part="station" />}
                     </div>
                   </div>
                   <StationView station={station} />
@@ -469,17 +473,20 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
               {station && phase.kind === "challenge" && (
                 <>
                   <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                    <p className="text-[11px] font-bold text-violet">
+                    <p className="text-xs font-bold text-violet">
                       التحدي {phase.i + 1} من {total} · {CHALLENGE_LABELS[station.challenge.kind]}
                     </p>
-                    <SourceChip page={station.page} />
+                    <div className="flex items-center gap-2">
+                      <SourceChip page={station.page} from={sourceFrom(challengeText(station.challenge))} />
+                      {real && joined && <ReportButton code={joined.code} stationId={station.id} part="challenge" />}
+                    </div>
                   </div>
 
                   {run.recovering && (
                     <div role="alert" className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 p-4">
                       <p className="text-sm font-bold text-amber-900">نفدت قلوبك، لكنك لن تخرج من الدرس.</p>
                       <p className="mt-1 text-xs font-medium leading-6 text-amber-900/80">راجع الفكرة الأهم في المحطة السابقة لتستعيد قلبًا:</p>
-                      <p className="mt-2 rounded-xl bg-white px-4 py-3 text-[13px] font-bold text-indigo-deep">«{previous?.keyIdea}»</p>
+                      <p className="mt-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-indigo-deep">«{previous?.keyIdea}»</p>
                       <button onClick={() => dispatch({ type: "recover" })} className="mt-3 rounded-full bg-amber-500 px-6 py-2 text-xs font-bold text-white shadow-sm transition hover:bg-amber-600">
                         راجعتها: أعد لي قلبًا
                       </button>
@@ -512,7 +519,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
                   <h2 className="mt-5 text-2xl font-bold text-indigo-deep">صندوق المفاجأة</h2>
                   {!opened ? (
                     <>
-                      <p className="mt-1 text-xs font-medium text-indigo-deep/60">أنهيت ثلاثة تحديات. خذ مكافأتك.</p>
+                      <p className="mt-1 text-xs font-medium text-indigo-deep/70">أنهيت ثلاثة تحديات. خذ مكافأتك.</p>
                       <button
                         onClick={() => {
                           sfx.streak();
@@ -560,7 +567,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
               <button
                 onClick={() => goTo(Math.max(0, run.at - 1))}
                 disabled={run.at === 0 || offline}
-                className="rounded-full bg-white px-7 py-3 text-xs font-bold text-indigo-deep/60 shadow-sm transition hover:text-indigo-deep disabled:opacity-40"
+                className="rounded-full bg-white px-7 py-3 text-xs font-bold text-indigo-deep/70 shadow-sm transition hover:text-indigo-deep disabled:opacity-40"
               >
                 السابق
               </button>
@@ -608,7 +615,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
         <Overlay label="ترقية الرتبة">
           <span className="mx-auto grid size-20 place-items-center rounded-full bg-sun text-4xl shadow-lg">🏆</span>
           <h2 className="mt-4 text-2xl font-bold text-indigo-deep">ترقّيت إلى «{RANKS[run.rankUp].name}»!</h2>
-          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">
             {nextRank(points) ? `الرتبة التالية «${nextRank(points)!.name}» تبدأ من ${nextRank(points)!.from} نقطة، وبقي لك ${Math.max(0, nextRank(points)!.from - points)}.` : "بلغت أعلى رتبة. أحسنت!"}
           </p>
           <button data-autofocus autoFocus onClick={() => dispatch({ type: "rankSeen" })} className="mt-5 rounded-full bg-brand px-9 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
@@ -621,7 +628,7 @@ export function SelfPaced({ variant = "joined" }: { variant?: PlayVariant }) {
         <Overlay label="أهلاً بعودتك">
           <span className="mx-auto grid size-16 place-items-center rounded-full bg-pink-50 text-3xl">👋</span>
           <h2 className="mt-4 text-2xl font-bold text-indigo-deep">أهلاً بعودتك يا {myName}!</h2>
-          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">
+          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">
             تقدّمك محفوظ. أنت عند {phase.kind === "station" ? `المحطة ${phase.i + 1}` : phase.kind === "challenge" ? `التحدي ${challengeNo + 1}` : "الجزء التالي"} من {total}، ومعك {run.points} نقطة.
           </p>
           <button autoFocus onClick={() => setWelcome(false)} className="mt-5 w-full rounded-full bg-brand px-9 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">

@@ -26,7 +26,7 @@ export function BoardFrame({
       className="dots relative min-h-[520px] overflow-hidden rounded-[28px] bg-gradient-to-b from-[#271456] to-[#481d91] p-6 text-white shadow-2xl shadow-indigo-deep/30 sm:p-7"
     >
       <div className="relative z-10 flex items-center justify-between gap-3">
-        <p className="text-[11px] font-semibold text-white/75">{label}</p>
+        <p className="text-xs font-semibold text-white/75">{label}</p>
         <div className="flex flex-wrap gap-2">{right}</div>
       </div>
       <div className={`relative z-10 ${center ? "grid min-h-[430px] place-items-center" : "mt-6"}`}>{children}</div>
@@ -40,7 +40,7 @@ export function ScorePills({ groups, scores }: { groups: Group[]; scores: number
       {groups.map((g, i) => (
         <span
           key={g.id}
-          className="rounded-full border-2 bg-white/5 px-3 py-1 text-[11px] font-bold"
+          className="rounded-full border-2 bg-white/5 px-3 py-1 text-xs font-bold"
           style={{ borderColor: g.color }}
         >
           {g.name} · {scores[i]}
@@ -52,7 +52,7 @@ export function ScorePills({ groups, scores }: { groups: Group[]; scores: number
 
 export function LeaderPill({ name, score }: { name: string; score: number }) {
   return (
-    <span className="rounded-full border-2 border-sun bg-white/5 px-3 py-1 text-[11px] font-bold">
+    <span className="rounded-full border-2 border-sun bg-white/5 px-3 py-1 text-xs font-bold">
       الأول: {name} · {score}
     </span>
   );
@@ -103,7 +103,7 @@ export function ArenaBoard({
                     <span className="mt-1 size-2.5 shrink-0 rounded-[3px]" style={{ background: g.color }} />
                     <p className="flex-1 text-sm font-bold leading-6">مجموعة {g.name}</p>
                   </div>
-                  <p className="mt-1 text-[10px] font-medium text-white/65">
+                  <p className="mt-1 text-xs font-medium text-white/80">
                     {plural.students(sizes[i])} · إتقان {g.mastery}%
                   </p>
                 </div>
@@ -112,12 +112,12 @@ export function ArenaBoard({
           ) : (
             <div className="mt-4 flex flex-wrap gap-2">
               {names.map((n, i) => (
-                <span key={`${n}-${i}`} className="animate-[pop_.35s_ease-out] rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-bold">
+                <span key={`${n}-${i}`} className="animate-[pop_.35s_ease-out] rounded-full bg-white/15 px-3 py-1.5 text-xs font-bold">
                   {n}
                 </span>
               ))}
               {count > names.length && (
-                <span className="rounded-full bg-white/25 px-3 py-1.5 text-[11px] font-bold">
+                <span className="rounded-full bg-white/25 px-3 py-1.5 text-xs font-bold">
                   +{count - names.length}
                 </span>
               )}
@@ -266,7 +266,7 @@ export function ChallengeBoard({
                 <p className="text-xs font-bold text-sun">{s.label}</p>
                 <div
                   className={`mt-2 grid min-h-14 place-items-center rounded-xl border-2 border-dashed px-3 py-3 text-sm font-bold ${
-                    reveal ? "border-mint bg-mint/20" : "border-white/25 text-white/40"
+                    reveal ? "border-mint bg-mint/20" : "border-white/25 text-white/80"
                   }`}
                 >
                   {reveal ? s.card : "أفلِت هنا"}
@@ -340,7 +340,7 @@ export function BossBoard({
             <span className="text-lg font-bold">{b.statement}</span>
             <span
               className={`w-20 shrink-0 rounded-full py-1.5 text-center text-xs font-bold ${
-                !reveal ? "bg-white/10 text-white/40" : b.answer ? "bg-mint text-white" : "bg-[#e11d48] text-white"
+                !reveal ? "bg-white/10 text-white/80" : b.answer ? "bg-mint text-white" : "bg-[#e11d48] text-white"
               }`}
             >
               {reveal ? (b.answer ? "صحيحة" : "خاطئة") : "؟"}

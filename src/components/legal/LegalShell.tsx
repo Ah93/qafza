@@ -46,7 +46,7 @@ export function LegalShell({
               href={t.href}
               aria-current={active === t.id ? "page" : undefined}
               className={`rounded-full px-5 py-2 text-xs font-bold transition ${
-                active === t.id ? "bg-indigo-deep text-white" : "text-indigo-deep/60 hover:text-indigo-deep"
+                active === t.id ? "bg-indigo-deep text-white" : "text-indigo-deep/70 hover:text-indigo-deep"
               }`}
             >
               {t.label}
@@ -65,7 +65,7 @@ export function LegalShell({
         <div className="mt-4">{children}</div>
       </main>
 
-      <footer className="mx-auto w-full max-w-[800px] px-5 pb-8 text-[11px] text-indigo-deep/50">© 2026 قفزة</footer>
+      <footer className="mx-auto w-full max-w-[800px] px-5 pb-8 text-xs text-indigo-deep/70">© 2026 قفزة</footer>
     </>
   );
 }
@@ -84,7 +84,7 @@ export function InfoGrid({ items }: { items: { title: string; body: React.ReactN
       {items.map((it) => (
         <section key={it.title} className="rounded-3xl border border-violet/10 bg-white p-5 shadow-sm">
           <h2 className={`text-lg font-bold ${TONE[it.tone]}`}>{it.title}</h2>
-          <p className="mt-2 text-[13px] font-medium leading-7 text-indigo-deep/75">{it.body}</p>
+          <p className="mt-2 text-sm font-medium leading-7 text-indigo-deep/75">{it.body}</p>
         </section>
       ))}
     </div>

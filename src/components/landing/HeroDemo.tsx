@@ -45,7 +45,7 @@ export function HeroDemo() {
       <div className="dots rounded-[22px] bg-gradient-to-br from-indigo-deep to-[#3a1a7a] p-3">
         <div
           role="tablist"
-          className="mb-3 grid grid-cols-4 gap-1 rounded-full bg-white/10 p-1 text-[11px] font-medium text-white/70"
+          className="mb-3 grid grid-cols-4 gap-1 rounded-full bg-white/10 p-1 text-xs font-medium text-white/70"
         >
           {MODES.map((m) => (
             <button
@@ -67,7 +67,7 @@ export function HeroDemo() {
             <>
               <div className="grid grid-cols-2 gap-2">
                 {FACTS.map((f) => (
-                  <div key={f.label} className="rounded-xl bg-white/10 p-2.5 text-[11px] text-white">
+                  <div key={f.label} className="rounded-xl bg-white/10 p-2.5 text-xs text-white">
                     <div className={`mb-1 font-semibold ${f.tone}`}>{f.label}</div>
                     <div className="font-medium leading-5">{f.value}</div>
                   </div>
@@ -86,7 +86,7 @@ export function HeroDemo() {
                   key={s}
                   className="flex items-center gap-3 rounded-xl bg-white/10 px-3 py-2.5 text-xs font-medium text-white"
                 >
-                  <span className="grid size-6 place-items-center rounded-full bg-sun text-[11px] font-bold text-indigo-deep">
+                  <span className="grid size-6 place-items-center rounded-full bg-sun text-xs font-bold text-indigo-deep">
                     {i + 1}
                   </span>
                   {s}
@@ -98,7 +98,7 @@ export function HeroDemo() {
           {mode === "خط زمني" && (
             <ol className="flex items-center justify-between gap-2 sm:col-span-2">
               {TIMELINE.map((t, i) => (
-                <li key={t} className="flex flex-1 flex-col items-center gap-2 text-[11px] text-white">
+                <li key={t} className="flex flex-1 flex-col items-center gap-2 text-xs text-white">
                   <span className="grid size-8 place-items-center rounded-full bg-brand font-bold">
                     {i + 1}
                   </span>
@@ -113,7 +113,7 @@ export function HeroDemo() {
               {CARDS.map((c) => (
                 <div key={c.term} className="rounded-xl bg-white p-3 text-center text-indigo-deep">
                   <div className="text-sm font-bold">{c.term}</div>
-                  <div className="mt-1 text-[11px] text-indigo-deep/60">{c.meaning}</div>
+                  <div className="mt-1 text-xs text-indigo-deep/70">{c.meaning}</div>
                 </div>
               ))}
             </div>
@@ -121,13 +121,13 @@ export function HeroDemo() {
         </div>
 
         <div className="mt-3 flex items-center justify-between rounded-2xl bg-white px-3 py-2.5">
-          <span className="rounded-full bg-sun px-2.5 py-1 text-[10px] font-bold text-indigo-deep">
+          <span className="rounded-full bg-sun px-2.5 py-1 text-xs font-bold text-indigo-deep">
             {rankOf(EXAMPLE_POINTS).name}
           </span>
-          <span className="rounded-full bg-mint px-2.5 py-1 text-[10px] font-bold text-white">
+          <span className="rounded-full bg-mint px-2.5 py-1 text-xs font-bold text-white">
             {EXAMPLE_POINTS} نقطة معرفة
           </span>
-          <span className="flex items-center gap-1 text-[11px] text-rose-500">
+          <span className="flex items-center gap-1 text-xs text-rose-500">
             <span className="text-orange-500">🔥 3</span>
             ♥ ♥ ♥
           </span>

@@ -17,11 +17,11 @@ export function LiveGate() {
       <TeacherHeader />
       <main className="grid flex-1 place-items-center px-5 py-16 text-center">
         {loading ? (
-          <p className="text-sm font-bold text-indigo-deep/60">جارٍ تحميل الدرس…</p>
+          <p className="text-sm font-bold text-indigo-deep/70">جارٍ تحميل الدرس…</p>
         ) : (
           <div role="alert" className="max-w-sm">
             <h1 className="text-2xl font-bold text-indigo-deep">لم نجد هذا الدرس</h1>
-            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">{missing ? `لا درس منشورًا بالرمز ${code}. ربما حُذف أو أُرشف.` : ""}</p>
+            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">{missing ? `لا درس منشورًا بالرمز ${code}. ربما حُذف أو أُرشف.` : ""}</p>
             <Link href="/lessons" className="mt-5 inline-block rounded-full bg-brand px-8 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
               إلى دروسي
             </Link>

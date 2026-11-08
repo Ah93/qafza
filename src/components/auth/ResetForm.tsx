@@ -38,7 +38,7 @@ export function ResetForm() {
     setDone(true);
   }
 
-  if (valid === null) return <p role="status" className="mt-5 text-sm font-bold text-indigo-deep/60">جارٍ التحقق من الرابط…</p>;
+  if (valid === null) return <p role="status" className="mt-5 text-sm font-bold text-indigo-deep/70">جارٍ التحقق من الرابط…</p>;
 
   if (done) {
     return (
@@ -67,7 +67,7 @@ export function ResetForm() {
       <Field label="كلمة المرور الجديدة">
         <div className="relative">
           <input type={show ? "text" : "password"} required minLength={8} autoComplete="new-password" value={pw} onChange={(e) => setPw(e.target.value)} className={`${inputCls} pe-16 text-start`} />
-          <button type="button" onClick={() => setShow(!show)} className="absolute end-4 top-1/2 -translate-y-1/2 text-[11px] font-bold text-violet">
+          <button type="button" onClick={() => setShow(!show)} className="absolute end-4 top-1/2 -translate-y-1/2 text-xs font-bold text-violet">
             {show ? "إخفاء" : "إظهار"}
           </button>
         </div>
@@ -75,7 +75,7 @@ export function ResetForm() {
       <Field label="أعد كتابتها">
         <input type={show ? "text" : "password"} required autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} className={`${inputCls} text-start`} />
       </Field>
-      <p className="text-[11px] text-indigo-deep/60">8 أحرف على الأقل. الأفضل جمع حروف وأرقام.</p>
+      <p className="text-xs text-indigo-deep/70">8 أحرف على الأقل. الأفضل جمع حروف وأرقام.</p>
       <FormError message={error} />
       <PrimaryButton type="submit" disabled={busy || !pw || !again}>
         {busy ? "جارٍ الحفظ…" : "احفظ كلمة المرور"}

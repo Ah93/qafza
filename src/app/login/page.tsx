@@ -10,7 +10,7 @@ export default function LoginPage() {
   return (
     <AuthShell>
       <h1 className="text-4xl font-bold text-indigo-deep">أهلاً بعودتك</h1>
-      <p className="mb-6 mt-2 text-xs text-indigo-deep/60">ادخل لتكمل دروسك وألعابك.</p>
+      <p className="mb-6 mt-2 text-xs text-indigo-deep/70">ادخل لتكمل دروسك وألعابك.</p>
       <AuthTabs active="login" />
       <div className="mt-5">
         <SocialButtons />

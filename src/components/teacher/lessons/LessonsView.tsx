@@ -108,7 +108,7 @@ function CardMenu({ lesson, folders, onAction }: { lesson: LessonSummary; folder
             </>
           ) : (
             <>
-              {folders.length === 0 && <p className="px-3 py-2 text-[11px] font-medium text-indigo-deep/55">لا مجلدات بعد. أنشئ واحدًا من القائمة الجانبية.</p>}
+              {folders.length === 0 && <p className="px-3 py-2 text-xs font-medium text-indigo-deep/70">لا مجلدات بعد. أنشئ واحدًا من القائمة الجانبية.</p>}
               {folders.map((f) => (
                 <button key={f} role="menuitem" className={`${item} ${lesson.folder === f ? "bg-violet/10 text-violet" : ""}`} onClick={() => run({ move: f })}>
                   {f}
@@ -237,7 +237,7 @@ export function LessonsView() {
       className={`flex w-full items-center justify-between rounded-xl px-3.5 py-2.5 text-start text-xs font-bold transition ${filter === id ? "bg-violet/10 text-violet" : "text-indigo-deep hover:bg-violet/5"}`}
     >
       <span>{label}</span>
-      <span className={`text-[11px] ${filter === id ? "text-violet" : "text-indigo-deep/45"}`}>{n}</span>
+      <span className={`text-xs ${filter === id ? "text-violet" : "text-indigo-deep/70"}`}>{n}</span>
     </button>
   );
 
@@ -259,11 +259,11 @@ export function LessonsView() {
               </button>
               <label className="relative max-w-[340px] flex-1">
                 <span className="sr-only">ابحث</span>
-                <Search className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-indigo-deep/40" />
+                <Search className="pointer-events-none absolute end-4 top-1/2 size-4 -translate-y-1/2 text-indigo-deep/70" />
                 <input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="ابحث بعنوان الدرس أو المصدر" className={`${fieldCls} !rounded-full !py-3 pe-11 text-xs`} />
               </label>
             </div>
-            {lessons && <p className="mb-3 text-[11px] font-semibold text-indigo-deep/55">{countLabel}</p>}
+            {lessons && <p className="mb-3 text-xs font-semibold text-indigo-deep/70">{countLabel}</p>}
 
             {loadError ? (
               <div role="alert" className="rounded-3xl border border-rose-200 bg-rose-50 p-6 text-center">
@@ -273,12 +273,12 @@ export function LessonsView() {
                 </button>
               </div>
             ) : !lessons ? (
-              <p className="py-16 text-center text-sm font-bold text-indigo-deep/50">جارٍ تحميل دروسك…</p>
+              <p className="py-16 text-center text-sm font-bold text-indigo-deep/70">جارٍ تحميل دروسك…</p>
             ) : shown.length === 0 ? (
               <div className="grid min-h-[220px] place-items-center rounded-3xl border border-dashed border-violet/25 bg-white/50 p-6 text-center">
                 <div>
                   <p className="text-sm font-bold text-indigo-deep">{all.length === 0 ? "دروسك ستظهر هنا" : "لا دروس هنا"}</p>
-                  <p className="mt-1 text-[11px] text-indigo-deep/55">
+                  <p className="mt-1 text-xs text-indigo-deep/70">
                     {all.length === 0 ? "ارفع ملفك الأول، ويجهز الدرس في أقل من دقيقة." : query ? "جرّب كلمة بحث أخرى." : "انقل درسًا إلى هذا المجلد من قائمة الدرس."}
                   </p>
                   {all.length === 0 && (
@@ -295,12 +295,12 @@ export function LessonsView() {
                     <article className="overflow-hidden rounded-3xl border border-violet/10 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet/10">
                       <button onClick={() => router.push(`/lessons/${l.id}`)} className="block w-full text-start" aria-label={`افتح صفحة ${l.title}`}>
                         <Art icon={iconFor(l.id)} />
-                        <span className={`absolute end-3 top-3 rounded-full px-3 py-1 text-[10px] font-bold text-white ${l.archived ? "bg-slate-400" : l.status === "draft" ? "bg-slate-500" : "bg-mint"}`}>
+                        <span className={`absolute end-3 top-3 rounded-full px-3 py-1 text-xs font-bold text-white ${l.archived ? "bg-slate-400" : l.status === "draft" ? "bg-slate-500" : "bg-mint"}`}>
                           {l.archived ? "مؤرشف" : l.status === "draft" ? "مسودة" : "منشور"}
                         </span>
                         <div className="p-4">
                           <h3 className="line-clamp-2 text-[17px] font-bold leading-snug text-indigo-deep">{l.title}</h3>
-                          <p className="mt-1 text-[10.5px] font-medium leading-5 text-indigo-deep/55">
+                          <p className="mt-1 text-[10.5px] font-medium leading-5 text-indigo-deep/70">
                             <span dir="ltr">{l.code}</span> · {date.format(l.updatedAt)}
                             {l.sourceName && <> · <span dir="auto">{l.sourceName}</span></>}
                           </p>
@@ -334,7 +334,7 @@ export function LessonsView() {
                   />
                 </form>
               ) : (
-                <button onClick={() => setAdding(true)} className="mt-2 w-full rounded-xl border border-dashed border-violet/30 py-2.5 text-[11px] font-bold text-violet transition hover:bg-violet/5">
+                <button onClick={() => setAdding(true)} className="mt-2 w-full rounded-xl border border-dashed border-violet/30 py-2.5 text-xs font-bold text-violet transition hover:bg-violet/5">
                   + مجلد جديد
                 </button>
               )}
@@ -347,7 +347,7 @@ export function LessonsView() {
         <div className="fixed inset-0 z-50 grid place-items-center bg-indigo-deep/40 p-5 backdrop-blur-sm" onMouseDown={(e) => e.target === e.currentTarget && setConfirm(null)}>
           <div role="alertdialog" aria-modal="true" aria-labelledby="del-title" className="w-full max-w-[400px] animate-[pop_.25s_ease-out] rounded-3xl bg-white p-6 shadow-2xl">
             <h2 id="del-title" className="text-xl font-bold text-indigo-deep">حذف «{confirm.title}»؟</h2>
-            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">يُحذف الدرس نهائيًا، ولن يعمل رمزه {confirm.code} بعد الآن. إن أردت الاحتفاظ به فاختر «أرشفة» بدل الحذف.</p>
+            <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">يُحذف الدرس نهائيًا، ولن يعمل رمزه {confirm.code} بعد الآن. إن أردت الاحتفاظ به فاختر «أرشفة» بدل الحذف.</p>
             <div className="mt-5 flex gap-2.5">
               <button autoFocus onClick={() => remove(confirm)} className="flex-1 rounded-full bg-[#c0174f] py-3 text-xs font-bold text-white">
                 احذف نهائيًا

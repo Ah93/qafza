@@ -6,7 +6,7 @@ import { Heart, Presentation, Trophy, House } from "lucide-react";
 import { MobileNav } from "../MobileNav";
 import { Logo } from "../Logo";
 import { useSyncExternalStore } from "react";
-import { setSound, soundOn, subscribeSound } from "@/lib/sound";
+import { calmOn, setCalm, setSound, soundOn, subscribeSound } from "@/lib/sound";
 import { useStudent } from "./StudentProvider";
 
 /** the sound on/off switch (remembered on this device) */
@@ -20,6 +20,22 @@ export function SoundToggle() {
       className="grid size-9 place-items-center rounded-full border border-violet/10 bg-white text-base shadow-sm transition hover:border-violet/30"
     >
       <span aria-hidden>{on ? "🔊" : "🔇"}</span>
+    </button>
+  );
+}
+
+/** calm motion: stops animations and vibration (also on by default for people whose device asks for reduced motion) */
+export function MotionToggle() {
+  const calm = useSyncExternalStore(subscribeSound, calmOn, () => false);
+  return (
+    <button
+      onClick={() => setCalm(!calm)}
+      aria-pressed={calm}
+      aria-label="حركة هادئة"
+      title="حركة هادئة"
+      className={`grid size-9 place-items-center rounded-full border text-base shadow-sm transition ${calm ? "border-violet bg-violet/10" : "border-violet/10 bg-white hover:border-violet/30"}`}
+    >
+      <span aria-hidden>🍃</span>
     </button>
   );
 }
@@ -69,7 +85,7 @@ export function LearnHeader() {
         <Logo href="/learn" />
         <div className="hidden items-center gap-3 md:flex">
           <div className="flex rounded-full border border-violet/10 bg-white p-1 text-xs font-bold shadow-sm">
-            <Link href="/dashboard" className="rounded-full px-4 py-2 text-indigo-deep/60">
+            <Link href="/dashboard" className="rounded-full px-4 py-2 text-indigo-deep/70">
               أعلّم
             </Link>
             <span className="rounded-full bg-indigo-deep px-4 py-2 text-white">أتعلّم</span>
@@ -81,7 +97,7 @@ export function LearnHeader() {
                 href={n.href}
                 aria-current={path === n.href ? "page" : undefined}
                 className={`rounded-full px-4 py-2 transition ${
-                  path === n.href ? "bg-pink-50 text-pink-600" : "text-indigo-deep/55 hover:text-indigo-deep"
+                  path === n.href ? "bg-pink-50 text-pink-700" : "text-indigo-deep/70 hover:text-indigo-deep"
                 }`}
               >
                 {n.label}
@@ -119,6 +135,7 @@ export function PlayHeader({ title, children }: { title?: string; children?: Rea
         <div className="flex items-center gap-2.5 justify-self-end">
           {children}
           <SoundToggle />
+          <MotionToggle />
         </div>
       </div>
     </header>
@@ -128,7 +145,7 @@ export function PlayHeader({ title, children }: { title?: string; children?: Rea
 export function NamePill({ group }: { group?: { name: string; color: string } | null }) {
   const { name } = useStudent();
   return group ? (
-    <span className="flex items-center gap-2 rounded-full border-2 border-pink-400 bg-white px-4 py-1.5 text-xs font-bold text-pink-600">
+    <span className="flex items-center gap-2 rounded-full border-2 border-pink-400 bg-white px-4 py-1.5 text-xs font-bold text-pink-700">
       <span className="size-2.5 rounded-[3px]" style={{ background: group.color }} />
       {name} · مجموعة {group.name}
     </span>

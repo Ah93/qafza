@@ -11,7 +11,7 @@ import { CHALLENGE_LABELS, type Lesson } from "@/lib/lesson";
 import { GROUP_POOL } from "@/lib/live";
 import { buildSlides, ENGAGE_CAP_PER_STATION, POINTS_ENGAGE, POINTS_RIGHT, type LiveAnswer, type StudentSnap } from "@/lib/live-flow";
 import { rankOf } from "@/lib/play";
-import { sfx } from "@/lib/sound";
+import { setSoundContext, sfx } from "@/lib/sound";
 import { Overlay } from "../Overlay";
 import { NamePill, PlayHeader } from "../StudentHeader";
 import type { LiveSeat } from "../StudentProvider";
@@ -35,6 +35,12 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
   const [tries, setTries] = useState(0);
   const lastKey = useRef("");
   const queued = useRef<{ slide: number; answer: LiveAnswer } | null>(null);
+
+  // in a live class sound starts muted (until the student switches it on)
+  useEffect(() => {
+    setSoundContext(true);
+    return () => setSoundContext(false);
+  }, []);
 
   // one stream; the browser reconnects by itself, a 403/404 closes it for good
   useEffect(() => {
@@ -117,7 +123,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
       <Shell>
         <div className="mx-auto mt-16 max-w-sm rounded-3xl border border-violet/10 bg-white p-7 text-center shadow-sm">
           <h1 className="text-xl font-bold text-indigo-deep">انتهت الحصة أو لم تعد متاحة</h1>
-          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/60">إن كانت الحصة لا تزال مفتوحة فادخل بالرمز مرة أخرى.</p>
+          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">إن كانت الحصة لا تزال مفتوحة فادخل بالرمز مرة أخرى.</p>
           <Link href={`/join?code=${seat.code}`} className="mt-5 inline-block rounded-full bg-brand px-8 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
             ادخل من جديد
           </Link>
@@ -128,7 +134,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
   if (!snap || !lesson || !slide) {
     return (
       <Shell>
-        <p role="status" className="mt-24 text-center text-sm font-bold text-indigo-deep/60">جارٍ الاتصال بالحصة…</p>
+        <p role="status" className="mt-24 text-center text-sm font-bold text-indigo-deep/70">جارٍ الاتصال بالحصة…</p>
       </Shell>
     );
   }
@@ -161,7 +167,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
           <section className="dots relative overflow-hidden rounded-[28px] bg-gradient-to-b from-[#241356] to-[#4a1d96] p-6 text-white shadow-2xl shadow-indigo-deep/25" aria-live="polite">
             {slide.kind === "arena" && (
               <div className="relative py-6 text-center">
-                <p className="text-[11px] font-semibold text-white/75">الحصة على وشك أن تبدأ</p>
+                <p className="text-xs font-semibold text-white/75">الحصة على وشك أن تبدأ</p>
                 <h1 className="mt-2 text-[34px] font-bold leading-tight">{lesson.title}</h1>
                 <p className="mt-3 text-xs font-medium text-white/80">{plural.students(snap.count)} في الحصة. شاشتك تتبع المعلّم تلقائيًا.</p>
               </div>
@@ -169,7 +175,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
 
             {slide.kind === "explain" && station && (
               <>
-                <p className="relative text-[11px] font-semibold text-white/75">
+                <p className="relative text-xs font-semibold text-white/75">
                   المحطة {slide.i + 1} من {lesson.stations.length}
                 </p>
                 <h1 className="relative mt-2 text-[34px] font-bold leading-tight">{station.title}</h1>
@@ -181,7 +187,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
 
             {(slide.kind === "challenge" || slide.kind === "reveal") && (
               <>
-                <p className="relative text-[11px] font-semibold text-white/75">
+                <p className="relative text-xs font-semibold text-white/75">
                   {isBoss ? "تحدّي الزعيم" : `التحدي ${slide.i + 1} · ${CHALLENGE_LABELS[station!.challenge.kind]}`}
                 </p>
                 <div className="relative mt-3 rounded-2xl bg-white p-5 text-indigo-deep">
@@ -189,7 +195,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
                     answered ? (
                       <div className="py-6 text-center">
                         <p className="text-lg font-bold">وصلت إجابتك</p>
-                        <p className="mt-1 text-xs font-medium text-indigo-deep/60">انتظر المعلّم ليكشف الإجابة الصحيحة.</p>
+                        <p className="mt-1 text-xs font-medium text-indigo-deep/70">انتظر المعلّم ليكشف الإجابة الصحيحة.</p>
                       </div>
                     ) : (
                       <LiveChallenge key={snap.at} challenge={isBoss ? undefined : station!.challenge} boss={isBoss ? lesson.boss : undefined} busy={busy} onSubmit={send} />
@@ -203,7 +209,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
 
             {slide.kind === "finish" && (
               <div className="relative py-6 text-center">
-                <p className="text-[11px] font-semibold text-white/75">انتهت الحصة</p>
+                <p className="text-xs font-semibold text-white/75">انتهت الحصة</p>
                 <h1 className="mt-2 text-[34px] font-bold">أحسنت يا {me.name}!</h1>
                 <p className="mt-3 text-sm font-semibold text-white/90">
                   جمعت {plural.points(me.points)} · ترتيبك {me.rank} من {snap.count}
@@ -236,10 +242,10 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
               <h2 className="text-sm font-bold text-indigo-deep">نقاط المعرفة</h2>
               <span className="text-base font-bold text-violet">{me.points}</span>
             </div>
-            <p className="mt-1.5 text-[11px] font-medium leading-5 text-indigo-deep/55">
+            <p className="mt-1.5 text-xs font-medium leading-5 text-indigo-deep/70">
               اضغط «فهمت» أثناء الشرح لتكسب {POINTS_ENGAGE} نقطة، وحتى {ENGAGE_CAP_PER_STATION} نقاط في كل محطة. وكل إجابة صحيحة من أول مرة تكسبك {POINTS_RIGHT}.
             </p>
-            <span className="mt-3 inline-block rounded-full bg-sun px-3.5 py-1.5 text-[11px] font-bold text-indigo-deep">الرتبة: {rank.name}</span>
+            <span className="mt-3 inline-block rounded-full bg-sun px-3.5 py-1.5 text-xs font-bold text-indigo-deep">الرتبة: {rank.name}</span>
           </section>
 
           <section className="dots relative overflow-hidden rounded-3xl bg-gradient-to-b from-[#241356] to-[#4a1d96] p-4 text-white shadow-xl shadow-indigo-deep/25">
@@ -281,7 +287,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
 
           <Outline lesson={lesson} at={slide.kind === "arena" ? -1 : slide.kind === "finish" ? lesson.stations.length + 1 : slide.i} />
 
-          <button onClick={() => (snap.status === "ended" ? router.push("/learn") : setLeaving(true))} className="block w-full rounded-2xl border border-violet/10 bg-white py-3 text-center text-[11px] font-bold text-violet transition hover:border-violet/40">
+          <button onClick={() => (snap.status === "ended" ? router.push("/learn") : setLeaving(true))} className="block w-full rounded-2xl border border-violet/10 bg-white py-3 text-center text-xs font-bold text-violet transition hover:border-violet/40">
             غادر الحصة
           </button>
         </aside>
@@ -289,7 +295,7 @@ export function LiveStudentReal({ seat }: { seat: LiveSeat }) {
       {leaving && (
         <Overlay label="مغادرة الحصة">
           <h2 className="text-xl font-bold text-indigo-deep">تغادر الحصة؟</h2>
-          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">تنقطع عن شاشة المعلّم، وتبقى نقاطك محفوظة. تستطيع العودة بالرمز نفسه ما دامت الحصة مفتوحة.</p>
+          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">تنقطع عن شاشة المعلّم، وتبقى نقاطك محفوظة. تستطيع العودة بالرمز نفسه ما دامت الحصة مفتوحة.</p>
           <div className="mt-5 flex gap-2.5">
             <button autoFocus onClick={() => setLeaving(false)} className="flex-1 rounded-full bg-brand py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
               ابقَ في الحصة
@@ -309,7 +315,7 @@ function Shell({ children, group, status }: { children: React.ReactNode; group?:
   return (
     <>
       <PlayHeader>
-        <span className="hidden rounded-full bg-violet/10 px-4 py-2 text-[11px] font-bold text-violet sm:block">{status === "ended" ? "انتهت الحصة" : "في الحصة: المعلّم يقود الدرس"}</span>
+        <span className="hidden rounded-full bg-violet/10 px-4 py-2 text-xs font-bold text-violet sm:block">{status === "ended" ? "انتهت الحصة" : "في الحصة: المعلّم يقود الدرس"}</span>
         <NamePill group={group} />
       </PlayHeader>
       {children}
@@ -333,7 +339,7 @@ function Progress({ lesson, at }: { lesson: Lesson; at: number }) {
           <span className={`block h-1.5 rounded-full ${at > total ? "bg-mint" : at === total ? "bg-pink-card" : "bg-violet/15"}`} />
         </li>
       </ol>
-      <p className="mt-2 text-[11px] font-bold text-indigo-deep/70">
+      <p className="mt-2 text-xs font-bold text-indigo-deep/70">
         {at < 0
           ? `ستبدأ الحصة قريبًا: ${plural.stations(total)} ثم تحدّي الزعيم.`
           : at > total
@@ -352,8 +358,8 @@ function Progress({ lesson, at }: { lesson: Lesson; at: number }) {
 function Outline({ lesson, at }: { lesson: Lesson; at: number }) {
   const total = lesson.stations.length;
   const row = (key: string, n: string, title: string, state: "done" | "now" | "next") => (
-    <li key={key} aria-current={state === "now" ? "step" : undefined} className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-[11px] font-bold ${state === "now" ? "bg-violet/10 text-violet" : state === "done" ? "text-indigo-deep/45" : "text-indigo-deep/75"}`}>
-      <span className={`grid size-5 shrink-0 place-items-center rounded-full text-[10px] ${state === "done" ? "bg-mint text-white" : state === "now" ? "bg-violet text-white" : "bg-violet/10 text-indigo-deep/55"}`}>{state === "done" ? "✓" : n}</span>
+    <li key={key} aria-current={state === "now" ? "step" : undefined} className={`flex items-center gap-2.5 rounded-xl px-2.5 py-2 text-xs font-bold ${state === "now" ? "bg-violet/10 text-violet" : state === "done" ? "text-indigo-deep/70" : "text-indigo-deep/75"}`}>
+      <span className={`grid size-5 shrink-0 place-items-center rounded-full text-xs ${state === "done" ? "bg-mint text-white" : state === "now" ? "bg-violet text-white" : "bg-violet/10 text-indigo-deep/70"}`}>{state === "done" ? "✓" : n}</span>
       <span className="min-w-0 flex-1 truncate">{title}</span>
     </li>
   );

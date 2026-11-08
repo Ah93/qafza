@@ -38,7 +38,7 @@ export function CodeCard({ code, preview = true }: { code: string; preview?: boo
   return (
     <aside className="space-y-3 lg:sticky lg:top-20">
       <div className="dots relative overflow-hidden rounded-3xl bg-gradient-to-b from-indigo-deep to-[#4a1d96] p-4 text-center text-white shadow-xl shadow-indigo-deep/25">
-        <p className="relative text-[11px] font-medium text-white/70">رمز الدرس</p>
+        <p className="relative text-xs font-medium text-white/70">رمز الدرس</p>
         <p dir="ltr" className="relative mt-1 text-[44px] font-bold leading-tight tracking-wider">
           {code}
         </p>
@@ -48,12 +48,12 @@ export function CodeCard({ code, preview = true }: { code: string; preview?: boo
         </div>
 
         <div className="relative mt-3.5 flex items-center justify-between gap-2 rounded-2xl bg-white/10 py-2 pe-3 ps-2">
-          <span dir="ltr" className="truncate text-[11px] font-semibold text-white/90">
+          <span dir="ltr" className="truncate text-xs font-semibold text-white/90">
             {URL_TEXT}
           </span>
           <button
             onClick={() => copy("link")}
-            className="shrink-0 rounded-full bg-white px-3.5 py-1.5 text-[11px] font-bold text-indigo-deep"
+            className="shrink-0 rounded-full bg-white px-3.5 py-1.5 text-xs font-bold text-indigo-deep"
           >
             {copied === "link" ? "تم النسخ" : "انسخ الرابط"}
           </button>
@@ -62,13 +62,13 @@ export function CodeCard({ code, preview = true }: { code: string; preview?: boo
         <div className="relative mt-2.5 flex justify-center gap-2">
           <button
             onClick={() => copy("code")}
-            className="rounded-full bg-white/15 px-4 py-1.5 text-[11px] font-bold transition hover:bg-white/25"
+            className="rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold transition hover:bg-white/25"
           >
             {copied === "code" ? "تم النسخ" : "انسخ الرمز"}
           </button>
           <button
             onClick={downloadQr}
-            className="rounded-full bg-white/15 px-4 py-1.5 text-[11px] font-bold transition hover:bg-white/25"
+            className="rounded-full bg-white/15 px-4 py-1.5 text-xs font-bold transition hover:bg-white/25"
           >
             نزّل QR
           </button>

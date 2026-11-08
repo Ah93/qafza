@@ -3,7 +3,7 @@
 import { useId } from "react";
 
 export const fieldCls =
-  "w-full rounded-2xl border border-violet/10 bg-white px-4 py-3.5 text-sm text-indigo-deep outline-none transition placeholder:text-indigo-deep/45 focus:border-violet focus:ring-4 focus:ring-violet/10";
+  "w-full rounded-2xl border border-violet/10 bg-white px-4 py-3.5 text-sm text-indigo-deep outline-none transition placeholder:text-indigo-deep/65 focus:border-violet focus:ring-4 focus:ring-violet/10";
 
 export function Chip({
   on,
@@ -69,7 +69,7 @@ export function Switch({
 
 export function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <p className="flex items-center gap-2 text-[11px] font-bold text-violet">
+    <p className="flex items-center gap-2 text-xs font-bold text-violet">
       <span className="size-2 rounded-full bg-violet" />
       {children}
     </p>

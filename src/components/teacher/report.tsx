@@ -51,7 +51,7 @@ export function useReport() {
 export function LessonPicker({ lessons, value, onChange }: { lessons: LessonSummary[]; value: string; onChange: (id: string) => void }) {
   if (lessons.length < 2) return null;
   return (
-    <label className="flex items-center gap-2 text-[11px] font-bold text-indigo-deep/60">
+    <label className="flex items-center gap-2 text-xs font-bold text-indigo-deep/70">
       الدرس
       <select value={value} onChange={(e) => onChange(e.target.value)} className="max-w-[220px] rounded-full border border-violet/15 bg-white px-3.5 py-2 text-xs font-bold text-indigo-deep outline-none focus:border-violet">
         {lessons.map((l) => (
@@ -69,13 +69,13 @@ export function ReportGate({ phase, error }: { phase: "loading" | "error" | "emp
   return (
     <main className="grid flex-1 place-items-center px-5 py-16 text-center">
       {phase === "loading" ? (
-        <p role="status" className="text-sm font-bold text-indigo-deep/60">جارٍ تحميل النتائج…</p>
+        <p role="status" className="text-sm font-bold text-indigo-deep/70">جارٍ تحميل النتائج…</p>
       ) : phase === "error" ? (
         <p role="alert" className="max-w-sm text-sm font-bold text-[#c0174f]">{error}</p>
       ) : (
         <div className="max-w-sm">
           <h1 className="text-2xl font-bold text-indigo-deep">لا دروس منشورة بعد</h1>
-          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/65">حين تنشر درسًا وتلعبه مع طلابك، تظهر هنا نتائجه: من أتقن ومن تعثّر وأين.</p>
+          <p className="mt-2 text-xs font-medium leading-6 text-indigo-deep/70">حين تنشر درسًا وتلعبه مع طلابك، تظهر هنا نتائجه: من أتقن ومن تعثّر وأين.</p>
           <Link href="/create" className="mt-5 inline-block rounded-full bg-brand px-8 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
             أنشئ درسًا
           </Link>

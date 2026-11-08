@@ -23,12 +23,12 @@ export function BossCard({ boss }: { boss: BossItem[] }) {
               value={b.statement}
               onChange={(e) => patch(i, { statement: e.target.value })}
               aria-label={`العبارة ${i + 1}`}
-              className="min-w-0 flex-1 bg-transparent text-[13px] font-bold text-indigo-deep outline-none"
+              className="min-w-0 flex-1 bg-transparent text-sm font-bold text-indigo-deep outline-none"
             />
             <button
               onClick={() => patch(i, { answer: !b.answer })}
               title="اضغط للتبديل بين صحيحة وخاطئة"
-              className={`w-14 shrink-0 text-end text-xs font-bold ${b.answer ? "text-emerald-600" : "text-[#c0174f]"}`}
+              className={`w-14 shrink-0 text-end text-xs font-bold ${b.answer ? "text-emerald-700" : "text-[#c0174f]"}`}
             >
               {b.answer ? "صحيحة" : "خاطئة"}
             </button>

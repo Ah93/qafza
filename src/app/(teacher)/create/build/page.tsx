@@ -124,10 +124,10 @@ export default function BuildPage() {
             </div>
           ) : (
             <>
-              <p className="text-[11px] font-bold text-violet">{done ? "اكتمل البناء" : `الخطوة ${Math.min(step, 5)} من 5`}</p>
+              <p className="text-xs font-bold text-violet">{done ? "اكتمل البناء" : `الخطوة ${Math.min(step, 5)} من 5`}</p>
               <h1 className="mt-1 text-[28px] font-bold leading-snug text-indigo-deep">{done ? `درس «${lesson.title}» جاهز` : `نبني «${title}»`}</h1>
 
-              <div role="progressbar" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} className="mt-4 h-2.5 overflow-hidden rounded-full bg-violet/10">
+              <div role="progressbar" aria-label="تقدّم بناء الدرس" aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100} className="mt-4 h-2.5 overflow-hidden rounded-full bg-violet/10">
                 <div className="h-full rounded-full bg-brand transition-[width] duration-700" style={{ width: `${progress}%` }} />
               </div>
 
@@ -140,14 +140,14 @@ export default function BuildPage() {
                     <li key={s.title} className="flex items-start gap-3" aria-current={active ? "step" : undefined}>
                       <span
                         className={`mt-0.5 grid size-7 shrink-0 place-items-center rounded-full text-xs font-bold transition ${
-                          complete ? "bg-mint text-white" : active ? "bg-violet text-white ring-4 ring-violet/15" : "bg-violet/10 text-indigo-deep/40"
+                          complete ? "bg-mint text-white" : active ? "bg-violet text-white ring-4 ring-violet/15" : "bg-violet/10 text-indigo-deep/70"
                         }`}
                       >
                         {complete ? <Check className="size-4" strokeWidth={3} /> : n}
                       </span>
                       <div className={complete || active ? "" : "opacity-45"}>
                         <p className="text-sm font-bold text-indigo-deep">{s.title}</p>
-                        {(complete || active) && <p className="mt-0.5 text-[11px] text-indigo-deep/60">{s.detail}</p>}
+                        {(complete || active) && <p className="mt-0.5 text-xs text-indigo-deep/70">{s.detail}</p>}
                       </div>
                     </li>
                   );
@@ -180,11 +180,11 @@ export default function BuildPage() {
                 <li key={s.id} className="flex animate-[pop_.35s_ease-out] items-center gap-3 rounded-2xl border border-violet/10 bg-white px-3.5 py-3 shadow-sm">
                   <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-brand text-xs font-bold text-white">{i + 1}</span>
                   <span className="min-w-0 flex-1 truncate text-sm font-bold text-indigo-deep">{s.title}</span>
-                  <span className="shrink-0 rounded-full bg-violet/10 px-2.5 py-1 text-[10px] font-bold text-violet">{modeLabel(s.mode)}</span>
+                  <span className="shrink-0 rounded-full bg-violet/10 px-2.5 py-1 text-xs font-bold text-violet">{modeLabel(s.mode)}</span>
                 </li>
               ))}
             {shown < total && (
-              <li className="grid min-h-[56px] place-items-center rounded-2xl border border-dashed border-violet/25 px-4 py-4 text-xs font-medium text-indigo-deep/55">
+              <li className="grid min-h-[56px] place-items-center rounded-2xl border border-dashed border-violet/25 px-4 py-4 text-xs font-medium text-indigo-deep/70">
                 {phase === "error" ? "لم تُبنَ أي محطة." : "تظهر المحطات هنا واحدة واحدة."}
               </li>
             )}

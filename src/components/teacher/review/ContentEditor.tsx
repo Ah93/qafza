@@ -37,7 +37,7 @@ const LABELS: Record<ModeId, { head: string; body: string; item: string }> = {
   diagram: { head: "الجزء", body: "وصفه", item: "جزء" },
 };
 
-const tiny = "grid size-8 place-items-center rounded-lg border border-violet/15 bg-white text-indigo-deep/65 transition hover:border-violet/40 hover:text-violet disabled:opacity-30";
+const tiny = "grid size-8 place-items-center rounded-lg border border-violet/15 bg-white text-indigo-deep/70 transition hover:border-violet/40 hover:text-violet disabled:opacity-30";
 
 /**
  * Editing a station's content, shaped by its display mode: points with titles, ordered stages, cards, or a
@@ -83,18 +83,18 @@ export function ContentEditor({ station, onChange }: { station: Station; onChang
 
   return (
     <div className="mt-4">
-      <label htmlFor={`${id}-lead`} className="mb-1.5 block text-[11px] font-bold text-indigo-deep/60">
+      <label htmlFor={`${id}-lead`} className="mb-1.5 block text-xs font-bold text-indigo-deep/70">
         المقدمة (سطر واحد)
       </label>
-      <input id={`${id}-lead`} value={lead} onChange={(e) => commit(oneLine(e.target.value), items)} className={`${inputBase} h-11 text-[13px]`} />
+      <input id={`${id}-lead`} value={lead} onChange={(e) => commit(oneLine(e.target.value), items)} className={`${inputBase} h-11 text-sm`} />
 
-      <p className="mb-1.5 mt-4 text-[11px] font-bold text-indigo-deep/60">
+      <p className="mb-1.5 mt-4 text-xs font-bold text-indigo-deep/70">
         {mode === "timeline" ? "المراحل بالترتيب" : mode === "dialogue" ? "الحوار: ط للطالب، م للمرشد" : "المحتوى"} · {items.length} من {MAX_ITEMS}
       </p>
       <ol className="space-y-2">
         {items.map((it, i) => (
           <li key={i} className="flex items-start gap-2 rounded-2xl border border-violet/10 bg-violet/[0.03] p-2.5">
-            <span className="mt-1.5 grid size-6 shrink-0 place-items-center rounded-full bg-violet/10 text-[11px] font-bold text-violet">{i + 1}</span>
+            <span className="mt-1.5 grid size-6 shrink-0 place-items-center rounded-full bg-violet/10 text-xs font-bold text-violet">{i + 1}</span>
             <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
               {mode === "dialogue" ? (
                 <>
@@ -102,16 +102,16 @@ export function ContentEditor({ station, onChange }: { station: Station; onChang
                     type="button"
                     onClick={() => setItem(i, { head: it.head === "ط" ? "م" : "ط" })}
                     aria-label={`المتحدّث في السطر ${i + 1}: ${it.head === "ط" ? "الطالب" : "المرشد"}. اضغط للتبديل`}
-                    className={`h-10 rounded-xl border text-sm font-bold transition ${it.head === "ط" ? "border-pink-300 bg-pink-50 text-pink-600" : "border-violet/30 bg-violet/10 text-violet"}`}
+                    className={`h-10 rounded-xl border text-sm font-bold transition ${it.head === "ط" ? "border-pink-300 bg-pink-50 text-pink-700" : "border-violet/30 bg-violet/10 text-violet"}`}
                   >
                     {it.head === "ط" ? "ط · طالب" : "م · مرشد"}
                   </button>
-                  <input aria-label={`${L.body} ${i + 1}`} value={it.body} onChange={(e) => setItem(i, { body: e.target.value })} className={`${inputBase} h-10 text-[13px] sm:col-span-1`} />
+                  <input aria-label={`${L.body} ${i + 1}`} value={it.body} onChange={(e) => setItem(i, { body: e.target.value })} className={`${inputBase} h-10 text-sm sm:col-span-1`} />
                 </>
               ) : (
                 <>
-                  <input aria-label={`${L.head} ${i + 1}`} placeholder={L.head} value={it.head} onChange={(e) => setItem(i, { head: cleanHead(e.target.value) })} className={`${inputBase} h-10 text-[13px] font-bold`} />
-                  <input aria-label={`${L.body} ${i + 1}`} placeholder={L.body} value={it.body} onChange={(e) => setItem(i, { body: e.target.value })} className={`${inputBase} h-10 text-[13px]`} />
+                  <input aria-label={`${L.head} ${i + 1}`} placeholder={L.head} value={it.head} onChange={(e) => setItem(i, { head: cleanHead(e.target.value) })} className={`${inputBase} h-10 text-sm font-bold`} />
+                  <input aria-label={`${L.body} ${i + 1}`} placeholder={L.body} value={it.body} onChange={(e) => setItem(i, { body: e.target.value })} className={`${inputBase} h-10 text-sm`} />
                 </>
               )}
             </div>
@@ -133,14 +133,14 @@ export function ContentEditor({ station, onChange }: { station: Station; onChang
         type="button"
         onClick={add}
         disabled={items.length >= MAX_ITEMS}
-        className="mt-2.5 flex items-center gap-1.5 rounded-full border border-dashed border-violet/30 px-4 py-2 text-[11px] font-bold text-violet transition hover:bg-violet/5 disabled:opacity-40"
+        className="mt-2.5 flex items-center gap-1.5 rounded-full border border-dashed border-violet/30 px-4 py-2 text-xs font-bold text-violet transition hover:bg-violet/5 disabled:opacity-40"
       >
         <Plus className="size-3.5" />
         أضف {L.item}
       </button>
 
       <div className="mt-4 rounded-2xl border border-violet/10 bg-white p-3.5">
-        <p className="mb-2 text-[11px] font-bold text-indigo-deep/55">معاينة: كما يراها الطالب</p>
+        <p className="mb-2 text-xs font-bold text-indigo-deep/70">معاينة: كما يراها الطالب</p>
         <StationView station={station} />
       </div>
     </div>

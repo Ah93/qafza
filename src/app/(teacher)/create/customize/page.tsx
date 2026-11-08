@@ -25,7 +25,7 @@ function Chip({ on, onClick, children }: { on: boolean; onClick: () => void; chi
       type="button"
       onClick={onClick}
       aria-pressed={on}
-      className={`rounded-full border px-3.5 py-1.5 text-[11px] font-bold transition ${
+      className={`rounded-full border px-3.5 py-1.5 text-xs font-bold transition ${
         on
           ? "border-violet bg-violet text-white"
           : "border-violet/15 bg-white text-indigo-deep hover:border-violet/40"
@@ -54,16 +54,16 @@ function Row({
   return (
     <div className="border-b border-violet/10 py-4 last:border-0">
       <div className="flex items-start gap-4">
-        <span className="w-[72px] shrink-0 pt-0.5 text-[11px] font-bold text-violet">{label}</span>
+        <span className="w-[72px] shrink-0 pt-0.5 text-xs font-bold text-violet">{label}</span>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-bold leading-6 text-indigo-deep">{title}</p>
-          <p className="mt-0.5 text-[11px] leading-5 text-indigo-deep/55">{hint}</p>
+          <p className="mt-0.5 text-xs leading-5 text-indigo-deep/70">{hint}</p>
         </div>
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={open}
-          className="shrink-0 rounded-full border border-violet/15 bg-white px-4 py-1.5 text-[11px] font-bold text-violet shadow-sm transition hover:border-violet/40"
+          className="shrink-0 rounded-full border border-violet/15 bg-white px-4 py-1.5 text-xs font-bold text-violet shadow-sm transition hover:border-violet/40"
         >
           {open ? "تم" : "غيّر"}
         </button>
@@ -82,7 +82,7 @@ function PreviewCard({ title, c }: { title: string; c: Customization }) {
   ];
   return (
     <aside className="dots relative overflow-hidden rounded-3xl bg-gradient-to-b from-indigo-deep to-[#4a1d96] p-4 text-white shadow-xl shadow-indigo-deep/25">
-      <p className="relative text-[11px] font-medium text-white/70">درسك سيكون هكذا</p>
+      <p className="relative text-xs font-medium text-white/70">درسك سيكون هكذا</p>
       <h2 className="relative mt-1 text-xl font-bold">{title}</h2>
 
       <div className="relative mt-3 grid h-[84px] place-items-center overflow-hidden rounded-2xl bg-indigo-deep/70">
@@ -97,13 +97,13 @@ function PreviewCard({ title, c }: { title: string; c: Customization }) {
       <div className="relative mt-3 space-y-2.5">
         {boxes.map((b) => (
           <div key={b.k} className="rounded-2xl bg-white/10 px-3.5 py-3">
-            <p className="text-[10px] font-medium text-white/60">{b.k}</p>
+            <p className="text-xs font-medium text-white/80">{b.k}</p>
             <p className="mt-0.5 text-xs font-bold leading-5">{b.v}</p>
           </div>
         ))}
       </div>
 
-      <p className="relative mt-3.5 text-[11px] font-semibold text-white/85">
+      <p className="relative mt-3.5 text-xs font-semibold text-white/85">
         5 محطات · 5 تحديات · تحدّي الزعيم · نحو {c.minutes} دقيقة
       </p>
     </aside>
@@ -141,7 +141,7 @@ export default function CustomizePage() {
       <main className="mx-auto grid w-full max-w-[1100px] flex-1 items-start gap-6 px-5 py-8 lg:grid-cols-[1fr_300px]">
         <section className="rounded-[28px] border border-violet/10 bg-white p-6 shadow-xl shadow-violet/5 sm:p-8">
           <h1 className="text-[32px] font-bold text-indigo-deep">خصّص درسك</h1>
-          <p className="mt-1.5 text-xs text-indigo-deep/60">
+          <p className="mt-1.5 text-xs text-indigo-deep/70">
             اترك قفزة ترتّبه، أو اختر بنفسك نمط العرض وإطار التلعيب ونمط التقييم.
           </p>
 
@@ -153,9 +153,9 @@ export default function CustomizePage() {
               <p dir="auto" className="truncate text-sm font-bold text-emerald-800">
                 {source.name}
               </p>
-              <p className="mt-0.5 text-[11px] text-emerald-700/80">{fileMeta}</p>
+              <p className="mt-0.5 text-xs text-emerald-700/80">{fileMeta}</p>
             </div>
-            <Link href="/dashboard" className="shrink-0 text-[11px] font-bold text-emerald-700 underline underline-offset-4">
+            <Link href="/dashboard" className="shrink-0 text-xs font-bold text-emerald-700 underline underline-offset-4">
               استبدل المصدر
             </Link>
           </div>
@@ -167,7 +167,7 @@ export default function CustomizePage() {
               </span>
               <div>
                 <h2 className="text-lg font-bold text-indigo-deep">رتّبنا الدرس لك</h2>
-                <p className="text-[11px] text-indigo-deep/60">اخترنا ما يناسب محتواه وطلابك. ابنِه الآن، أو غيّر أي سطر.</p>
+                <p className="text-xs text-indigo-deep/70">اخترنا ما يناسب محتواه وطلابك. ابنِه الآن، أو غيّر أي سطر.</p>
               </div>
             </div>
 
@@ -187,7 +187,7 @@ export default function CustomizePage() {
                   ))}
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[11px] font-bold text-indigo-deep/60">المدة</span>
+                  <span className="text-xs font-bold text-indigo-deep/70">المدة</span>
                   {MINUTES.map((m) => (
                     <Chip key={m} on={custom.minutes === m} onClick={() => set({ minutes: m })}>
                       {m} دقيقة
@@ -246,14 +246,14 @@ export default function CustomizePage() {
           >
             ابنِ الدرس
           </button>
-          <p className="mt-3 text-center text-[11px] text-indigo-deep/55">
+          <p className="mt-3 text-center text-xs text-indigo-deep/70">
             هذا درسك المجاني: كامل بكل المزايا، ومعه حصته المباشرة وتقريره.
           </p>
         </section>
 
         <div className="space-y-3 lg:sticky lg:top-20">
           <PreviewCard title={lessonTitle} c={custom} />
-          <p className="rounded-2xl border border-mint/25 bg-mint/10 px-4 py-3 text-[11px] font-semibold leading-5 text-emerald-800">
+          <p className="rounded-2xl border border-mint/25 bg-mint/10 px-4 py-3 text-xs font-semibold leading-5 text-emerald-800">
             كل محطة تُبنى من صفحتها في ملفك، وما لا مصدر له لا يُولَّد.
           </p>
         </div>

@@ -15,7 +15,7 @@ export default function NotFound() {
           404
         </p>
         <h1 className="mt-3 text-3xl font-bold text-indigo-deep">لم نجد هذه الصفحة.</h1>
-        <p className="mt-2 text-sm font-medium leading-7 text-indigo-deep/65">ربما تغيّر الرابط أو حُذفت الصفحة. تحقّق من العنوان، أو عُد إلى الرئيسية.</p>
+        <p className="mt-2 text-sm font-medium leading-7 text-indigo-deep/70">ربما تغيّر الرابط أو حُذفت الصفحة. تحقّق من العنوان، أو عُد إلى الرئيسية.</p>
         <Link href="/" className="mt-6 inline-block rounded-full bg-brand px-9 py-3 text-sm font-bold text-white shadow-lg shadow-violet/30">
           عُد إلى الرئيسية
         </Link>
